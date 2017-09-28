@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
-using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model.Quote
 {
-    public partial class QuoteRequestFormModel : Entity
+    public partial class QuoteRequestFormModel
     {
         public QuoteRequestFormModel()
         {
             Items = new List<QuoteItemFormModel>();
         }
+
+        public string Id { get; set; }
 
         public string Tag { get; set; }
 

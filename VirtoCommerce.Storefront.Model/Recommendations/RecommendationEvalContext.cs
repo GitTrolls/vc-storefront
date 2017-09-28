@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model.Recommendations
 {
     /// <summary>
     /// Context used for evaluation recommendation for given  parameters 
     /// </summary>
-    public partial class RecommendationEvalContext : ValueObject
+    public partial class RecommendationEvalContext
     {
         public RecommendationEvalContext()
         {
@@ -33,25 +32,9 @@ namespace VirtoCommerce.Storefront.Model.Recommendations
 
         public string UserId { get; set; }
 
-        public ICollection<string> ProductIds { get; set; } = new List<string>();
+        public ICollection<string> ProductIds { get; set; }
 
-        public int Take { get; set; }
-
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return Provider;
-            yield return Type;
-            yield return StoreId;
-            yield return UserId;
-            yield return Take;
-            if (ProductIds != null)
-            {
-                foreach (var productId in ProductIds)
-                {
-                    yield return productId;
-                }
-            }
-        }
-
+        public int Take { get; set; }           
+      
     }
 }

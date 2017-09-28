@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using CacheManager.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,6 @@ using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
-using VirtoCommerce.Storefront.Model.Common.Caching;
 using VirtoCommerce.Storefront.Model.StaticContent;
 using VirtoCommerce.Storefront.Model.Stores;
 using coreDto = VirtoCommerce.Storefront.AutoRestClients.CoreModuleApi.Models;
@@ -17,15 +16,15 @@ namespace VirtoCommerce.Storefront.Routing
 {
     public class SlugRouteService : ISlugRouteService
     {
-        private readonly IMemoryCache _memoryCache;
+        private readonly ICacheManager<object> _cacheManager;
         //TODO: Replace to services and  make async
         private readonly  ICommerce _coreApi;
         private readonly ICatalogModuleCategories _catalogCategoriesApi;
         private readonly ICatalogModuleProducts _catalogProductsApi;
 
-        public SlugRouteService(IMemoryCache memoryCache, ICommerce coreApi, ICatalogModuleCategories catalogCategoriesApi, ICatalogModuleProducts catalogProductsApi)
+        public SlugRouteService(ICacheManager<object> cacheManager, ICommerce coreApi, ICatalogModuleCategories catalogCategoriesApi, ICatalogModuleProducts catalogProductsApi)
         {
-            _memoryCache = memoryCache;
+            _cacheManager = cacheManager;
             _coreApi = coreApi;
             _catalogCategoriesApi = catalogCategoriesApi;
             _catalogProductsApi = catalogProductsApi;
@@ -176,12 +175,7 @@ namespace VirtoCommerce.Storefront.Routing
 
             if (!string.IsNullOrEmpty(slug))
             {
-                var cacheKey = CacheKey.With(GetType(), "GetAllSeoRecords", slug);
-                var apiResult = _memoryCache.GetOrCreate(cacheKey, (cacheEntry) =>
-                {
-                    cacheEntry.AddExpirationToken(RoutingCacheRegion.CreateChangeToken());
-                    return _coreApi.GetSeoInfoBySlug(slug);
-                });
+                var apiResult = _cacheManager.Get(string.Join(":", "Commerce.GetSeoInfoBySlug", slug), "ApiRegion", () => _coreApi.GetSeoInfoBySlug(slug));
                 result.AddRange(apiResult);
             }
 
@@ -212,18 +206,28 @@ namespace VirtoCommerce.Storefront.Routing
 
         protected virtual IDictionary<string, string> GetFullSeoPaths(string objectType, string[] objectIds, Store store, Language language)
         {
-            var cacheKey = CacheKey.With(GetType(), "GetFullSeoPaths", store.Id, objectType, objectIds.GetOrderIndependentHashCode().ToString());
-            return _memoryCache.GetOrCreate(cacheKey, (cacheEntry) =>
+            IDictionary<string, string> result = null;
+
+            var cacheKey = BuildCacheKey(new[] { "GetFullSeoPaths", store.Id, objectType }, objectIds);
+
+            switch (objectType)
             {
-                switch (objectType)
-                {
-                    case "Category":
-                        return GetCategorySeoPaths(objectIds, store, language);
-                    case "CatalogProduct":
-                        return GetProductSeoPaths(objectIds, store, language);
-                }
-                return null;
-            });           
+                case "Category":
+                    result = _cacheManager.Get(cacheKey, "ApiRegion", () => GetCategorySeoPaths(objectIds, store, language));
+                    break;
+                case "CatalogProduct":
+                    result = _cacheManager.Get(cacheKey, "ApiRegion", () => GetProductSeoPaths(objectIds, store, language));
+                    break;
+            }
+
+            return result;
+        }
+
+        protected virtual string BuildCacheKey(string[] keyItems, params string[] objectIds)
+        {
+            var cacheKeyItems = new List<string>(keyItems);
+            cacheKeyItems.AddRange(objectIds.OrderBy(id => id));
+            return string.Join(":", cacheKeyItems);
         }
 
         protected virtual IDictionary<string, string> GetCategorySeoPaths(string[] objectIds, Store store, Language language)

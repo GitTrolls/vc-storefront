@@ -7,7 +7,7 @@ using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model
 {
-    public partial class Image : ValueObject
+    public partial class Image : ValueObject<Image>
     {
         /// <summary>
         /// Full url of image
@@ -26,9 +26,6 @@ namespace VirtoCommerce.Storefront.Model
         /// </summary>
         public string Alt { get; set; }
 
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return Url;
-        }
+      
     }
 }

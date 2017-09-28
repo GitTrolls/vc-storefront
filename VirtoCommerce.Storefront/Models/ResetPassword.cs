@@ -3,7 +3,7 @@ using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model
 {
-    public partial class ResetPassword : ValueObject
+    public partial class ResetPassword : ValueObject<ForgotPassword>
     {
         [FromForm(Name = "customer[password]")]
         public string Password { get; set; }

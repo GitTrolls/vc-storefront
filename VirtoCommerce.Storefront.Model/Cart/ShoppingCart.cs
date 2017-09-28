@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using VirtoCommerce.Storefront.Model.Cart.Services;
 using VirtoCommerce.Storefront.Model.Cart.ValidationErrors;
@@ -490,10 +489,10 @@ namespace VirtoCommerce.Storefront.Model.Cart
 
         public override string ToString()
         {
-            var cartId = Id ?? "transient";
+            var cartId = Id ?? "undefined";
             var customer = Customer != null ? Customer.ToString() : "undefined";
 
-            return $"Cart #{cartId}-{Name} {customer}";
+            return $"Cart #{cartId} Items({ItemsQuantity}) {customer}";
         }
     }
 }

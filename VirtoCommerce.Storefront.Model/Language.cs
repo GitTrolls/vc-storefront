@@ -11,7 +11,7 @@ namespace VirtoCommerce.Storefront.Model
     /// <summary>
     /// Represent language for specified culture
     /// </summary>
-    public partial class Language : ValueObject
+    public partial class Language 
     {
         private Language()
             :this(CultureInfo.InvariantCulture.Name)
@@ -75,10 +75,57 @@ namespace VirtoCommerce.Storefront.Model
         /// </summary>
         public string ThreeLetterRegionName { get; private set; }
 
-        protected override IEnumerable<object> GetEqualityComponents()
+
+        public static bool operator ==(Language left, Language right)
         {
-            yield return CultureName;
+            if (Object.Equals(left, null))
+                return (Object.Equals(right, null)) ? true : false;
+            else
+                return left.Equals(right);
         }
+
+        public static bool operator !=(Language left, Language right)
+        {
+            return !(left == right);
+        }
+
+        /// <summary>
+        /// <see cref="M:System.Object.Equals"/>
+        /// </summary>
+        /// <param name="obj"><see cref="M:System.Object.Equals"/></param>
+        /// <returns><see cref="M:System.Object.Equals"/></returns>
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+
+            if (Object.ReferenceEquals(this, obj))
+                return true;
+
+            var other = obj as Language;
+            var code = obj as string;
+            if (other != null)
+            {
+                return String.Equals(CultureName, other.CultureName, StringComparison.InvariantCultureIgnoreCase);
+            }
+            if (code != null)
+            {
+                return String.Equals(CultureName, code, StringComparison.InvariantCultureIgnoreCase);
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// <see cref="M:System.Object.GetHashCode"/>
+        /// </summary>
+        /// <returns><see cref="M:System.Object.GetHashCode"/></returns>
+        public override int GetHashCode()
+        {
+            return CultureName.ToUpper().GetHashCode();
+        }
+
+
 
     }
 }

@@ -15,7 +15,5 @@ namespace VirtoCommerce.Storefront.Model.Common.Caching
         {
             return With($"{ownerType.GetCacheKey()}:{string.Join("-", keys)}");
         }
-
-   
     }
 }

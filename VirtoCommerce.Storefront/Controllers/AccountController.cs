@@ -3,12 +3,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
-using VirtoCommerce.Storefront.Domain;
+using VirtoCommerce.Storefront.Common;
+using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Common.Events;
 using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Model.Customer.Events;
+using VirtoCommerce.Storefront.Model.Order.Events;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
@@ -127,7 +129,7 @@ namespace VirtoCommerce.Storefront.Controllers
             {
                 var user = await _signInManager.UserManager.FindByNameAsync(login.Username);
                 //Check that it's login on behalf request           
-                //var onBehalfUserId = Request.Cookies[StorefrontConstants.LoginOnBehalfUserIdCookie];
+                var onBehalfUserId = Request.Cookies[StorefrontConstants.LoginOnBehalfUserIdCookie];
                 //TODO: login on behalf
                 //if (!string.IsNullOrEmpty(onBehalfUserId) && !string.Equals(onBehalfUserId, User.Identity.Name) && await _customerService.CanLoginOnBehalfAsync(WorkContext.CurrentStore.Id, customer.UserId))
                 //{
@@ -179,6 +181,56 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             await _signInManager.SignOutAsync();
             return StoreFrontRedirect("~/");
+        }
+
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult ExternalLogin(string authType, string returnUrl)
+        {
+            if (string.IsNullOrEmpty(authType))
+            {
+                return new BadRequestResult();
+            }
+
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(authType, Url.Action("ExternalLoginCallback", "Account"));
+            return Challenge(properties, authType);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
+        {
+            var loginInfo = await _signInManager.GetExternalLoginInfoAsync();
+            if (loginInfo == null)
+            {
+                return new BadRequestResult();
+            }
+
+            CustomerInfo customer = await _signInManager.UserManager.FindByLoginAsync(loginInfo.LoginProvider, loginInfo.ProviderKey);
+            if (customer == null)
+            {
+                customer = new CustomerInfo()
+                {
+                    FullName = loginInfo.Principal.Identity.Name,
+                    UserName = string.Join("--", loginInfo.LoginProvider, loginInfo.ProviderKey),
+                    StoreId = WorkContext.CurrentStore.Id,
+                };
+
+                var result = await _signInManager.UserManager.AddLoginAsync(customer, loginInfo);
+                if (!result.Succeeded)
+                {
+                    return new StatusCodeResult((int)System.Net.HttpStatusCode.InternalServerError);
+                }
+            }
+
+            var signInResult = await _signInManager.ExternalLoginSignInAsync(loginInfo.LoginProvider, loginInfo.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+            if (signInResult.Succeeded)
+            {
+                await _publisher.Publish(new UserLoginEvent(WorkContext, customer));
+            }
+
+            return StoreFrontRedirect(returnUrl);
         }
     }    
 }

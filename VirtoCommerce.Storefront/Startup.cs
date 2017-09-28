@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using CacheManager.Core;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -8,13 +10,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using VirtoCommerce.LiquidThemeEngine;
-using VirtoCommerce.Storefront.Authentication;
 using VirtoCommerce.Storefront.Binders;
+using VirtoCommerce.Storefront.Builders;
 using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.DependencyInjection;
-using VirtoCommerce.Storefront.Domain;
 using VirtoCommerce.Storefront.Extensions;
-using VirtoCommerce.Storefront.Infrastructure;
 using VirtoCommerce.Storefront.JsonConverters;
 using VirtoCommerce.Storefront.Middleware;
 using VirtoCommerce.Storefront.Model;
@@ -38,6 +38,9 @@ using VirtoCommerce.Storefront.Model.Stores;
 using VirtoCommerce.Storefront.Model.Subscriptions.Services;
 using VirtoCommerce.Storefront.Model.Tax.Services;
 using VirtoCommerce.Storefront.Routing;
+using VirtoCommerce.Storefront.Services;
+using VirtoCommerce.Storefront.Services.Identity;
+using VirtoCommerce.Storefront.Services.Recommendations;
 using VirtoCommerce.Tools;
 
 namespace VirtoCommerce.Storefront
@@ -68,6 +71,7 @@ namespace VirtoCommerce.Storefront
             services.AddSingleton<IUrlBuilder, UrlBuilder>();
             services.AddSingleton<IStorefrontUrlBuilder, StorefrontUrlBuilder>();
 
+            services.AddSingleton<ICountriesService, JsonCountriesService>(provider => new JsonCountriesService(provider.GetService<ICacheManager<object>>(), HostingEnvironment.MapPath("~/countries.json")));
             services.AddSingleton<IStoreService, StoreService>();
             services.AddSingleton<ICurrencyService, CurrencyService>();
             services.AddSingleton<ISlugRouteService, SlugRouteService>();
@@ -87,7 +91,6 @@ namespace VirtoCommerce.Storefront
             services.AddSingleton<IStaticContentService, StaticContentService>();
             services.AddSingleton<IMenuLinkListService, MenuLinkListServiceImpl>();
             services.AddSingleton<IStaticContentItemFactory, StaticContentItemFactory>();
-            services.AddSingleton<IApiChangesWatcher, ApiChangesWatcher>();
             services.AddSingleton<AssociationRecommendationsProvider>();
             services.AddSingleton<CognitiveRecommendationsProvider>();
             services.AddSingleton<IRecommendationProviderFactory, RecommendationProviderFactory>(provider => new RecommendationProviderFactory(provider.GetService<AssociationRecommendationsProvider>(), provider.GetService<CognitiveRecommendationsProvider>()));
@@ -103,11 +106,7 @@ namespace VirtoCommerce.Storefront
                 Configuration.GetSection("VirtoCommerce:Endpoint").Bind(options);
             });
 
-            services.AddSingleton<ICountriesService, FileSystemCountriesService>();
-            services.Configure<FileSystemCountriesOptions>(options =>
-            {
-               options.FilePath = HostingEnvironment.MapPath("~/countries.json");
-            });
+            services.AddCache(HostingEnvironment);
 
             var contentConnectionString = BlobConnectionString.Parse(Configuration.GetConnectionString("ContentConnectionString"));
             if (contentConnectionString.Provider.EqualsInvariant("AzureBlobStorage"))
@@ -130,10 +129,32 @@ namespace VirtoCommerce.Storefront
             services.AddSingleton<IUserStore<CustomerInfo>, CustomUserStore>();
             services.AddSingleton<IUserPasswordStore<CustomerInfo>, CustomUserStore>();
             services.AddSingleton<IUserEmailStore<CustomerInfo>, CustomUserStore>();
+            services.AddSingleton<IUserLoginStore<CustomerInfo>, CustomUserStore>();
             services.AddSingleton<IUserClaimsPrincipalFactory<CustomerInfo>, CustomerInfoPrincipalFactory>();
             services.AddScoped<UserManager<CustomerInfo>, CustomUserManager>();
 
-            services.AddAuthentication();
+            //services.AddAuthentication();
+            var auth = services.AddAuthentication() //CookieAuthenticationDefaults.AuthenticationScheme
+                .AddCookie(options =>
+                {
+                    options.LoginPath = new PathString("/Account/Login");
+                    options.Cookie.Name = StorefrontConstants.AuthenticationCookie;
+                });
+
+            var a = Configuration["Authentication:Facebook:AppId"];
+
+            auth.AddFacebook(facebookOptions =>
+            {
+                facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
+                facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+            });
+
+            auth.AddGoogle(googleOptions =>
+             {
+                 googleOptions.ClientId = Configuration["Authentication:Google:ClientId"];
+                 googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+             });
+
             services.AddIdentity<CustomerInfo, IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 8;
@@ -162,13 +183,12 @@ namespace VirtoCommerce.Storefront
 
             var snapshotProvider = services.BuildServiceProvider();
             //Register JSON converters to 
-            services.AddMvc(options =>
+            services.AddMvc(options=>
             {
-                options.CacheProfiles.Add("Default", new CacheProfile()
-                {
-                    Duration = (int)TimeSpan.FromHours(1).TotalSeconds,
-                    VaryByHeader = "host"
-                });
+                options.CacheProfiles.Add("Default", new CacheProfile() {
+                                                           Duration = 60,
+                                                           VaryByHeader = "host"
+                                                       });
             }).AddJsonOptions(options =>
             {
                 options.SerializerSettings.Converters.Add(new CartTypesJsonConverter(snapshotProvider.GetService<IWorkContextAccessor>()));
@@ -180,7 +200,8 @@ namespace VirtoCommerce.Storefront
             {
                 options.ViewEngines.Add(snapshotProvider.GetService<ILiquidViewEngine>());
             });
-            
+
+
             //Register event handlers via reflection
             services.RegisterAssembliesEventHandlers(typeof(Startup));
 

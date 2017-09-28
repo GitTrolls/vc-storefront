@@ -17,19 +17,16 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
     {
         public virtual Page ToLiquidPage(StorefrontModel.StaticContent.ContentItem contentItem)
         {
-            var result = new Page
-            {
-                Author = contentItem.Author,
-                Description = contentItem.Description,
-                Priority = contentItem.Priority,
-                Title = contentItem.Title,
-                Type = contentItem.Type,
-                Url = contentItem.Url,
-                Handle = contentItem.Url,
-                Content = contentItem.Content,
+            var result = new Page();
+            result.Author = contentItem.Author;
+            result.Description = contentItem.Description;
+            result.Priority = contentItem.Priority;
+            result.Title = contentItem.Title;
+            result.Type = contentItem.Type;
+            result.Url = contentItem.Url;
+            result.Handle = contentItem.Url;
 
-                MetaInfo = new MetafieldsCollection("meta_fields", new Dictionary<string, object>())
-            };
+            result.MetaInfo = new MetafieldsCollection("meta_fields", new Dictionary<string, object>());
             foreach (var metaInfoProp in contentItem.MetaInfo)
             {
                 result.MetaInfo.Add(metaInfoProp.Key, metaInfoProp.Value);
