@@ -88,7 +88,7 @@ namespace VirtoCommerce.Storefront.Authentication
         public async Task<CustomerInfo> FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
             var cacheKey = CacheKey.With(GetType(), "FindByIdAsync", userId);
-            var user = await _memoryCache.GetOrCreateAsync(cacheKey, async (cacheEntry) =>
+            var user = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
             {
                 cacheEntry.AddExpirationToken(UserStoreCacheRegion.CreateChangeToken());
                 return await _commerceCoreApi.GetUserByIdAsync(userId, cancellationToken);
@@ -104,7 +104,7 @@ namespace VirtoCommerce.Storefront.Authentication
         public async Task<CustomerInfo> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
             var cacheKey = CacheKey.With(GetType(), "FindByNameAsync", normalizedUserName);
-            var user = await _memoryCache.GetOrCreateAsync(cacheKey, async (cacheEntry) =>
+            var user = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
             {
                 cacheEntry.AddExpirationToken(UserStoreCacheRegion.CreateChangeToken());
                 return await _commerceCoreApi.GetUserByNameAsync(normalizedUserName, cancellationToken);
@@ -258,55 +258,14 @@ namespace VirtoCommerce.Storefront.Authentication
             return Task.FromResult(logins);
         }
 
-        public async Task<CustomerInfo> FindByLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken)
+        public Task<CustomerInfo> FindByLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken)
         {
-            var cacheKey = CacheKey.With(GetType(), "FindByLoginAsync", loginProvider, providerKey);
-            var user = await _memoryCache.GetOrCreateAsync(cacheKey, async (cacheEntry) =>
-            {
-                cacheEntry.AddExpirationToken(UserStoreCacheRegion.CreateChangeToken());
-                return await _commerceCoreApi.GetUserByLoginAsync(loginProvider, providerKey);
-            });
-
-            if (user != null)
-            {
-                return await GetContactInfoForPlatformUserAsync(user);
-            }
-            return null;
+            throw new NotImplementedException();
         }
 
-        public async Task AddLoginAsync(CustomerInfo user, UserLoginInfo login, CancellationToken cancellationToken)
+        public Task AddLoginAsync(CustomerInfo user, UserLoginInfo login, CancellationToken cancellationToken)
         {
-            var newUser = new securityDto.ApplicationUserExtended
-            {
-                Email = user.Email,
-                UserName = user.UserName,
-                UserType = "Customer",
-                StoreId = user.StoreId,
-                Logins = new List<securityDto.ApplicationUserLogin>
-                    {
-                        new securityDto.ApplicationUserLogin
-                        {
-                            LoginProvider = login.LoginProvider,
-                            ProviderKey = login.ProviderKey
-                        }
-                    }
-            };
-            var result = await _commerceCoreApi.CreateAsync(newUser);
-
-            if (result.Succeeded == true)
-            {
-                var storefrontUser = await _commerceCoreApi.GetUserByNameAsync(user.UserName);
-
-                user.Id = storefrontUser.Id;
-                user.IsRegisteredUser = true;
-                user.MemberType = "Contact";
-                user.FullName = user.FullName;
-                user.AllowedStores = storefrontUser.AllowedStores;
-                await _customerService.CreateCustomerAsync(user);
-            }
-
-            var cacheKey = CacheKey.With(GetType(), "FindByLoginAsync", login.LoginProvider, login.ProviderKey);
-            _memoryCache.Remove(cacheKey);
+            throw new NotImplementedException();
         }
 
         public Task RemoveLoginAsync(CustomerInfo user, string loginProvider, string providerKey, CancellationToken cancellationToken)

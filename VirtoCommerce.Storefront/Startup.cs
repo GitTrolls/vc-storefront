@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using VirtoCommerce.LiquidThemeEngine;
 using VirtoCommerce.Storefront.Authentication;
+using VirtoCommerce.Storefront.Authorization;
 using VirtoCommerce.Storefront.Binders;
 using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.DependencyInjection;
@@ -130,31 +132,17 @@ namespace VirtoCommerce.Storefront
             services.AddSingleton<IUserStore<CustomerInfo>, CustomUserStore>();
             services.AddSingleton<IUserPasswordStore<CustomerInfo>, CustomUserStore>();
             services.AddSingleton<IUserEmailStore<CustomerInfo>, CustomUserStore>();
-            services.AddSingleton<IUserLoginStore<CustomerInfo>, CustomUserStore>();
             services.AddSingleton<IUserClaimsPrincipalFactory<CustomerInfo>, CustomerInfoPrincipalFactory>();
             services.AddScoped<UserManager<CustomerInfo>, CustomUserManager>();
 
-            //services.AddAuthentication();
-            var auth = services.AddAuthentication() //CookieAuthenticationDefaults.AuthenticationScheme
-                .AddCookie(options =>
-                {
-                    options.LoginPath = new PathString("/Account/Login");                    
-                });
-
-            var a = Configuration["Authentication:Facebook:AppId"];
-
-            auth.AddFacebook(facebookOptions =>
+            services.AddAuthentication();
+            //Resource-based authorization that requires API permissions for some operations
+            services.AddSingleton<IAuthorizationHandler, StorefrontAuthorizationHandler>();
+            services.AddAuthorization(options =>
             {
-                facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
-                facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+                options.AddPolicy("CanImpersonate",
+                                  policy => policy.Requirements.Add(AuthorizationOperations.CanImpersonate));
             });
-
-            auth.AddGoogle(googleOptions =>
-             {
-                 googleOptions.ClientId = Configuration["Authentication:Google:ClientId"];
-                 googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
-             });
-
             services.AddIdentity<CustomerInfo, IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 8;
@@ -171,7 +159,8 @@ namespace VirtoCommerce.Storefront
                 options.Cookie.HttpOnly = true;
                 options.Cookie.Expiration = TimeSpan.FromDays(30);
                 options.LoginPath = "/Account/Login"; // If the LoginPath is not set here, ASP.NET Core will default to /Account/Login
-                options.LogoutPath = "/Account/Logout"; // If the LogoutPath is not set here, ASP.NET Core will default to /Account/Logout               
+                options.LogoutPath = "/Account/Logout"; // If the LogoutPath is not set here, ASP.NET Core will default to /Account/Logout 
+                options.AccessDeniedPath = "/error/AccessDenied";
                 options.SlidingExpiration = true;
             });
 

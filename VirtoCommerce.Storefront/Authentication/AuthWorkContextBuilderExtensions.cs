@@ -7,7 +7,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using VirtoCommerce.Storefront.Domain;
 using VirtoCommerce.Storefront.Infrastructure;
-using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Customer;
 
 namespace VirtoCommerce.Storefront.Authentication
@@ -18,15 +17,6 @@ namespace VirtoCommerce.Storefront.Authentication
         {
             var serviceProvider = builder.HttpContext.RequestServices;
             var signInManager = serviceProvider.GetRequiredService<SignInManager<CustomerInfo>>();
-
-            // Gets the collection of external login providers
-            var externalAuthTypes = (await signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-            builder.WorkContext.ExternalLoginProviders = externalAuthTypes.Select(at => new LoginProvider
-            {
-                AuthenticationType = at.Name,
-                Caption = at.DisplayName,
-                //Properties = at.Properties
-            }).ToList();
 
             var customer = new CustomerInfo
             {
