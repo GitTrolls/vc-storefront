@@ -20,11 +20,6 @@ namespace VirtoCommerce.Storefront.Controllers
                 }
             }
             return View(view);
-        }
-
-        public IActionResult AccessDenied()
-        {          
-            return View("AccessDenied");
-        }
+        }        
     }
 }
