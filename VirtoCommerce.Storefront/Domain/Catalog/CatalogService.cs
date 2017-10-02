@@ -27,7 +27,7 @@ namespace VirtoCommerce.Storefront.Domain
         private readonly ICatalogModuleProducts _productsApi;
         private readonly ICatalogModuleSearch _searchApi;
         private readonly IPricingService _pricingService;
-        private readonly ICustomerService _customerService;
+        private readonly IMemberService _customerService;
         private readonly ISubscriptionService _subscriptionService;
         private readonly IProductAvailabilityService _productAvailabilityService;
         private readonly IInventoryService _inventoryService;
@@ -35,7 +35,7 @@ namespace VirtoCommerce.Storefront.Domain
         private readonly IApiChangesWatcher _apiChangesWatcher;
 
         public CatalogService(IWorkContextAccessor workContextAccessor, ICatalogModuleCategories categoriesApi, ICatalogModuleProducts productsApi,
-                              ICatalogModuleSearch searchApi, IPricingService pricingService, ICustomerService customerService, ISubscriptionService subscriptionService,
+                              ICatalogModuleSearch searchApi, IPricingService pricingService, IMemberService customerService, ISubscriptionService subscriptionService,
                               IProductAvailabilityService productAvailabilityService, IInventoryService inventoryService, IMemoryCache memoryCache, IApiChangesWatcher changesWatcher)
         {
             _workContextAccessor = workContextAccessor;
@@ -109,8 +109,6 @@ namespace VirtoCommerce.Storefront.Domain
                     foreach (var product in allProducts)
                     {
                         product.IsAvailable = await _productAvailabilityService.IsAvailable(product, 1);
-                        product.IsBuyable = _productAvailabilityService.IsBuyable(product);
-                        product.IsInStock = await _productAvailabilityService.IsInStock(product);
                     }
                 }
             }
@@ -274,8 +272,6 @@ namespace VirtoCommerce.Storefront.Domain
                     foreach (var product in productsWithVariations)
                     {
                         product.IsAvailable = await _productAvailabilityService.IsAvailable(product, 1);
-                        product.IsBuyable = _productAvailabilityService.IsBuyable(product);
-                        product.IsInStock = await _productAvailabilityService.IsInStock(product);
                     }
                 }
                 return new CatalogSearchResult
