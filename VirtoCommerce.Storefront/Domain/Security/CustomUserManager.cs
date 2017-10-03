@@ -137,7 +137,7 @@ namespace VirtoCommerce.Storefront.Domain.Security
     }
 
     //Stub for UserManager
-    public class UserStoreStub : IUserStore<User>, IUserPasswordStore<User>, IUserEmailStore<User>, IUserLoginStore<User>
+    public class UserStoreStub : IUserStore<User>, IUserPasswordStore<User>
     {
         public Task AddLoginAsync(User user, UserLoginInfo login, CancellationToken cancellationToken)
         {
@@ -158,11 +158,6 @@ namespace VirtoCommerce.Storefront.Domain.Security
         {
         }
 
-        public Task<User> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<User> FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
@@ -176,27 +171,7 @@ namespace VirtoCommerce.Storefront.Domain.Security
         public Task<User> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
-        }
-
-        public Task<string> GetEmailAsync(User user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> GetEmailConfirmedAsync(User user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IList<UserLoginInfo>> GetLoginsAsync(User user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<string> GetNormalizedEmailAsync(User user, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(user.Email);
-        }
+        }        
 
         public Task<string> GetNormalizedUserNameAsync(User user, CancellationToken cancellationToken)
         {
@@ -219,26 +194,6 @@ namespace VirtoCommerce.Storefront.Domain.Security
         }
 
         public Task<bool> HasPasswordAsync(User user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task RemoveLoginAsync(User user, string loginProvider, string providerKey, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task SetEmailAsync(User user, string email, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task SetEmailConfirmedAsync(User user, bool confirmed, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task SetNormalizedEmailAsync(User user, string normalizedEmail, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
