@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using DotLiquid;
+using DotLiquid.Exceptions;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Web;
-using DotLiquid;
-using DotLiquid.Exceptions;
 
 namespace VirtoCommerce.LiquidThemeEngine.Tags
 {
@@ -79,9 +79,6 @@ namespace VirtoCommerce.LiquidThemeEngine.Tags
                     HttpUtility.HtmlAttributeEncode(formName));
 
                 RenderAll(NodeList, context, result);
-
-                // add anti forgery token
-                AntiforgeryTag.GenerateAndWriteTo(result);
 
                 result.WriteLine("</form>");
             }
