@@ -10,12 +10,6 @@ namespace VirtoCommerce.Storefront.Model.Security
 {
     public partial class User : Entity
     {
-        public User()
-        {
-            AllowedStores = new List<string>();
-            ExternalLogins = new List<ExternalUserLoginInfo>();
-        }
-
         /// <summary>
         /// Store id
         /// </summary>
@@ -56,9 +50,9 @@ namespace VirtoCommerce.Storefront.Model.Security
         /// <summary>
         /// List of stores which user can sign in
         /// </summary>
-        public IList<string> AllowedStores { get; set; }
+        public IList<string> AllowedStores { get; set; } = new List<string>();
 
-        public IList<ExternalUserLoginInfo> ExternalLogins { get; set; }
+        public IList<ExternalUserLoginInfo> ExternalLogins { get; set; } = new List<ExternalUserLoginInfo>();
 
         //Selected and persisted currency code
         public string SelectedCurrencyCode { get; set; }
