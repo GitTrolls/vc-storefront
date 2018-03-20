@@ -6,7 +6,6 @@ using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
-using VirtoCommerce.Storefront.Model.Lists;
 using VirtoCommerce.Storefront.Model.Marketing;
 using VirtoCommerce.Storefront.Model.Security;
 using VirtoCommerce.Storefront.Model.Stores;
@@ -544,7 +543,6 @@ namespace VirtoCommerce.Storefront.Domain
             result.OrganizationId = cartDto.OrganizationId;
             result.Status = cartDto.Status;
             result.StoreId = cartDto.StoreId;
-            result.Type = cartDto.Type;
        
             result.Customer = user;
 
@@ -601,6 +599,7 @@ namespace VirtoCommerce.Storefront.Domain
             return result;
         }
 
+
         public virtual cartDto.ShoppingCart ToShoppingCartDto(ShoppingCart cart)
         {
             var result = new cartDto.ShoppingCart();
@@ -615,7 +614,6 @@ namespace VirtoCommerce.Storefront.Domain
             result.OrganizationId = cart.OrganizationId;
             result.Status = cart.Status;
             result.StoreId = cart.StoreId;
-            result.Type = cart.Type;
 
             if (cart.Language != null)
             {

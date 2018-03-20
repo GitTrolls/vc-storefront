@@ -16,8 +16,6 @@ using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Common.Caching;
 using VirtoCommerce.Storefront.Model.Common.Exceptions;
-using VirtoCommerce.Storefront.Model.Lists;
-using VirtoCommerce.Storefront.Model.Lists.Services;
 using VirtoCommerce.Storefront.Model.Marketing;
 using VirtoCommerce.Storefront.Model.Marketing.Services;
 using VirtoCommerce.Storefront.Model.Quote;
@@ -30,7 +28,7 @@ using cartModel = VirtoCommerce.Storefront.AutoRestClients.CartModuleApi.Models;
 
 namespace VirtoCommerce.Storefront.Domain
 {
-    public class CartBuilder : IWishlistBuilder
+    public class CartBuilder : ICartBuilder
     {
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly ICartModule _cartApi;
@@ -69,32 +67,33 @@ namespace VirtoCommerce.Storefront.Domain
             Cart = cart;
         }
 
-        public void LoadOrCreateNewTransientCart(string cartName, Store store, User user, Language language, Currency currency, string type = null)
+        public void LoadOrCreateNewTransientCart(string cartName, Store store, User user, Language language, Currency currency)
         {
             Task.Factory.StartNew(() => LoadOrCreateNewTransientCartAsync(cartName, store, user, language, currency), CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default).Unwrap().GetAwaiter().GetResult();
         }
 
-        public virtual async Task LoadOrCreateNewTransientCartAsync(string cartName, Store store, User user, Language language, Currency currency, string type = null)
+        public virtual async Task LoadOrCreateNewTransientCartAsync(string cartName, Store store, User user, Language language, Currency currency)
         {
-            var cacheKey = CacheKey.With(GetType(), store.Id, cartName, user.Id, currency.Code, type);
+            var cacheKey = CacheKey.With(GetType(), store.Id, cartName, user.Id, currency.Code);
             var needReevaluate = false;
             Cart = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
-            {
-                needReevaluate = true;
+           {
+               needReevaluate = true;
 
-                var cartSearchCriteria = CreateCartSearchCriteria(cartName, store, user, language, currency, type);
-                var cartSearchResult = await _cartApi.SearchAsync(cartSearchCriteria);
-                var cartDto = cartSearchResult.Results.FirstOrDefault();
-                var cart = cartDto?.ToShoppingCart(currency, language, user) ?? CreateCart(cartName, store, user, language, currency, type);
+               var cartSearchCriteria = CreateCartSearchCriteria(cartName, store, user, language, currency);
+               var cartSearchResult = await _cartApi.SearchAsync(cartSearchCriteria);
 
-                //Load cart dependencies
-                await PrepareCartAsync(cart, store);
+               var cartDto = cartSearchResult.Results.FirstOrDefault();
+               var cart = cartDto?.ToShoppingCart(currency, language, user) ?? CreateCart(cartName, store, user, language, currency);
 
-                //Add expiration token for concrete cart instance
-                cacheEntry.AddExpirationToken(CartCacheRegion.CreateChangeToken(cart));
+               //Load cart dependencies
+               await PrepareCartAsync(cart, store);
 
-                return cart;
-            });
+               //Add expiration token for concrete cart instance
+               cacheEntry.AddExpirationToken(CartCacheRegion.CreateChangeToken(cart));
+
+               return cart;
+           });
 
             if (needReevaluate)
             {
@@ -256,9 +255,8 @@ namespace VirtoCommerce.Storefront.Domain
 
             //Reset primary keys for all aggregated entities before merge
             //To prevent insertions same Ids for target cart
-            //exclude user because it might be the current one
             var entities = cart.GetFlatObjectsListWithInterface<IEntity>();
-            foreach (var entity in entities.Where(x => !(x is User)).ToList())
+            foreach (var entity in entities)
             {
                 entity.Id = null;
             }
@@ -267,21 +265,13 @@ namespace VirtoCommerce.Storefront.Domain
             {
                 await AddLineItemAsync(lineItem);
             }
+            Cart.Coupon = cart.Coupon;
 
-            if (cart.Coupon != null)
-            {
-                Cart.Coupon = cart.Coupon;
-            }
+            Cart.Shipments.Clear();
+            Cart.Shipments = cart.Shipments;
 
-            foreach (var shipment in cart.Shipments)
-            {
-                await AddOrUpdateShipmentAsync(shipment);
-            }
-
-            foreach (var payment in cart.Payments)
-            {
-                await AddOrUpdatePaymentAsync(payment);
-            }
+            Cart.Payments.Clear();
+            Cart.Payments = cart.Payments;
         }
 
         public virtual async Task RemoveCartAsync()
@@ -457,9 +447,9 @@ namespace VirtoCommerce.Storefront.Domain
             await TakeCartAsync(cart);
         }
 
-        #endregion
+        #endregion      
 
-        protected virtual cartModel.ShoppingCartSearchCriteria CreateCartSearchCriteria(string cartName, Store store, User user, Language language, Currency currency, string type)
+        protected virtual cartModel.ShoppingCartSearchCriteria CreateCartSearchCriteria(string cartName, Store store, User user, Language language, Currency currency)
         {
             return new cartModel.ShoppingCartSearchCriteria
             {
@@ -467,11 +457,10 @@ namespace VirtoCommerce.Storefront.Domain
                 CustomerId = user.Id,
                 Name = cartName,
                 Currency = currency.Code,
-                Type = type
             };
         }
 
-        protected virtual ShoppingCart CreateCart(string cartName, Store store, User user, Language language, Currency currency, string type)
+        protected virtual ShoppingCart CreateCart(string cartName, Store store, User user, Language language, Currency currency)
         {
             var cart = new ShoppingCart(currency, language)
             {
@@ -480,7 +469,6 @@ namespace VirtoCommerce.Storefront.Domain
                 StoreId = store.Id,
                 Language = language,
                 Customer = user,
-                Type = type,
                 IsAnonymous = !user.IsRegisteredUser,
                 CustomerName = user.IsRegisteredUser ? user.UserName : StorefrontClaims.AnonymousUsername
             };

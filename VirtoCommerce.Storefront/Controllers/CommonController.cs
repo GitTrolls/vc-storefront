@@ -7,7 +7,6 @@ using VirtoCommerce.LiquidThemeEngine;
 using VirtoCommerce.Storefront.AutoRestClients.PlatformModuleApi;
 using VirtoCommerce.Storefront.AutoRestClients.StoreModuleApi;
 using VirtoCommerce.Storefront.Domain;
-using VirtoCommerce.Storefront.Domain.Lists;
 using VirtoCommerce.Storefront.Domain.Security;
 using VirtoCommerce.Storefront.Middleware;
 using VirtoCommerce.Storefront.Model;
@@ -53,7 +52,6 @@ namespace VirtoCommerce.Storefront.Controllers
             SubscriptionCacheRegion.ExpireRegion();
             SecurityCacheRegion.ExpireRegion();
             InventoryCacheRegion.ExpireRegion();
-            WishlistCacheRegion.ExpireRegion();
 
             return StoreFrontRedirect("~/");
         }

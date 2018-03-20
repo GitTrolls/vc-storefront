@@ -15,11 +15,5 @@ namespace VirtoCommerce.Storefront.Model.Lists
         /// </summary>
         [JsonProperty("listName")]
         public string ListName { get; set; }
-
-        /// <summary>
-        /// List type
-        /// </summary>
-        [JsonProperty("type")]
-        public string Type { get; set; }
     }
 }
