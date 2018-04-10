@@ -45,7 +45,6 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
 
         public ResetPassword ResetPassword { get; set; }
 
-        public UserRegistration UserRegistration { get; set; }
         /// <summary>
         /// Contains a collection of all of the links in your shop.
         /// You can access a linklist by calling its handle on linklists
@@ -114,6 +113,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         public Currency CurrentCurrency { get; set; }
 
         public Shop[] AllStores { get; set; }
+
+        public Role[] AvailableRoles { get; set; }
 
         public IMutablePagedList<Vendor> Vendors { get; set; }
 
