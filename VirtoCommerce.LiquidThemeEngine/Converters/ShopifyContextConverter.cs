@@ -160,10 +160,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 
             if (workContext.ContactUsForm != null)
             {
-                result.Form = new Form
-                {
-                    Properties = workContext.ContactUsForm.AsDictionary().ToDictionary(x => x.Key, x => (object)(x.Value != null ? string.Join(", ", x.Value) : string.Empty))
-                };
+                result.Form = workContext.ContactUsForm.ToShopifyModel();
             }
 
             if (workContext.ResetPassword != null)
@@ -178,24 +175,28 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             }
             if (workContext.UserRegistration != null)
             {
-                result.Form = new Form
+                var userRegistration = workContext.UserRegistration;
+                result.UserRegistration = new UserRegistration
                 {
-                    Email = workContext.UserRegistration.Email,
-                    Properties = workContext.UserRegistration.AsDictionary()
+                    Address = userRegistration.Address?.ToShopifyModel(),
+                    Email = userRegistration.Email,
+                    Token = userRegistration.Token,
+                    FirstName = userRegistration.FirstName,
+                    LastName = userRegistration.LastName,
+                    OrganizationId = userRegistration.OrganizationId,
+                    Name = userRegistration.Name,
+                    OrganizationName = userRegistration.OrganizationName,
+                    Role = userRegistration.Role,
+                    StoreId = userRegistration.StoreId,
+                    UserName = userRegistration.UserName,
+                    Type = userRegistration.Type
                 };
-                if(workContext.UserRegistration.Address != null)
-                {
-                    result.Form.Properties["Address"] = workContext.UserRegistration.Address.ToShopifyModel();
-                }
             }
 
-            if (workContext.UserLogin != null)
-            {
-                result.Form = new Form
-                {
-                    Properties = workContext.UserLogin.AsDictionary()
-                };
-            }
+            //if (workContext.Login != null)
+            //{
+            //    result.Form = workContext.Login.ToShopifyModel();
+            //}
 
             if (workContext.StorefrontNotification != null)
             {
