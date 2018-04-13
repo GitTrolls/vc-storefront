@@ -4,20 +4,16 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using VirtoCommerce.Storefront.AutoRestClients.CoreModuleApi;
-using VirtoCommerce.Storefront.AutoRestClients.PlatformModuleApi;
-using VirtoCommerce.Storefront.Domain;
-using VirtoCommerce.Storefront.Domain.Common;
 using VirtoCommerce.Storefront.Domain.Security;
-using VirtoCommerce.Storefront.Domain.Security.Notifications;
-using VirtoCommerce.Storefront.Extensions;
-using VirtoCommerce.Storefront.Infrastructure;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Common.Events;
 using VirtoCommerce.Storefront.Model.Security;
 using VirtoCommerce.Storefront.Model.Security.Events;
+using VirtoCommerce.Storefront.Extensions;
+using VirtoCommerce.Storefront.Infrastructure;
+using Microsoft.Extensions.Options;
 using VirtoCommerce.Storefront.Model.Security.Specifications;
 
 namespace VirtoCommerce.Storefront.Controllers
@@ -30,12 +26,11 @@ namespace VirtoCommerce.Storefront.Controllers
         private readonly IStorefrontSecurity _commerceCoreApi;
         private readonly IStorefrontUrlBuilder _urlBuilder;
         private readonly StorefrontOptions _options;
-        private readonly INotifications _platformNotificationApi;
-
+        
         private readonly string[] _firstNameClaims = { ClaimTypes.GivenName, "urn:github:name", ClaimTypes.Name };
 
         public AccountController(IWorkContextAccessor workContextAccessor, IStorefrontUrlBuilder urlBuilder, SignInManager<User> signInManager,
-            IEventPublisher publisher, IStorefrontSecurity commerceCoreApi, INotifications platformNotificationApi, IOptions<StorefrontOptions> options)
+            IEventPublisher publisher, IStorefrontSecurity commerceCoreApi, IOptions<StorefrontOptions> options)
             : base(workContextAccessor, urlBuilder)
         {
             _signInManager = signInManager;
@@ -43,7 +38,6 @@ namespace VirtoCommerce.Storefront.Controllers
             _commerceCoreApi = commerceCoreApi;
             _urlBuilder = urlBuilder;
             _options = options.Value;
-            _platformNotificationApi = platformNotificationApi;
         }
 
         //GET: /account
@@ -82,120 +76,51 @@ namespace VirtoCommerce.Storefront.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register([FromForm] UserRegistration registration)
+        public async Task<ActionResult> Register([FromForm] Register formModel)
         {
-            TryValidateModel(registration);
+            var user = formModel.ToUser();
+            user.StoreId = WorkContext.CurrentStore.Id;
 
-            if (ModelState.IsValid)
+            var result = await _signInManager.UserManager.CreateAsync(user, formModel.Password);
+            if (result.Succeeded == true)
             {
-                //Register user
-                var user = registration.ToUser();
-                user.Contact = registration.ToContact();
-                user.StoreId = WorkContext.CurrentStore.Id;
-
-                var result = await _signInManager.UserManager.CreateAsync(user, registration.Password);
-                if (result.Succeeded == true)
+                user = await _signInManager.UserManager.FindByNameAsync(user.UserName);
+                await _publisher.Publish(new UserRegisteredEvent(WorkContext, user, formModel.ToUserRegistrationInfo()));
+                await _signInManager.SignInAsync(user, isPersistent: true);
+                await _publisher.Publish(new UserLoginEvent(WorkContext, user));
+                if (_options.SendAccountConfirmation)
                 {
-                    user = await _signInManager.UserManager.FindByNameAsync(user.UserName);
-                    await _publisher.Publish(new UserRegisteredEvent(WorkContext, user, registration));
-                    await _signInManager.SignInAsync(user, isPersistent: true);
-                    await _publisher.Publish(new UserLoginEvent(WorkContext, user));
-                    if (_options.SendAccountConfirmation)
-                    {
-                        var token = await _signInManager.UserManager.GenerateEmailConfirmationTokenAsync(user);
-                        var callbackUrl = Url.Action("ConfirmEmail", "Account", new { UserId = user.Id, Token = token }, protocol: Request.Scheme);
-                        var emailConfirmationNotification = new EmailConfirmationNotification(WorkContext.CurrentStore.Id, WorkContext.CurrentLanguage)
-                        {
-                            Url = callbackUrl,
-                            Sender = WorkContext.CurrentStore.Email,
-                            Recipient = GetUserEmail(user)
-                        };
-                        await _platformNotificationApi.SendNotificationAsync(emailConfirmationNotification.ToNotificationDto());
-                    }
-                    return StoreFrontRedirect("~/account");
+                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { UserId = user.Id, Code = "token" }, protocol: Request.Scheme);
+                    await _commerceCoreApi.SendEmailConfirmationAsync(user.Id, WorkContext.CurrentStore.Id, WorkContext.CurrentLanguage.CultureName, callbackUrl);
                 }
-                else
+                return StoreFrontRedirect("~/account");
+            }
+            else
+            {
+                foreach (var error in result.Errors)
                 {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError("form", error.Description);
-                    }
+                    ModelState.AddModelError("form", error.Description);
                 }
             }
-            WorkContext.UserRegistration = registration;
+
             return View("customers/register", WorkContext);
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult ConfirmInvitation(string organizationId, string email, string token)
-
+        public async Task<ActionResult> ConfirmEmail(string code)
         {
-            WorkContext.UserRegistration = new UserRegistrationByInvitation
-            {
-                Email = email,
-                OrganizationId = organizationId,
-                Token = token
-            };
-            return View("customers/confirm_invitation");
-        }
+            var result = await _commerceCoreApi.ConfirmEmailAsync(WorkContext.CurrentUser.Id, code);
 
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ConfirmInvitation([FromForm] UserRegistrationByInvitation register)
-        {   
-            var result = IdentityResult.Success;
-            TryValidateModel(register);
-
-            if (ModelState.IsValid)
-            {
-                var user = await _signInManager.UserManager.FindByEmailAsync(register.Email);
-                if (user != null)
-                {
-                    if(user.UserName != register.UserName)
-                    {
-                        user.UserName = register.UserName;
-                    }
-                    result = await _signInManager.UserManager.ResetPasswordAsync(user, register.Token, register.Password);
-                    if (result.Succeeded)
-                    {
-                        user.Contact = register.ToContact();
-                        user.Contact.OrganizationId = register.OrganizationId;
-                        result = await _signInManager.UserManager.UpdateAsync(user);
-                        if (result.Succeeded)
-                        {
-                            await _publisher.Publish(new UserRegisteredEvent(WorkContext, user, register));
-                            await _signInManager.SignInAsync(user, isPersistent: true);
-                            await _publisher.Publish(new UserLoginEvent(WorkContext, user));
-                        }
-                        return View("customers/confirm_invitation_done", WorkContext);
-                    }
-                }
-            }
-
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
-
-            WorkContext.UserRegistration = register;
-            return View("customers/confirm_invitation");
-        }
-
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<ActionResult> ConfirmEmail(string token)
-        {
-            var result = await _signInManager.UserManager.ConfirmEmailAsync(WorkContext.CurrentUser, token);
-            if (!result.Succeeded)
+            if (!result.Succeeded.HasValue || !result.Succeeded.Value)
             {
                 return View("error");
             }
+
             return View("confirmation-done");
         }
 
-        [Authorize(Policy = CanImpersonateAuthorizationRequirement.PolicyName)]
+        [Authorize(Policy = "CanImpersonate")]
         public async Task<IActionResult> ImpersonateUser(string userId)
         {
             var user = await _signInManager.UserManager.FindByNameAsync(User.Identity.Name);
@@ -223,8 +148,16 @@ namespace VirtoCommerce.Storefront.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login([FromForm] Login login, string returnUrl)
         {
-            TryValidateModel(login);
-            
+            if (string.IsNullOrWhiteSpace(login.Username))
+            {
+                ModelState.AddModelError("user_name", "must not be empty");
+            }
+
+            if (string.IsNullOrWhiteSpace(login.Password))
+            {
+                ModelState.AddModelError("password", "must not be empty");
+            }
+
             if (!ModelState.IsValid)
             {
                 return View("customers/login", WorkContext);
@@ -246,7 +179,9 @@ namespace VirtoCommerce.Storefront.Controllers
                 {
                     ModelState.AddModelError("form", "User cannot login to current store.");
                 }
+
             }
+            //TODO: Locked out not work. Need to add some API methods to support lockout data.
             if (loginResult.IsLockedOut)
             {
                 return View("lockedout", WorkContext);
@@ -258,7 +193,6 @@ namespace VirtoCommerce.Storefront.Controllers
             }
 
             ModelState.AddModelError("form", "Login attempt failed.");
-            WorkContext.UserLogin = login;
             return View("customers/login", WorkContext);
 
         }
@@ -280,6 +214,7 @@ namespace VirtoCommerce.Storefront.Controllers
             {
                 return new BadRequestResult();
             }
+
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(authType, Url.Action("ExternalLoginCallback", "Account", new { returnUrl = returnUrl }));
             return Challenge(properties, authType);
         }
@@ -337,14 +272,14 @@ namespace VirtoCommerce.Storefront.Controllers
             if (!externalLoginResult.Succeeded)
             {
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                var userRegistration = new UserRegistration
+                var registrationInfo = new UserRegistrationInfo
                 {
                     FirstName = loginInfo.Principal.FindFirstValue(_firstNameClaims, "unknown"),
                     LastName = loginInfo.Principal.FindFirstValue(ClaimTypes.Surname),
                     UserName = user.UserName,
                     Email = user.Email
                 };
-                await _publisher.Publish(new UserRegisteredEvent(WorkContext, user, userRegistration));
+                await _publisher.Publish(new UserRegisteredEvent(WorkContext, user, registrationInfo));
             }
             await _publisher.Publish(new UserLoginEvent(WorkContext, user));
 
@@ -366,19 +301,10 @@ namespace VirtoCommerce.Storefront.Controllers
             var user = await _signInManager.UserManager.FindByEmailAsync(formModel.Email);
             if (user != null)
             {
-                var token = await _signInManager.UserManager.GeneratePasswordResetTokenAsync(user);
-                var callbackUrl = Url.Action("ResetPassword", "Account", new { UserId = user.Id, Token = token }, protocol: Request.Scheme);
-                var resetPasswordEmailNotification = new ResetPasswordEmailNotification(WorkContext.CurrentStore.Id, WorkContext.CurrentLanguage)
-                {
-                    Url = callbackUrl,
-                    Sender = WorkContext.CurrentStore.Email,
-                    Recipient = GetUserEmail(user)
-                };
-                var sendingResult = await _platformNotificationApi.SendNotificationAsync(resetPasswordEmailNotification.ToNotificationDto());
-                if(sendingResult.IsSuccess != true)
-                {
-                    ModelState.AddModelError("form", sendingResult.ErrorMessage);
-                }
+                var callbackUrl = Url.Action("ResetPassword", "Account",
+                    new { UserId = user.Id, Code = "token" }, protocol: Request.Scheme);
+                //TODO: Need to change storefront security API to support to do reset password token generation  via ASP.NET UserManager 
+                await _commerceCoreApi.GenerateResetPasswordTokenAsync(user.Id, WorkContext.CurrentStore.Id, WorkContext.CurrentLanguage.CultureName, callbackUrl);
             }
             else
             {
@@ -390,9 +316,9 @@ namespace VirtoCommerce.Storefront.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult> ResetPassword(string token, string userId)
+        public async Task<ActionResult> ResetPassword(string code, string userId)
         {
-            if (string.IsNullOrEmpty(token) && string.IsNullOrEmpty(userId))
+            if (string.IsNullOrEmpty(code) && string.IsNullOrEmpty(userId))
             {
                 WorkContext.ErrorMessage = "Error in URL format";
 
@@ -407,7 +333,7 @@ namespace VirtoCommerce.Storefront.Controllers
             }
             WorkContext.ResetPassword = new ResetPassword
             {
-                Token = token,
+                Token = code,
                 Email = user.Email
             };
             return View("customers/reset_password", WorkContext);
@@ -463,20 +389,6 @@ namespace VirtoCommerce.Storefront.Controllers
                 ModelState.AddModelError("form", result.Errors.FirstOrDefault()?.Description);
                 return View("customers/account", WorkContext);
             }
-        }
-
-        private string GetUserEmail(User user)
-        {
-            string email = null;
-            if (user != null)
-            {
-                email = user.Email ?? user.UserName;
-                if (user.Contact != null)
-                {
-                    email = user.Contact?.Email ?? email;
-                }
-            }
-            return email;
         }
     }
 }

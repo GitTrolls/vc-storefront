@@ -160,10 +160,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 
             if (workContext.ContactUsForm != null)
             {
-                result.Form = new Form
-                {
-                    Properties = workContext.ContactUsForm.AsDictionary().ToDictionary(x => x.Key, x => (object)(x.Value != null ? string.Join(", ", x.Value) : string.Empty))
-                };
+                result.Form = workContext.ContactUsForm.ToShopifyModel();
             }
 
             if (workContext.ResetPassword != null)
@@ -176,26 +173,10 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                     Token = workContext.ResetPassword.Token
                 };
             }
-            if (workContext.UserRegistration != null)
-            {
-                result.Form = new Form
-                {
-                    Email = workContext.UserRegistration.Email,
-                    Properties = workContext.UserRegistration.AsDictionary()
-                };
-                if(workContext.UserRegistration.Address != null)
-                {
-                    result.Form.Properties["Address"] = workContext.UserRegistration.Address.ToShopifyModel();
-                }
-            }
-
-            if (workContext.UserLogin != null)
-            {
-                result.Form = new Form
-                {
-                    Properties = workContext.UserLogin.AsDictionary()
-                };
-            }
+            //if (workContext.Login != null)
+            //{
+            //    result.Form = workContext.Login.ToShopifyModel();
+            //}
 
             if (workContext.StorefrontNotification != null)
             {
@@ -226,15 +207,6 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 //Populate current page number
                 result.CurrentPage = workContext.PageNumber ?? 1;
                 result.PageSize = workContext.PageSize ?? 0;
-            }
-
-            if (workContext.AvailableRoles != null)
-            {
-                result.AvailableRoles = workContext.AvailableRoles.Select(x => new Role
-                {
-                    Id = x.Id,
-                    Name = x.Name
-                }).ToArray();
             }
 
             return result;

@@ -144,23 +144,18 @@ namespace VirtoCommerce.Storefront
             services.AddScoped<UserManager<User>, CustomUserManager>();
 
             //Resource-based authorization that requires API permissions for some operations
-            services.AddSingleton<IAuthorizationHandler, CanImpersonateAuthorizationHandler>();
-            services.AddSingleton<IAuthorizationHandler, CanReadContentItemAuthorizationHandler>();
-            // register the AuthorizationPolicyProvider which dynamically registers authorization policies for each permission defined in the platform 
-            services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
-            //Storefront authorization handler for policy based on permissions 
-            services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
-            services.AddSingleton<IAuthorizationHandler, CanEditOrganizationResourceAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, StorefrontAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, ContentItemAuthorizationHandler>();
+
             services.AddAuthorization(options =>
             {
-                options.AddPolicy(CanImpersonateAuthorizationRequirement.PolicyName,
-                                  policy => policy.Requirements.Add(new CanImpersonateAuthorizationRequirement()));
-                options.AddPolicy(CanReadContentItemAuthorizeRequirement.PolicyName,
-                                policy => policy.Requirements.Add(new CanReadContentItemAuthorizeRequirement()));
-                options.AddPolicy(CanEditOrganizationResourceAuthorizeRequirement.PolicyName,
-                               policy => policy.Requirements.Add(new CanEditOrganizationResourceAuthorizeRequirement()));
+                options.AddPolicy("CanImpersonate",
+                                  policy => policy.Requirements.Add(AuthorizationOperations.CanImpersonate));
+                options.AddPolicy("CanResetCache",
+                                policy => policy.Requirements.Add(AuthorizationOperations.CanResetCache));
+                options.AddPolicy("CanReadContentItem",
+                                policy => policy.Requirements.Add(new ContentItemAuthorizeRequirement()));
             });
-
 
             var auth = services.AddAuthentication();
 
@@ -203,9 +198,6 @@ namespace VirtoCommerce.Storefront
                 options.Password.RequireUppercase = true;
                 options.Password.RequireDigit = false;
                 options.Password.RequireNonAlphanumeric = false;
-                options.Lockout.MaxFailedAccessAttempts = 5;
-                options.Lockout.AllowedForNewUsers = true;
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
             }).AddDefaultTokenProviders();
 
             services.ConfigureApplicationCookie(options =>
@@ -238,7 +230,6 @@ namespace VirtoCommerce.Storefront
                 options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
                 options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                options.SerializerSettings.MissingMemberHandling = MissingMemberHandling.Ignore;
                 options.SerializerSettings.Converters.Add(new CartTypesJsonConverter(snapshotProvider.GetService<IWorkContextAccessor>()));
                 options.SerializerSettings.Converters.Add(new MoneyJsonConverter(snapshotProvider.GetService<IWorkContextAccessor>()));
                 options.SerializerSettings.Converters.Add(new CurrencyJsonConverter(snapshotProvider.GetService<IWorkContextAccessor>()));
@@ -306,8 +297,6 @@ namespace VirtoCommerce.Storefront
             {
                 routes.MapStorefrontRoutes();
             });
-
-            app.UseStorefrontRoles();
 
 
         }

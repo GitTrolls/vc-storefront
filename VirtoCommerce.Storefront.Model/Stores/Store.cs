@@ -19,7 +19,6 @@ namespace VirtoCommerce.Storefront.Model.Stores
             DynamicProperties = new List<DynamicProperty>();
             Settings = new List<SettingEntry>();
             FulfilmentCenters = new List<FulfillmentCenter>();
-            TrustedGroups = new List<string>();
         }
 
         public string Name { get; set; }

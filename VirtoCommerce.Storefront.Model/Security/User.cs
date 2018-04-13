@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using VirtoCommerce.Storefront.Model.Common;
@@ -16,6 +15,7 @@ namespace VirtoCommerce.Storefront.Model.Security
     {
         public User()
         {
+            AllowedStores = new List<string>();
             ExternalLogins = new List<ExternalUserLoginInfo>();
         }
 
@@ -27,47 +27,21 @@ namespace VirtoCommerce.Storefront.Model.Security
         /// Security account user name
         /// </summary>
         public string UserName { get; set; }
-        public string NormalizedUserName { get; set; }
+        public string UserNameNormalized => UserName?.ToUpper();
         public string Password { get; set; }
-        [JsonIgnore]
-        [IgnoreDataMember]
-        public string PasswordHash { get; set; }
-        [JsonIgnore]
-        [IgnoreDataMember]
-        public string SecurityStamp { get; set; }
+
         public string PhoneNumber { get; set; }
         public bool PhoneNumberConfirmed { get; set; }
         /// <summary>
         /// Returns the email address of the customer.
         /// </summary>
         public string Email { get; set; }
-        public string NormalizedEmail { get; set; }
-
-        public bool EmailConfirmed { get; set; }
+        public string EmailNormalized => Email?.ToUpper();
 
         public string DefaultLanguage { get; set; }
 
         public bool TwoFactorEnabled { get; set; }
-        public bool IsLockedOut
-        {
-            get
-            {
-                return LockoutEndDateUtc != null ? LockoutEndDateUtc.Value > DateTime.UtcNow : false;
-            }
-        }
 
-        /// <summary>
-        ///  Used to record failures for the purposes of lockout
-        /// </summary>
-        public virtual int AccessFailedCount { get; set; }
-        /// <summary>
-        /// Is lockout enabled for this user
-        /// </summary>
-        public virtual bool LockoutEnabled { get; set; }
-        /// <summary>
-        /// DateTime in UTC when lockout ends, any time in the past is considered not locked out.
-        /// </summary>
-        public virtual DateTime? LockoutEndDateUtc { get; set; }
         /// <summary>
         /// Returns true if user authenticated  returns false if it anonymous. 
         /// </summary>
@@ -76,8 +50,6 @@ namespace VirtoCommerce.Storefront.Model.Security
         /// The flag indicates that the user is an administrator 
         /// </summary>
         public bool IsAdministrator { get; set; }
-        public string UserType { get; set; }
-        public string UserState { get; set; }
         /// <summary>
         /// The user ID of an operator who has loggen in on behalf of a customer
         /// </summary>
@@ -87,8 +59,11 @@ namespace VirtoCommerce.Storefront.Model.Security
         /// </summary>
         public string OperatorUserName { get; set; }
 
-        [JsonIgnore]
-        [IgnoreDataMember]
+        /// <summary>
+        /// List of stores which user can sign in
+        /// </summary>
+        public IList<string> AllowedStores { get; set; }
+
         public IList<ExternalUserLoginInfo> ExternalLogins { get; set; }
 
         //Selected and persisted currency code
@@ -98,27 +73,7 @@ namespace VirtoCommerce.Storefront.Model.Security
         /// <summary>
         /// Member associated with user 
         /// </summary>
-        public Contact Contact { get; set; }
-
-        /// <summary>
-        /// All user permissions
-        /// </summary>
-        public IEnumerable<string> Permissions { get; set; }
-
-        /// <summary>
-        /// Single user role
-        /// </summary>
-        public Role Role
-        {
-            get
-            {
-                return Roles?.FirstOrDefault();
-            }
-        }
-        /// <summary>
-        /// All user roles
-        /// </summary>
-        public IEnumerable<Role> Roles { get; set; }
+        public Lazy<Contact> Contact { get; set; }
 
         /// <summary>
         /// All user orders

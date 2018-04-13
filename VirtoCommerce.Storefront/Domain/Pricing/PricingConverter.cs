@@ -100,7 +100,7 @@ namespace VirtoCommerce.Storefront.Domain
             if (workContext.CurrentUser != null)
             {
                 retVal.CustomerId = workContext.CurrentUser.Id;
-                var contact = workContext.CurrentUser?.Contact;
+                var contact = workContext.CurrentUser?.Contact?.Value;
 
                 if (contact != null)
                 {

@@ -12,7 +12,7 @@ namespace VirtoCommerce.Storefront.JsonConverters
     public class UserBackwardCompatibilityJsonConverter : JsonConverter
     {
         private readonly JsonSerializerSettings _jsonSettings;
-        private static Type[] _knowTypes = new[] { typeof(User), typeof(UserRegistration)};
+        private static Type[] _knowTypes = new[] { typeof(User) };
 
         public UserBackwardCompatibilityJsonConverter(JsonSerializerSettings jsonSettings)
         {
@@ -51,7 +51,7 @@ namespace VirtoCommerce.Storefront.JsonConverters
 
         }
         public override bool CanWrite { get { return true; } }
-        public override bool CanRead { get { return true; } }
+        public override bool CanRead { get { return false; } }
 
         public override bool CanConvert(Type objectType)
         {
@@ -60,11 +60,7 @@ namespace VirtoCommerce.Storefront.JsonConverters
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            //Use serializer with your setting do not containing this converter to prevent infinite recursion calls.
-            serializer = JsonSerializer.Create(_jsonSettings);
-            var result = serializer.Deserialize(reader, objectType);
-
-            return result;
+            throw new NotImplementedException();
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
@@ -73,14 +69,12 @@ namespace VirtoCommerce.Storefront.JsonConverters
             //Use serializer with your setting do not containing this converter to prevent infinite recursion calls.
             serializer = JsonSerializer.Create(_jsonSettings);
             var result = JObject.FromObject(user, serializer);
-            var contact = user?.Contact;
+            var contact = user?.Contact?.Value;
 
             if (contact != null)
             {
                 var contactJson = JObject.FromObject(contact, serializer);
                 result.Merge(contactJson);
-                var restoreUserIdJson = JObject.FromObject(new { user.Id, user.Email } , serializer);
-                result.Merge(restoreUserIdJson);
             }
             result.WriteTo(writer);
         }

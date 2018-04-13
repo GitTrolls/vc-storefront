@@ -71,7 +71,7 @@ namespace VirtoCommerce.Storefront.Domain
                 retVal.Address = taxContext.Address.ToCoreAddressDto();
             }
 
-            retVal.Customer = taxContext?.Customer?.Contact?.ToCoreContactDto();
+            retVal.Customer = taxContext?.Customer?.Contact?.Value?.ToCoreContactDto();
             if (retVal.Customer != null)
             {
                 retVal.Customer.MemberType = "Contact";
@@ -112,7 +112,7 @@ namespace VirtoCommerce.Storefront.Domain
             result.Customer = workContext.CurrentUser;
             result.StoreTaxCalculationEnabled = workContext.CurrentStore.TaxCalculationEnabled;
 
-            result.Address = workContext.CurrentUser?.Contact?.DefaultBillingAddress;
+            result.Address = workContext.CurrentUser?.Contact?.Value?.DefaultBillingAddress;
 
             if (products != null)
             {
