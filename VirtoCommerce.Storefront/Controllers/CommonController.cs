@@ -33,7 +33,7 @@ namespace VirtoCommerce.Storefront.Controllers
         /// GET : /resetcache
         /// </summary>
         /// <returns></returns>
-        [Authorize(Policy = "CanResetCache")]
+        [Authorize(SecurityConstants.Permissions.CanResetCache)]
         public ActionResult ResetCache()
         {
 
@@ -67,7 +67,7 @@ namespace VirtoCommerce.Storefront.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> СontactForm([FromForm]ContactForm model, string viewName = "page.contact")
+        public async Task<ActionResult> ContactForm([FromForm]ContactForm model, string viewName = "page.contact")
         {
             //TODO: Test with exist contact us form 
             await _storeApi.SendDynamicNotificationAnStoreEmailAsync(model.ToServiceModel(WorkContext));

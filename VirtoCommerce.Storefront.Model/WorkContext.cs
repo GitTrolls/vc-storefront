@@ -38,6 +38,7 @@ namespace VirtoCommerce.Storefront.Model
       
         public NameValueCollection QueryString { get; set; }
 
+        
         /// <summary>
         /// Current user
         /// </summary>
@@ -117,6 +118,11 @@ namespace VirtoCommerce.Storefront.Model
         /// List of all active system currencies
         /// </summary>
         public IList<Currency> AllCurrencies { get; set; }
+
+        /// <summary>
+        /// List of all available roles
+        /// </summary>
+        public IEnumerable<Role> AvailableRoles { get; set; }
 
         public string ErrorMessage { get; set; }
         /// <summary>
@@ -222,6 +228,16 @@ namespace VirtoCommerce.Storefront.Model
         /// Gets or sets the dictionary of application settings
         /// </summary>
         public IDictionary<string, object> ApplicationSettings { get; set; }
+
+        /// <summary>
+        /// Represents user registration data required to bind entered user data in the register form
+        /// </summary>
+        public UserRegistration UserRegistration { get; set; }
+
+        /// <summary>
+        /// Represents user login data required to bind entered user data in the login form
+        /// </summary>
+        public Login UserLogin { get; set; }
 
         public ResetPassword ResetPassword { get; set; }
         /// <summary>
