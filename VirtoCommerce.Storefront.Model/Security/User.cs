@@ -87,6 +87,8 @@ namespace VirtoCommerce.Storefront.Model.Security
         /// </summary>
         public string OperatorUserName { get; set; }
 
+        [JsonIgnore]
+        [IgnoreDataMember]
         public IList<ExternalUserLoginInfo> ExternalLogins { get; set; }
 
         //Selected and persisted currency code
