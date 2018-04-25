@@ -7,7 +7,6 @@ using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Customer;
-using VirtoCommerce.Storefront.Model.Inventory;
 using VirtoCommerce.Storefront.Model.Order;
 using VirtoCommerce.Storefront.Model.Pricing;
 using VirtoCommerce.Storefront.Model.Quote;
@@ -39,7 +38,6 @@ namespace VirtoCommerce.Storefront.Model
       
         public NameValueCollection QueryString { get; set; }
 
-        
         /// <summary>
         /// Current user
         /// </summary>
@@ -119,11 +117,6 @@ namespace VirtoCommerce.Storefront.Model
         /// List of all active system currencies
         /// </summary>
         public IList<Currency> AllCurrencies { get; set; }
-
-        /// <summary>
-        /// List of all available roles
-        /// </summary>
-        public IEnumerable<Role> AvailableRoles { get; set; }
 
         public string ErrorMessage { get; set; }
         /// <summary>
@@ -206,6 +199,8 @@ namespace VirtoCommerce.Storefront.Model
         public CustomerOrder CurrentOrder { get; set; }
 
 
+        public ContactForm ContactUsForm { get; set; }
+
         public StorefrontNotification StorefrontNotification { get; set; }
 
         /// <summary>
@@ -224,22 +219,11 @@ namespace VirtoCommerce.Storefront.Model
         public IList<LoginProvider> ExternalLoginProviders { get; set; }
 
         /// <summary>
-        /// Current fulfillment center
-        /// </summary>
-        public FulfillmentCenter CurrentFulfillmentCenter { get; set; }
-
-        /// <summary>
-        ///  All available fulfillment centers 
-        /// </summary>
-        public IMutablePagedList<FulfillmentCenter> FulfillmentCenters { get; set; }
-
-        /// <summary>
         /// Gets or sets the dictionary of application settings
         /// </summary>
         public IDictionary<string, object> ApplicationSettings { get; set; }
 
-        //Represent the form data sent and processed on the server side and used for render result view and display errors
-        public object Form { get; set; }
+        public ResetPassword ResetPassword { get; set; }
         /// <summary>
         /// Current page number
         /// </summary>

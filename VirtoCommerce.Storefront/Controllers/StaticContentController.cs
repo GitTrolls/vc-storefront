@@ -10,7 +10,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using VirtoCommerce.Storefront.Domain.Security;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.StaticContent;
@@ -35,7 +34,7 @@ namespace VirtoCommerce.Storefront.Controllers
             if(page==null)
                 return NotFound();
 
-            var authorizationResult = await _authorizationService.AuthorizeAsync(User, page, CanReadContentItemAuthorizeRequirement.PolicyName);
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, page, "CanReadContentItem");
             if (!authorizationResult.Succeeded)
                 return Challenge();
 

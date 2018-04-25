@@ -7,13 +7,11 @@ using VirtoCommerce.Storefront.Model.StaticContent;
 
 namespace VirtoCommerce.Storefront.Domain.Security
 {
-    public class CanReadContentItemAuthorizeRequirement : IAuthorizationRequirement {
-        public const string PolicyName = "CanReadContentItem";
-    }
+    public class ContentItemAuthorizeRequirement : IAuthorizationRequirement { }
 
-    public class CanReadContentItemAuthorizationHandler : AuthorizationHandler<CanReadContentItemAuthorizeRequirement, ContentItem>
+    public class ContentItemAuthorizationHandler : AuthorizationHandler<ContentItemAuthorizeRequirement, ContentItem>
     {
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, CanReadContentItemAuthorizeRequirement requirement, ContentItem resource)
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, ContentItemAuthorizeRequirement requirement, ContentItem resource)
         {
             if (resource.Authorize)
             {

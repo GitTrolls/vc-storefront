@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model
 {
-    public partial class ContactForm : ValueObject
+    public partial class ContactForm
     {
         public ContactForm()
         {

@@ -10,7 +10,6 @@ using VirtoCommerce.Storefront.Domain;
 using VirtoCommerce.Storefront.Domain.Security;
 using VirtoCommerce.Storefront.Infrastructure;
 using VirtoCommerce.Storefront.Model;
-using VirtoCommerce.Storefront.Model.Security;
 
 namespace VirtoCommerce.Storefront.Middleware
 {
@@ -66,13 +65,12 @@ namespace VirtoCommerce.Storefront.Middleware
             await builder.WithBlogsAsync(workContext.CurrentStore, workContext.CurrentLanguage);
             await builder.WithPricelistsAsync();
             await builder.WithQuotesAsync(workContext.CurrentStore, workContext.CurrentUser, workContext.CurrentCurrency, workContext.CurrentLanguage);
+            await builder.WithUserContactAsync();
             await builder.WithUserOrdersAsync();
             await builder.WithUserQuotesAsync();
             await builder.WithUserSubscriptionsAsync();
             await builder.WithVendorsAsync(workContext.CurrentStore, workContext.CurrentLanguage);
-            await builder.WithFulfillmentCentersAsync();
 
-            workContext.AvailableRoles = SecurityConstants.Roles.AllRoles;
             _workContextAccessor.WorkContext = workContext;
 
 

@@ -1,8 +1,6 @@
 ﻿using DotLiquid;
 using PagedList.Core;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using VirtoCommerce.LiquidThemeEngine.Objects;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.StaticContent;
@@ -160,38 +158,25 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 result.Article = ToLiquidArticle(workContext.CurrentBlogArticle);
             }
 
-            if(workContext.Form != null)
+            if (workContext.ContactUsForm != null)
             {
-                result.Form = new Form
-                {
-                    Properties = new Dictionary<string, object>()
-                };
-                var formProps = workContext.Form.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
-                var formPropNames = formProps.Select(x => x.Name).ToArray();
-                foreach (var property in formProps)
-                {
-                    var propertyValue = property.GetValue(workContext.Form);
-                    if (propertyValue != null)
-                    {
-                        result.Form.Properties[Template.NamingConvention.GetMemberName(property.Name)] = propertyValue;
-                        if (typeof(IEntity).IsAssignableFrom(property.PropertyType) || typeof(IValueObject).IsAssignableFrom(property.PropertyType))
-                        {
-                            //For it is user type need to register this type as Drop in Liquid Template
-                            Template.RegisterSafeType(property.GetType(), formPropNames);
-                            var allChildEntities = propertyValue.GetFlatObjectsListWithInterface<IEntity>();
-                            foreach (var type in allChildEntities.Select(x => x.GetType()).Distinct())
-                            {
-                                Template.RegisterSafeType(type, formPropNames);            
-                            }
-                            var allChildLiquidObjects = propertyValue.GetFlatObjectsListWithInterface<IValueObject>();
-                            foreach (var type in allChildLiquidObjects.Select(x => x.GetType()).Distinct())
-                            {
-                                Template.RegisterSafeType(type, formPropNames);
-                            }
-                        }
-                    }
-                }
+                result.Form = workContext.ContactUsForm.ToShopifyModel();
             }
+
+            if (workContext.ResetPassword != null)
+            {
+                result.ResetPassword = new ResetPassword
+                {
+                    PasswordConfirmation = workContext.ResetPassword.PasswordConfirmation,
+                    Email = workContext.ResetPassword.Email,
+                    Password = workContext.ResetPassword.Password,
+                    Token = workContext.ResetPassword.Token
+                };
+            }
+            //if (workContext.Login != null)
+            //{
+            //    result.Form = workContext.Login.ToShopifyModel();
+            //}
 
             if (workContext.StorefrontNotification != null)
             {
@@ -224,28 +209,6 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 result.PageSize = workContext.PageSize ?? 0;
             }
 
-            if (workContext.AvailableRoles != null)
-            {
-                result.AvailableRoles = workContext.AvailableRoles.Select(x => new Role
-                {
-                    Id = x.Id,
-                    Name = x.Name
-                }).ToArray();
-            }
-
-            if(workContext.CurrentFulfillmentCenter != null)
-            {
-                result.FulfillmentCenter = workContext.CurrentFulfillmentCenter.ToShopifyModel();
-            }
-
-            if(workContext.FulfillmentCenters != null)
-            {
-                result.FulfillmentCenters = new MutablePagedList<FulfillmentCenter>((pageNumber, pageSize, sortInfos) =>
-                 {
-                     workContext.FulfillmentCenters.Slice(pageNumber, pageSize, sortInfos);
-                     return new StaticPagedList<FulfillmentCenter>(workContext.FulfillmentCenters.Select(x => x.ToShopifyModel()), workContext.FulfillmentCenters);
-                 }, workContext.FulfillmentCenters.PageNumber, workContext.FulfillmentCenters.PageSize);
-            }
             return result;
         }
     }

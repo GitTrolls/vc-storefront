@@ -8,7 +8,7 @@ using System.Web;
 
 namespace VirtoCommerce.Storefront.Model.Common
 {
-    public abstract class ValueObject : IValueObject
+    public abstract class ValueObject
     {
         private static readonly ConcurrentDictionary<Type, IReadOnlyCollection<PropertyInfo>> TypeProperties = new ConcurrentDictionary<Type, IReadOnlyCollection<PropertyInfo>>();
 

@@ -1,11 +1,12 @@
 ﻿using System.Threading.Tasks;
 using VirtoCommerce.Storefront.Model.Common.Events;
+using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Model.Customer.Services;
 using VirtoCommerce.Storefront.Model.Security.Events;
 
 namespace VirtoCommerce.Storefront.Domain.Customer.Handlers
 {
-    public  class SecurityEventsHandler : IEventHandler<UserDeletedEvent>
+    public class SecurityEventsHandler : IEventHandler<UserRegisteredEvent>
     {
         private readonly IMemberService _memberService;
         public SecurityEventsHandler(IMemberService memberService)
@@ -14,13 +15,27 @@ namespace VirtoCommerce.Storefront.Domain.Customer.Handlers
         }
 
         #region IEventHandler<UserRegisteredEvent> members
-      
-        public async Task Handle(UserDeletedEvent message)
+        public virtual async Task Handle(UserRegisteredEvent @event)
         {
-            if(message.User.ContactId != null)
+            //Need to create new contact related to new user with same Id
+            var registrationData = @event.RegistrationInfo;
+            var contact = new Contact
             {
-                await _memberService.DeleteContactAsync(message.User.ContactId);
+                Id = @event.User.Id,
+                Name = registrationData.UserName,
+                FullName = string.Join(" ", registrationData.FirstName, registrationData.LastName),
+                FirstName = registrationData.FirstName,
+                LastName = registrationData.LastName
+            };
+            if (!string.IsNullOrEmpty(registrationData.Email))
+            {
+                contact.Emails.Add(registrationData.Email);
             }
+            if (string.IsNullOrEmpty(contact.FullName) || string.IsNullOrWhiteSpace(contact.FullName))
+            {
+                contact.FullName = registrationData.Email;
+            }
+            await _memberService.CreateContactAsync(contact);
         }
         #endregion
     }

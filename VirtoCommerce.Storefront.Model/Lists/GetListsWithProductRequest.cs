@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace VirtoCommerce.Storefront.Model.Cart
+namespace VirtoCommerce.Storefront.Model.Lists
 {
-    public class GetCartsWithProductRequest
+    public class GetListsWithProductRequest
     {
         /// <summary>
         /// Gets or sets the value of lists names to search product in
@@ -11,7 +11,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public string[] ListNames { get; set; }
 
         /// <summary>
-        /// Cart type
+        /// list type
         /// </summary>
         [JsonProperty("type")]
         public string Type { get; set; }

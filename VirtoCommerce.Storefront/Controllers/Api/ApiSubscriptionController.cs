@@ -43,7 +43,7 @@ namespace VirtoCommerce.Storefront.Controllers.Api
             return Json(retVal);
         }
 
-        // POST: storefrontapi/subscriptions/cancel
+        // POST: storefrontapi/subscriptions/{number}/cancel
         [HttpPost]
         public async Task<ActionResult> CancelSubscription([FromBody] SubscriptionCancelRequest cancelRequest)
         {

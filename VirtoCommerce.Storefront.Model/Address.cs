@@ -1,5 +1,6 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+using System.Linq;
 using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model
@@ -7,6 +8,7 @@ namespace VirtoCommerce.Storefront.Model
     public partial class Address : ValueObject
     {
         public AddressType Type { get; set; }
+        public string Key { get; set; }
         public string Name { get; set; }
         public string Organization { get; set; }
         public string CountryCode { get; set; }
@@ -21,9 +23,7 @@ namespace VirtoCommerce.Storefront.Model
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
         public string LastName { get; set; }
-        [Phone]
         public string Phone { get; set; }
-        [EmailAddress]
         public string Email { get; set; }
 
         public override string ToString()

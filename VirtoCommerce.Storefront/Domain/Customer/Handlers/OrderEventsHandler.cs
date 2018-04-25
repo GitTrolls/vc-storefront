@@ -21,7 +21,7 @@ namespace VirtoCommerce.Storefront.Domain.Customer.Handlers
             if (@event.Order != null)
             {
                 //Add addresses to contact profile
-                var contact = @event.WorkContext.CurrentUser?.Contact;
+                var contact = @event.WorkContext.CurrentUser?.Contact?.Value;
                 if (contact != null)
                 {
                     var addresses = contact.Addresses

@@ -48,7 +48,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 }, user.QuoteRequests.PageNumber, user.QuoteRequests.PageSize);
             }
 
-            var contact = user?.Contact;
+            var contact = user?.Contact?.Value;
             if (contact != null)
             {
                 result.AcceptsMarketing = contact.AcceptsMarketing;
