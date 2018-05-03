@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Web;
@@ -60,26 +60,26 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
                 return null;
 
             var retVal = input.ToString();
-       
-            if (input is shopifyModel.Product product)
+            var product = input as shopifyModel.Product;
+            var image = input as shopifyModel.Image;
+            var variant = input as shopifyModel.Variant;
+            var collection = input as shopifyModel.Collection;
+
+            if (product != null)
             {
-                retVal = product.FeaturedImage?.Src;
+                retVal = product.FeaturedImage != null ? product.FeaturedImage.Src : null;
             }
-            if (input is shopifyModel.Image image)
+            if (image != null)
             {
                 retVal = image.Src;
             }
-            if (input is shopifyModel.Variant variant)
+            if (variant != null)
             {
-                retVal = variant.FeaturedImage?.Src;
+                retVal = variant.FeaturedImage != null ? variant.FeaturedImage.Src : null;
             }
-            if (input is shopifyModel.Collection collection)
+            if (collection != null)
             {
-                retVal = collection.Image?.Src;
-            }
-            if(input is shopifyModel.LineItem lineItem)
-            {
-                retVal = lineItem.Image?.Src;
+                retVal = collection.Image != null ? collection.Image.Src : null;
             }
 
             if (!string.IsNullOrEmpty(retVal))
