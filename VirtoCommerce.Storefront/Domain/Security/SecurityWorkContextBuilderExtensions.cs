@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -32,7 +32,7 @@ namespace VirtoCommerce.Storefront.Domain.Security
             };
 
             var identity = builder.HttpContext.User.Identity;
-            if (identity.IsAuthenticated && user.UserName != SecurityConstants.AnonymousUsername)
+            if (identity.IsAuthenticated)
             {
                 user = await signInManager.UserManager.FindByNameAsync(identity.Name);
                 //User has been removed from storage or current store is not allowed for signed in user
@@ -49,7 +49,6 @@ namespace VirtoCommerce.Storefront.Domain.Security
                 user = new User
                 {
                     Id = Guid.NewGuid().ToString(),
-                    SecurityStamp = Guid.NewGuid().ToString(),
                     UserName = SecurityConstants.AnonymousUsername,
                 };
                 //Workaround: Do not sign out for js map requests they are always coming without authentication

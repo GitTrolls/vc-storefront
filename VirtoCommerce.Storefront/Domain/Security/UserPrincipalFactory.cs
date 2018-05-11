@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -9,56 +9,66 @@ using VirtoCommerce.Storefront.Model.Security;
 
 namespace VirtoCommerce.Storefront.Domain.Security
 {
-    public class UserPrincipalFactory : UserClaimsPrincipalFactory<User>
+    public class UserPrincipalFactory : IUserClaimsPrincipalFactory<User>
     {
+        private readonly IdentityOptions _options;
 
-        public UserPrincipalFactory(UserManager<User> userManager, IOptions<IdentityOptions> optionsAccessor)
-            :base(userManager, optionsAccessor)
+        public UserPrincipalFactory(IOptions<IdentityOptions> optionsAccessor)
         {
+            _options = optionsAccessor?.Value ?? new IdentityOptions();
         }
 
-        protected override async Task<ClaimsIdentity> GenerateClaimsAsync(User user)
+        public Task<ClaimsPrincipal> CreateAsync(User user)
         {
-            var result = await base.GenerateClaimsAsync(user);
-                     
+            //Create first anonymous identity
+            var identity = new ClaimsIdentity();
+            if(user.IsRegisteredUser)
+            {
+                //https://stackoverflow.com/questions/45261732/user-identity-isauthenticated-always-false-in-net-core-custom-authentication
+                identity = new ClaimsIdentity("Registered");
+            }
+
+            identity.AddClaim(new Claim(ClaimTypes.Name, user.UserName));
+            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id));
+
             if (user.IsAdministrator)
             {
-                result.AddClaim(new Claim(ClaimTypes.Role, SecurityConstants.Roles.Administrator));
+                identity.AddClaim(new Claim(ClaimTypes.Role, SecurityConstants.Roles.Administrator));
             }
 
             if (user.SelectedCurrencyCode != null)
             {
-                result.AddClaim(new Claim(SecurityConstants.Claims.CurrencyClaimType, user.SelectedCurrencyCode));
+                identity.AddClaim(new Claim(SecurityConstants.Claims.CurrencyClaimType, user.SelectedCurrencyCode));
             }
 
             if (!string.IsNullOrEmpty(user.OperatorUserName))
             {
-                result.AddClaim(new Claim(SecurityConstants.Claims.OperatorUserNameClaimType, user.OperatorUserName));
+                identity.AddClaim(new Claim(SecurityConstants.Claims.OperatorUserNameClaimType, user.OperatorUserName));
             }
 
             if (!string.IsNullOrEmpty(user.OperatorUserId))
             {
-                result.AddClaim(new Claim(SecurityConstants.Claims.OperatorUserIdClaimType, user.OperatorUserId));
-                result.AddClaim(new Claim(SecurityConstants.Claims.OperatorUserNameClaimType, user.OperatorUserName));
+                identity.AddClaim(new Claim(SecurityConstants.Claims.OperatorUserIdClaimType, user.OperatorUserId));
+                identity.AddClaim(new Claim(SecurityConstants.Claims.OperatorUserNameClaimType, user.OperatorUserName));
             }
 
-            if (!user.Permissions.IsNullOrEmpty())
+            if(!user.Permissions.IsNullOrEmpty())
             {
-                foreach (var permission in user.Permissions)
+                foreach(var permission in user.Permissions)
                 {
-                    result.AddClaim(new Claim(SecurityConstants.Claims.PermissionClaimType, permission));
+                    identity.AddClaim(new Claim(SecurityConstants.Claims.PermissionClaimType, permission));
                 }
             }
             if (!user.Roles.IsNullOrEmpty())
             {
                 foreach (var role in user.Roles)
                 {
-                    result.AddClaim(new Claim(ClaimTypes.Role, role.Id));
+                    identity.AddClaim(new Claim(ClaimTypes.Role, role.Id));
                 }
             }
-        
-            return result;
+            var principal = new ClaimsPrincipal(identity);
+
+            return Task.FromResult(principal);
         }
-      
     }
 }

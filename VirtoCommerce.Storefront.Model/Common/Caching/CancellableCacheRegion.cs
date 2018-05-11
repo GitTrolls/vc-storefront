@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Primitives;
+using Microsoft.Extensions.Primitives;
 using System.Threading;
 
 namespace VirtoCommerce.Storefront.Model.Common.Caching
@@ -11,11 +11,11 @@ namespace VirtoCommerce.Storefront.Model.Common.Caching
        
         public static IChangeToken CreateChangeToken()
         {
-            if(_regionChangeToken == null)
+            if(_regionTokenSource == null)
             {
                 lock (_lock)
                 {
-                    if (_regionChangeToken == null)
+                    if (_regionTokenSource == null)
                     {
                         _regionTokenSource = new CancellationTokenSource();
                         _regionChangeToken = new CancellationChangeToken(_regionTokenSource.Token);
