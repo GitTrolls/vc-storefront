@@ -93,9 +93,9 @@ namespace VirtoCommerce.Storefront.Model.Order
         public string ShippingMethodCode { get; set; }
 
         /// <summary>
-        /// Gets or Sets FulfillmentLocationCode
+        /// Gets or Sets FulfilmentLocationCode
         /// </summary>
-        public string FulfillmentLocationCode { get; set; }
+        public string FulfilmentLocationCode { get; set; }
 
         /// <summary>
         /// Gets or Sets WeightUnit
