@@ -1,4 +1,4 @@
-﻿using VirtoCommerce.LiquidThemeEngine.Objects;
+using VirtoCommerce.LiquidThemeEngine.Objects;
 using StorefrontModel = VirtoCommerce.Storefront.Model.StaticContent;
 
 namespace VirtoCommerce.LiquidThemeEngine.Converters
@@ -19,8 +19,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             var retVal = new BlogSearch();
             retVal.Author = blogSearchCriteria.Author;
             retVal.Category = blogSearchCriteria.Category;
-            retVal.Tag = blogSearchCriteria.Tag;
-
+ 
             return retVal;
         }
     }
