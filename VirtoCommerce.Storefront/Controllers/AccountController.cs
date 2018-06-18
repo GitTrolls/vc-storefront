@@ -21,30 +21,28 @@ using VirtoCommerce.Storefront.Model.Security.Specifications;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
+    [Authorize]
     public class AccountController : StorefrontControllerBase
     {
         private readonly SignInManager<User> _signInManager;
         private readonly IEventPublisher _publisher;
         private readonly StorefrontOptions _options;
         private readonly INotifications _platformNotificationApi;
-        private readonly IAuthorizationService _authorizationService;
 
         private readonly string[] _firstNameClaims = { ClaimTypes.GivenName, "urn:github:name", ClaimTypes.Name };
 
         public AccountController(IWorkContextAccessor workContextAccessor, IStorefrontUrlBuilder urlBuilder, SignInManager<User> signInManager,
-            IEventPublisher publisher, INotifications platformNotificationApi, IAuthorizationService authorizationService, IOptions<StorefrontOptions> options)
+            IEventPublisher publisher, INotifications platformNotificationApi, IOptions<StorefrontOptions> options)
             : base(workContextAccessor, urlBuilder)
         {
             _signInManager = signInManager;
             _publisher = publisher;
             _options = options.Value;
             _platformNotificationApi = platformNotificationApi;
-            _authorizationService = authorizationService;
         }
 
         //GET: /account
         [HttpGet]
-        [Authorize(OnlyRegisteredUserAuthorizationRequirement.PolicyName)]
         public ActionResult GetAccount()
         {
             //Customer should be already populated in WorkContext middle-ware
@@ -52,7 +50,6 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         [HttpGet]
-        [Authorize(OnlyRegisteredUserAuthorizationRequirement.PolicyName)]
         public ActionResult GetOrderDetails(string number)
         {
             var order = WorkContext.CurrentUser?.Orders.FirstOrDefault(x => x.Number.EqualsInvariant(number));
@@ -65,7 +62,6 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         [HttpGet]
-        [Authorize(OnlyRegisteredUserAuthorizationRequirement.PolicyName)]
         public ActionResult GetAddresses()
         {
             return View("customers/addresses", WorkContext);
@@ -194,25 +190,20 @@ namespace VirtoCommerce.Storefront.Controllers
             return View(viewName);
         }
 
+        [Authorize(Policy = CanImpersonateAuthorizationRequirement.PolicyName)]
         public async Task<IActionResult> ImpersonateUser(string userId)
         {
-            var authorizationResult = await _authorizationService.AuthorizeAsync(User, null, CanImpersonateAuthorizationRequirement.PolicyName);
-            if (!authorizationResult.Succeeded)
-            {
-                return Forbid();
-            }
-            var impersonateUser = await _signInManager.UserManager.FindByIdAsync(userId);
-            if (impersonateUser != null)
-            {
-                impersonateUser.OperatorUserId = WorkContext.CurrentUser.Id;
-                impersonateUser.OperatorUserName = WorkContext.CurrentUser.UserName;
+            var user = await _signInManager.UserManager.FindByNameAsync(User.Identity.Name);
+            var impersonatedUser = await _signInManager.UserManager.FindByIdAsync(userId);
+            impersonatedUser.OperatorUserId = user.Id;
+            impersonatedUser.OperatorUserName = user.UserName;
 
-                // sign out the current user
-                await _signInManager.SignOutAsync();
+            // sign out the current user
+            await _signInManager.SignOutAsync();
 
-                await _signInManager.SignInAsync(impersonateUser, isPersistent: false);
-            }
-            return StoreFrontRedirect("~/");
+            await _signInManager.SignInAsync(impersonatedUser, isPersistent: false);
+
+            return View("index");
         }
 
         [HttpGet]
@@ -269,7 +260,6 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         [HttpGet]
-        [Authorize(OnlyRegisteredUserAuthorizationRequirement.PolicyName)]
         public async Task<ActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
