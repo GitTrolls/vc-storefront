@@ -47,7 +47,7 @@ Key features:
 http://demo.virtocommerce.com
 
 # Cloud Private Demo
-Setup your own private Microsoft Cloud environment and evaluate the latest version of Virto Commerce Storefront.
+Setup your own private Microsoft Cloud environment and evaluate the latest version of Virto Commerce Storefront, <a href="http://docs.virtocommerce.com/x/VwAqAQ" target="_blank">read more</a>.
 
 <a href="https://azuredeploy.net/" target="_blank">
   <img alt="Deploy to Azure" src="http://azuredeploy.net/deploybutton.png"/>
