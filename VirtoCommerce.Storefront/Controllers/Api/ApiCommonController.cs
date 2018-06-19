@@ -9,6 +9,7 @@ using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Controllers.Api
 {
+    [ValidateAntiForgeryToken]
     public class ApiCommonController : StorefrontControllerBase
     {
         private readonly IStoreModule _storeApi;
@@ -44,7 +45,6 @@ namespace VirtoCommerce.Storefront.Controllers.Api
 
         // POST: storefrontapi/feedback
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Feedback([FromBody] ContactForm model)
         {
             await _storeApi.SendDynamicNotificationAnStoreEmailAsync(model.ToServiceModel(WorkContext));

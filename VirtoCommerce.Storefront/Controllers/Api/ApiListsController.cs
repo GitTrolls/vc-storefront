@@ -10,6 +10,7 @@ using VirtoCommerce.Storefront.Model.Services;
 
 namespace VirtoCommerce.Storefront.Controllers.Api
 {
+    [ValidateAntiForgeryToken]
     public class ApiListsController : StorefrontControllerBase
     {
         private readonly ICartService _cartService;
@@ -37,7 +38,6 @@ namespace VirtoCommerce.Storefront.Controllers.Api
 
         // POST: storefrontapi/lists/getlistswithproduct
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> GetListsWithProduct([FromBody] GetCartsWithProductRequest request)
         {
             var result = new List<string>();
@@ -60,7 +60,6 @@ namespace VirtoCommerce.Storefront.Controllers.Api
 
         // POST: storefrontapi/lists/items
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> AddItemToList([FromBody] AddCartItem listItem)
         {
             //Need lock to prevent concurrent access to same list
@@ -80,7 +79,6 @@ namespace VirtoCommerce.Storefront.Controllers.Api
 
         // DELETE: storefrontapi/lists/{listName}/type/items/{lineItemId}
         [HttpDelete]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> RemoveItemFromList(string lineItemId, string listName, string type)
         {
             //Need lock to prevent concurrent access to same list
@@ -95,7 +93,6 @@ namespace VirtoCommerce.Storefront.Controllers.Api
 
         // POST: storefrontapi/lists/search
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> SearchLists([FromBody] CartSearchCriteria searchCriteria)
         {
             if (searchCriteria == null)
@@ -120,7 +117,6 @@ namespace VirtoCommerce.Storefront.Controllers.Api
 
         // POST: storefrontapi/lists/{listName}/{type}/create
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateList(string listName, string type)
         {
             var cartBuilder = await LoadOrCreateCartAsync(listName, type);
@@ -133,7 +129,6 @@ namespace VirtoCommerce.Storefront.Controllers.Api
 
         // DELETE: storefrontapi/lists/deletelistsbyids?listIds=...&listIds=...
         [HttpDelete]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteListsByIds(string[] listIds)
         {
             //filter out the lists that don't belong to the current user
@@ -151,7 +146,6 @@ namespace VirtoCommerce.Storefront.Controllers.Api
 
         // POST: storefrontapi/lists/{listName}/{type}/mergewithcurrentcart
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> MergeWithCurrentCart(string listName, string type)
         {
             var currentCartName = WorkContext.CurrentCart.Value?.Name;
