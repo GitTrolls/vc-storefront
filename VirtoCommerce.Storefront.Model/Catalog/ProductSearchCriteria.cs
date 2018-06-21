@@ -46,9 +46,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
 
         public string SortBy { get; set; }
 
-        public string VendorId { get; set; }
-
-        public bool IsFuzzySearch { get; set; }
+        public string VendorId { get; set; }     
 
         public ProductSearchCriteria Clone()
         {
@@ -62,8 +60,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
                 SortBy = SortBy,
                 PageNumber = PageNumber,
                 PageSize = PageSize,
-                ResponseGroup = ResponseGroup,
-                IsFuzzySearch = IsFuzzySearch,
+                ResponseGroup = ResponseGroup
             };
 
             if (Terms != null)

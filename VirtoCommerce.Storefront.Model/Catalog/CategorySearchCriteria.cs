@@ -42,20 +42,15 @@ namespace VirtoCommerce.Storefront.Model.Catalog
 
         public string SortBy { get; set; }
 
-        public bool IsFuzzySearch { get; set; }
-
         public CategorySearchCriteria Clone()
         {
-            var retVal = new CategorySearchCriteria(Language)
-            {
-                Outline = Outline,
-                Keyword = Keyword,
-                SortBy = SortBy,
-                PageNumber = PageNumber,
-                PageSize = PageSize,
-                ResponseGroup = ResponseGroup,
-                IsFuzzySearch = IsFuzzySearch,
-            };
+            var retVal = new CategorySearchCriteria(Language);
+            retVal.Outline = Outline;
+            retVal.Keyword = Keyword;
+            retVal.SortBy = SortBy;
+            retVal.PageNumber = PageNumber;
+            retVal.PageSize = PageSize;
+            retVal.ResponseGroup = ResponseGroup;
             return retVal;
         }
       

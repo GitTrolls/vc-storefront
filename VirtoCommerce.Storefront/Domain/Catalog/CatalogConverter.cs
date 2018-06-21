@@ -166,7 +166,6 @@ namespace VirtoCommerce.Storefront.Domain
                 Skip = criteria.Start,
                 Take = criteria.PageSize,
                 ResponseGroup = ((int)criteria.ResponseGroup).ToString(),
-                IsFuzzySearch = criteria.IsFuzzySearch,
             };
 
             // Add vendor id to terms
@@ -218,7 +217,6 @@ namespace VirtoCommerce.Storefront.Domain
                 Skip = criteria.Start,
                 Take = criteria.PageSize,
                 ResponseGroup = ((int)criteria.ResponseGroup).ToString(),
-                IsFuzzySearch = criteria.IsFuzzySearch,
             };
             var contact = workContext.CurrentUser?.Contact;
             if (contact != null && !contact.UserGroups.IsNullOrEmpty())
