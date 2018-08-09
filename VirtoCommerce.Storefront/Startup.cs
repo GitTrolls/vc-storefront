@@ -22,7 +22,6 @@ using VirtoCommerce.Storefront.Domain.Cart;
 using VirtoCommerce.Storefront.Domain.Security;
 using VirtoCommerce.Storefront.Extensions;
 using VirtoCommerce.Storefront.Infrastructure;
-using VirtoCommerce.Storefront.Infrastructure.ApplicationInsights;
 using VirtoCommerce.Storefront.JsonConverters;
 using VirtoCommerce.Storefront.Middleware;
 using VirtoCommerce.Storefront.Model;
@@ -147,7 +146,6 @@ namespace VirtoCommerce.Storefront
             services.AddScoped<IUserStore<User>, UserStoreStub>();
             services.AddScoped<IRoleStore<Role>, UserStoreStub>();
             services.AddScoped<UserManager<User>, CustomUserManager>();
-            services.AddScoped<SignInManager<User>, CustomSignInManager>();
 
             //Resource-based authorization that requires API permissions for some operations
             services.AddSingleton<IAuthorizationHandler, CanImpersonateAuthorizationHandler>();
@@ -271,7 +269,6 @@ namespace VirtoCommerce.Storefront
             services.RegisterAssembliesEventHandlers(typeof(Startup));
 
             services.AddApplicationInsightsTelemetry();
-            services.AddApplicationInsightsExtensions(Configuration);
             services.AddAntiforgery(options => options.HeaderName = "X-XSRF-TOKEN");
         }
 
