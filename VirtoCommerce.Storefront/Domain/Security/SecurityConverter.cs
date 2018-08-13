@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Identity;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Security;
@@ -75,7 +75,7 @@ namespace VirtoCommerce.Storefront.Domain.Security
                 TwoFactorEnabled = user.TwoFactorEnabled,
                 SecurityStamp = user.SecurityStamp,
                 PasswordHash = user.PasswordHash,
-                UserState = user.UserState.ToString(),
+                UserState = user.UserState,
                 UserType = user.UserType,
                 IsAdministrator = user.IsAdministrator
             };
@@ -115,7 +115,7 @@ namespace VirtoCommerce.Storefront.Domain.Security
                 LockoutEndDateUtc = userDto.LockoutEndDateUtc,
                 PasswordHash = userDto.PasswordHash,
                 SecurityStamp = userDto.SecurityStamp,
-                UserState = EnumUtility.SafeParse(userDto.UserState, AccountState.Approved),
+                UserState = userDto.UserState,
                 UserType = userDto.UserType
             };
 

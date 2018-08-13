@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Newtonsoft.Json;
 using VirtoCommerce.LiquidThemeEngine;
 using VirtoCommerce.Storefront.Binders;
@@ -22,7 +23,6 @@ using VirtoCommerce.Storefront.Domain.Cart;
 using VirtoCommerce.Storefront.Domain.Security;
 using VirtoCommerce.Storefront.Extensions;
 using VirtoCommerce.Storefront.Infrastructure;
-using VirtoCommerce.Storefront.Infrastructure.ApplicationInsights;
 using VirtoCommerce.Storefront.JsonConverters;
 using VirtoCommerce.Storefront.Middleware;
 using VirtoCommerce.Storefront.Model;
@@ -147,7 +147,6 @@ namespace VirtoCommerce.Storefront
             services.AddScoped<IUserStore<User>, UserStoreStub>();
             services.AddScoped<IRoleStore<Role>, UserStoreStub>();
             services.AddScoped<UserManager<User>, CustomUserManager>();
-            services.AddScoped<SignInManager<User>, CustomSignInManager>();
 
             //Resource-based authorization that requires API permissions for some operations
             services.AddSingleton<IAuthorizationHandler, CanImpersonateAuthorizationHandler>();
@@ -226,6 +225,8 @@ namespace VirtoCommerce.Storefront
                 options.Cookie.IsEssential = true;
             });
 
+            services.Replace(ServiceDescriptor.Transient<CookieAuthenticationHandler, CustomCookieAuthenticationHandler>());
+
             //Add Liquid view engine
             services.AddLiquidViewEngine(options =>
             {
@@ -271,7 +272,6 @@ namespace VirtoCommerce.Storefront
             services.RegisterAssembliesEventHandlers(typeof(Startup));
 
             services.AddApplicationInsightsTelemetry();
-            services.AddApplicationInsightsExtensions(Configuration);
             services.AddAntiforgery(options => options.HeaderName = "X-XSRF-TOKEN");
         }
 
