@@ -1,8 +1,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Text.Encodings.Web;
-using System.Text.Unicode;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -10,17 +8,16 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.WebEncoders;
 using Newtonsoft.Json;
 using VirtoCommerce.LiquidThemeEngine;
 using VirtoCommerce.Storefront.Binders;
+using VirtoCommerce.Storefront.Caching;
 using VirtoCommerce.Storefront.DependencyInjection;
 using VirtoCommerce.Storefront.Domain;
 using VirtoCommerce.Storefront.Domain.Cart;
@@ -31,6 +28,7 @@ using VirtoCommerce.Storefront.Infrastructure.ApplicationInsights;
 using VirtoCommerce.Storefront.JsonConverters;
 using VirtoCommerce.Storefront.Middleware;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Caching;
 using VirtoCommerce.Storefront.Model.Cart.Services;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Common.Bus;
@@ -111,6 +109,9 @@ namespace VirtoCommerce.Storefront
             services.AddSingleton(new InProcessBus());
             services.AddSingleton<IEventPublisher>(provider => provider.GetService<InProcessBus>());
             services.AddSingleton<IHandlerRegistrar>(provider => provider.GetService<InProcessBus>());
+
+            //Cache
+            services.AddSingleton<IStorefrontMemoryCache, StorefrontMemoryCache>();
 
             //Register platform API clients
             services.AddPlatformEndpoint(options =>
@@ -280,16 +281,6 @@ namespace VirtoCommerce.Storefront
             services.AddApplicationInsightsTelemetry();
             services.AddApplicationInsightsExtensions(Configuration);
             services.AddAntiforgery(options => options.HeaderName = "X-XSRF-TOKEN");
-
-            //https://github.com/aspnet/HttpAbstractions/issues/315
-            //Changing the default html encoding options, to not encode non-Latin characters
-            services.Configure<WebEncoderOptions>(options => options.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.All));
-
-            services.Configure<HstsOptions>(options =>
-            {
-                options.IncludeSubDomains = true;
-                options.MaxAge = TimeSpan.FromDays(30);
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
