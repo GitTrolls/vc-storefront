@@ -9,7 +9,7 @@ namespace VirtoCommerce.Storefront.Controllers
     [StorefrontRoute("error")]
     public class ErrorController : Controller
     {
-        [Route("{errCode}")]
+        [HttpGet("{errCode}")]
         public IActionResult Error(int? errCode)
         {
             var exceptionFeature = base.HttpContext.Features.Get<IExceptionHandlerFeature>();
@@ -24,7 +24,7 @@ namespace VirtoCommerce.Storefront.Controllers
             return View();
         }
 
-        [Route("AccessDenied")]
+        [HttpGet("AccessDenied")]
         public IActionResult AccessDenied()
         {          
             return View("AccessDenied");
