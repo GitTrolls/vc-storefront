@@ -299,11 +299,6 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// </summary>
         public string Outline { get; set; }
 
-        /// <summary>
-        /// Product code
-        /// </summary>
-        public string Sku { get; set; }
-
 
         /// <summary>
         /// Association type Related, Associations, Up-Sales etc.

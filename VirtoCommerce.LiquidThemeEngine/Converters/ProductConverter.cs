@@ -47,8 +47,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 CategoryId = product.CategoryId,
                 Description = product.Description,
                 IsQuotable = product.IsQuotable,
-                TaxType = product.TaxType,
-                Sku = product.Sku
+                TaxType = product.TaxType
             };
 
             result.Variants.Add(ToLiquidVariant(product));
