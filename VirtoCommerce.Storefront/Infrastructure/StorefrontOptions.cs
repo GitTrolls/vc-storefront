@@ -16,7 +16,5 @@ namespace VirtoCommerce.Storefront.Infrastructure
         public bool CacheEnabled { get; set; }
 
         public TimeSpan CacheAbsoluteExpiration { get; set; }
-
-        public int PageSizeMaxValue { get; set; } = 100;
     }
 }
