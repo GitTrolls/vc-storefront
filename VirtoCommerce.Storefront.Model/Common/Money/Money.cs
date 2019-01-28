@@ -91,8 +91,7 @@ namespace VirtoCommerce.Storefront.Model.Common
         {
             get
             {
-                var roundingBase = (decimal)Math.Pow(10, DecimalDigits);
-                return (long)Math.Truncate(InternalAmount * roundingBase) / roundingBase;
+                return (decimal)(long)Math.Truncate(InternalAmount * DecimalDigits) / DecimalDigits;
             }
         }
 
