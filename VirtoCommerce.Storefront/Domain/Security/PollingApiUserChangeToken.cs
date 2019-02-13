@@ -11,21 +11,21 @@ namespace VirtoCommerce.Storefront.Domain.Security
     {
         private readonly ISecurity _platformSecurityApi;
         private DateTime _lastCheckedTimeUtc;
-        private readonly TimeSpan _pollingInterval;
+        private readonly TimeSpan _poolingInterval;
         private readonly User _user;
         private readonly object _lock = new object();
 
-        private PollingApiUserChangeToken(User user, ISecurity platformSecurityApi, TimeSpan pollingInterval)
+        private PollingApiUserChangeToken(User user, ISecurity platformSecurityApi, TimeSpan poolingInterval)
         {
             _user = user;
             _lastCheckedTimeUtc = DateTime.UtcNow;
-            _pollingInterval = pollingInterval;
+            _poolingInterval = poolingInterval;
             _platformSecurityApi = platformSecurityApi;
         }
 
-        public static IChangeToken CreateChangeToken(User user, ISecurity platformSecurityApi, TimeSpan pollingInterval)
+        public static IChangeToken CreateChangeToken(User user, ISecurity platformSecurityApi, TimeSpan poolingInterval)
         {
-            return new PollingApiUserChangeToken(user, platformSecurityApi, pollingInterval);
+            return new PollingApiUserChangeToken(user, platformSecurityApi, poolingInterval);
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace VirtoCommerce.Storefront.Domain.Security
             get
             {
                 var currentTime = DateTime.UtcNow;
-                if (currentTime - _lastCheckedTimeUtc < _pollingInterval)
+                if (currentTime - _lastCheckedTimeUtc < _poolingInterval)
                 {
                     return false;
                 }

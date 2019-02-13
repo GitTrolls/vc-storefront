@@ -52,9 +52,9 @@ namespace VirtoCommerce.Storefront.Infrastructure
                     _hasChanged = true;
                 }
 
-                //check polling interval
+                //check pooling interval
                 var currentTime = DateTime.UtcNow;
-                if (currentTime - _lastCheckedTimeUtcStatic < _options.ChangesPollingInterval)
+                if (currentTime - _lastCheckedTimeUtcStatic < _options.ChangesPoolingInterval)
                 {
                     return _hasChanged;
                 }
@@ -100,7 +100,7 @@ namespace VirtoCommerce.Storefront.Infrastructure
         }
 
         private async Task<IEnumerable<CloudBlob>> ListBlobs()
-        {
+        {            
             var blobItems = new List<IListBlobItem>();
             BlobContinuationToken token = null;
             var operationContext = new OperationContext();
