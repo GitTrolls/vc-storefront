@@ -51,9 +51,9 @@ namespace VirtoCommerce.Storefront.Controllers.Api
         // GET: storefrontapi/account
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult<User> GetCurrentUser()
+        public ActionResult GetCurrentUser()
         {
-            return WorkContext.CurrentUser;
+            return Json(WorkContext.CurrentUser);
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace VirtoCommerce.Storefront.Controllers.Api
         /// <returns></returns>
         [HttpGet("{userId}")]
         [Authorize(SecurityConstants.Permissions.CanViewUsers)]
-        public async Task<ActionResult<User>> GetUserById(string userId)
+        public async Task<ActionResult> GetUserById(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user != null && !string.IsNullOrEmpty(user.ContactId))
@@ -74,14 +74,14 @@ namespace VirtoCommerce.Storefront.Controllers.Api
                     return Unauthorized();
                 }
             }
-            return user;
+            return Json(user);
         }
 
         // DELETE: storefrontapi/account/{userId}
         [HttpDelete("{userId}")]
         [Authorize(SecurityConstants.Permissions.CanDeleteUsers)]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult<IdentityResult>> DeleteUser([FromRoute] string userId)
+        public async Task<ActionResult> DeleteUser([FromRoute] string userId)
         {
             //TODO: Authorization check
             var result = IdentityResult.Success;
@@ -100,13 +100,13 @@ namespace VirtoCommerce.Storefront.Controllers.Api
                     await _publisher.Publish(new UserDeletedEvent(WorkContext, user));
                 }
             }
-            return result;
+            return Json(result);
         }
 
         // POST: storefrontapi/account/organization
         [HttpPost("organization")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult<IdentityResult>> RegisterOrganization([FromBody] OrganizationRegistration orgRegistration)
+        public async Task<ActionResult> RegisterOrganization([FromBody] OrganizationRegistration orgRegistration)
         {
             var result = IdentityResult.Success;
 
@@ -138,14 +138,14 @@ namespace VirtoCommerce.Storefront.Controllers.Api
                 result = IdentityResult.Failed(ModelState.Values.SelectMany(x => x.Errors).Select(x => new IdentityError { Description = x.ErrorMessage }).ToArray());
             }
 
-            return result;
+            return Json(result);
         }
 
         // POST: storefrontapi/account/user
         [HttpPost("user")]
         [Authorize(SecurityConstants.Permissions.CanCreateUsers)]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult<IdentityResult>> RegisterUser([FromBody] OrganizationUserRegistration registration)
+        public async Task<ActionResult> RegisterUser([FromBody] OrganizationUserRegistration registration)
         {
             var result = IdentityResult.Success;
 
@@ -178,14 +178,13 @@ namespace VirtoCommerce.Storefront.Controllers.Api
             {
                 result = IdentityResult.Failed(ModelState.Values.SelectMany(x => x.Errors).Select(x => new IdentityError { Description = x.ErrorMessage }).ToArray());
             }
-            return result;
+            return Json(result);
         }
 
         // POST: storefrontapi/account/invitation
         [HttpPost("invitation")]
         [ValidateAntiForgeryToken]
-        [ProducesResponseType(401)]
-        public async Task<ActionResult<IdentityResult>> CreateUserInvitation([FromBody] UsersInvitation invitation)
+        public async Task<ActionResult> CreateUserInvitation([FromBody] UsersInvitation invitation)
         {
             var result = IdentityResult.Success;
             TryValidateModel(invitation);
@@ -248,7 +247,7 @@ namespace VirtoCommerce.Storefront.Controllers.Api
             {
                 result = IdentityResult.Failed(ModelState.Values.SelectMany(x => x.Errors).Select(x => new IdentityError { Description = x.ErrorMessage }).ToArray());
             }
-            return result;
+            return Json(result);
         }
 
         // PUT: storefrontapi/account/organization
@@ -270,17 +269,17 @@ namespace VirtoCommerce.Storefront.Controllers.Api
 
         // GET: storefrontapi/account/organization/current
         [HttpGet("organization/current")]
-        public ActionResult<Organization> GetCustomerOrganization()
+        public ActionResult GetCustomerOrganization()
         {
             var result = WorkContext.CurrentUser?.Contact?.Organization;
-            return result;
+            return Json(result);
         }
 
         // POST: storefrontapi/account/organization/users/search
         [HttpPost("organization/users/search")]
         [Authorize(SecurityConstants.Permissions.CanViewUsers)]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult<GenericSearchResult<User>>> SearchOrganizationUsersAsync([FromBody] OrganizationContactsSearchCriteria searchCriteria)
+        public async Task<ActionResult> SearchOrganizationUsersAsync([FromBody] OrganizationContactsSearchCriteria searchCriteria)
         {
             searchCriteria.OrganizationId = searchCriteria.OrganizationId ?? WorkContext.CurrentUser?.Contact?.Organization?.Id;
             //Allow to register new users only within own organization
@@ -302,11 +301,7 @@ namespace VirtoCommerce.Storefront.Controllers.Api
                         users.Add(user);
                     }
                 }
-                return new GenericSearchResult<User>
-                {
-                    TotalCount = contactsSearchResult.TotalItemCount,
-                    Results = users
-                };
+                return Json(new { TotalCount = contactsSearchResult.TotalItemCount, Results = users });
             }
             return Ok();
         }
@@ -315,7 +310,7 @@ namespace VirtoCommerce.Storefront.Controllers.Api
         [HttpPost("{userId}/lock")]
         [Authorize(SecurityConstants.Permissions.CanEditUsers)]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult<IdentityResult>> LockUser([FromRoute]string userId)
+        public async Task<ActionResult> LockUser([FromRoute]string userId)
         {
             //TODO: Add authorization checks
             var result = IdentityResult.Success;
@@ -331,14 +326,14 @@ namespace VirtoCommerce.Storefront.Controllers.Api
 
                 await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.MaxValue);
             }
-            return result;
+            return Json(result);
         }
 
         // POST: storefrontapi/account/{userId}/unlock
         [HttpPost("{userId}/unlock")]
         [Authorize(SecurityConstants.Permissions.CanEditUsers)]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult<IdentityResult>> UnlockUser([FromRoute] string userId)
+        public async Task<ActionResult> UnlockUser([FromRoute] string userId)
         {
             //TODO: Add authorization checks
             var result = IdentityResult.Success;
@@ -354,13 +349,12 @@ namespace VirtoCommerce.Storefront.Controllers.Api
                 await _userManager.ResetAccessFailedCountAsync(user);
                 await _userManager.SetLockoutEndDateAsync(user, null);
             }
-            return result;
+            return Json(result);
         }
 
         // POST: storefrontapi/account
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [ProducesResponseType(401)]
         public async Task<ActionResult> UpdateAccount([FromBody] UserUpdateInfo userUpdateInfo)
         {
             //TODO:Check authorization
@@ -408,7 +402,7 @@ namespace VirtoCommerce.Storefront.Controllers.Api
         // POST: storefrontapi/account/password
         [HttpPost("password")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult<PasswordChangeResult>> ChangePassword([FromBody] ChangePassword formModel)
+        public async Task<ActionResult> ChangePassword([FromBody] ChangePassword formModel)
         {
             var changePassword = new ChangePasswordInfo
             {
@@ -418,7 +412,7 @@ namespace VirtoCommerce.Storefront.Controllers.Api
 
             var result = await _userManager.ChangePasswordAsync(WorkContext.CurrentUser, formModel.OldPassword, formModel.NewPassword);
 
-            return new PasswordChangeResult { Succeeded = result.Succeeded, Errors = result.Errors.Select(x => x.Description) };
+            return Json(new { result.Succeeded, Errors = result.Errors.Select(x => x.Description) });
         }
 
         // POST: storefrontapi/account/addresses
