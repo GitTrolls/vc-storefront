@@ -164,7 +164,6 @@ namespace VirtoCommerce.Storefront
             services.AddSingleton<IAuthorizationHandler, CanImpersonateAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, CanReadContentItemAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, OnlyRegisteredUserAuthorizationHandler>();
-            services.AddSingleton<IAuthorizationHandler, DenyAnonymousForStoreAuthorizationHandler>();
             // register the AuthorizationPolicyProvider which dynamically registers authorization policies for each permission defined in the platform 
             services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
             //Storefront authorization handler for policy based on permissions 
@@ -180,8 +179,6 @@ namespace VirtoCommerce.Storefront
                                 policy => policy.Requirements.Add(new CanEditOrganizationResourceAuthorizeRequirement()));
                 options.AddPolicy(OnlyRegisteredUserAuthorizationRequirement.PolicyName,
                                 policy => policy.Requirements.Add(new OnlyRegisteredUserAuthorizationRequirement()));
-                options.AddPolicy(DenyAnonymousForStoreAuthorizationRequirement.PolicyName,
-                                policy => policy.Requirements.Add(new DenyAnonymousForStoreAuthorizationRequirement()));
             });
 
 
@@ -257,11 +254,6 @@ namespace VirtoCommerce.Storefront
                 //TODO: Try to remove in ASP.NET Core 2.2
                 options.AllowCombiningAuthorizeFilters = false;
 
-                // Thus we disable anonymous users based on "Store:AllowAnonymous" store option
-                var policy = new AuthorizationPolicyBuilder()
-                    .AddRequirements(new DenyAnonymousForStoreAuthorizationRequirement())
-                    .Build();
-                options.Filters.Add(new ForceLoginAuthorizeFilter(policy));
 
                 options.CacheProfiles.Add("Default", new CacheProfile()
                 {
