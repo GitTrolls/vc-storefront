@@ -92,8 +92,7 @@ namespace VirtoCommerce.Storefront.Domain
                 Name = propertyDto.Name,
                 Type = propertyDto.Type,
                 ValueType = propertyDto.ValueType,
-                IsMultivalue = propertyDto.Multivalue ?? false,
-                Hidden = propertyDto.Hidden ?? false
+                IsMultivalue = propertyDto.Multivalue ?? false
             };
 
             //Set display names and set current display name for requested language
