@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Inventory;
 
 namespace VirtoCommerce.Storefront.Model.Stores
 {
@@ -127,14 +129,6 @@ namespace VirtoCommerce.Storefront.Model.Stores
             get
             {
                 return Settings.GetSettingValue("Stores.TaxCalculationEnabled", true);
-            }
-        }
-
-        public bool AnonymousUsersAllowed
-        {
-            get
-            {
-                return Settings.GetSettingValue("Stores.AllowAnonymousUsers", true);
             }
         }
 
