@@ -1,3 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using DotLiquid;
 
 namespace VirtoCommerce.LiquidThemeEngine.Objects
@@ -21,9 +26,5 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// </summary>
         public string Value { get; set; }
 
-        /// <summary>
-        /// Property hidden
-        /// </summary>
-        public bool Hidden { get; set; }
     }
 }

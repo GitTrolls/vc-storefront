@@ -1,10 +1,13 @@
+using Microsoft.Extensions.Caching.Memory;
+using PagedList.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
-using PagedList.Core;
 using VirtoCommerce.Storefront.AutoRestClients.InventoryModuleApi;
+using VirtoCommerce.Storefront.Caching;
+using VirtoCommerce.Storefront.Extensions;
 using VirtoCommerce.Storefront.Infrastructure;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Caching;
@@ -58,7 +61,7 @@ namespace VirtoCommerce.Storefront.Domain
             }
         }
 
-        public virtual async Task<FulfillmentCenter> GetFulfillmentCenterByIdAsync(string id)
+        public async Task<FulfillmentCenter> GetFulfillmentCenterByIdAsync(string id)
         {
             FulfillmentCenter result = null;
             var centerDto = await _inventoryApi.GetFulfillmentCenterAsync(id);

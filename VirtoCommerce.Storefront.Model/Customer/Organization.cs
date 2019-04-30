@@ -4,7 +4,7 @@ using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model.Customer
 {
-    public partial class Organization : Member
+    public class Organization : Member
     {
         /// <summary>
         /// Organization contacts

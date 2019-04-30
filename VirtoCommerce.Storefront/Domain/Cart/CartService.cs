@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Memory;
 using PagedList.Core;
 using VirtoCommerce.Storefront.AutoRestClients.CartModuleApi;
+using VirtoCommerce.Storefront.Caching;
+using VirtoCommerce.Storefront.Extensions;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Caching;
 using VirtoCommerce.Storefront.Model.Cart;
@@ -56,7 +58,7 @@ namespace VirtoCommerce.Storefront.Domain.Cart
             return result;
         }
 
-        public virtual async Task<IEnumerable<ShippingMethod>> GetAvailableShippingMethodsAsync(ShoppingCart cart)
+        public async Task<IEnumerable<ShippingMethod>> GetAvailableShippingMethodsAsync(ShoppingCart cart)
         {
             if (cart == null)
             {
@@ -84,7 +86,7 @@ namespace VirtoCommerce.Storefront.Domain.Cart
             return result;
         }
 
-        public virtual async Task<ShoppingCart> SaveChanges(ShoppingCart cart)
+        public async Task<ShoppingCart> SaveChanges(ShoppingCart cart)
         {
             if (cart == null)
             {
@@ -103,7 +105,7 @@ namespace VirtoCommerce.Storefront.Domain.Cart
             return result;
         }
 
-        public virtual async Task<IPagedList<ShoppingCart>> SearchCartsAsync(CartSearchCriteria criteria)
+        public async Task<IPagedList<ShoppingCart>> SearchCartsAsync(CartSearchCriteria criteria)
         {
             if (criteria == null)
             {
