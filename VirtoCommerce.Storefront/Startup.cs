@@ -109,6 +109,7 @@ namespace VirtoCommerce.Storefront
             services.AddTransient<ICartBuilder, CartBuilder>();
             services.AddTransient<ICartService, CartService>();
             services.AddTransient<AngularAntiforgeryCookieResultFilter>();
+            services.AddTransient<AnonymousUserForStoreAuthorizationFilter>();
 
             //Register events framework dependencies
             services.AddSingleton(new InProcessBus());
@@ -164,6 +165,7 @@ namespace VirtoCommerce.Storefront
             services.AddSingleton<IAuthorizationHandler, CanImpersonateAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, CanReadContentItemAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, OnlyRegisteredUserAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, AnonymousUserForStoreAuthorizationHandler>();
             // register the AuthorizationPolicyProvider which dynamically registers authorization policies for each permission defined in the platform 
             services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
             //Storefront authorization handler for policy based on permissions 
@@ -180,8 +182,8 @@ namespace VirtoCommerce.Storefront
                                 policy => policy.Requirements.Add(new CanEditOrganizationResourceAuthorizeRequirement()));
                 options.AddPolicy(OnlyRegisteredUserAuthorizationRequirement.PolicyName,
                                 policy => policy.Requirements.Add(new OnlyRegisteredUserAuthorizationRequirement()));
-                options.AddPolicy(CanAccessOrderAuthorizationRequirement.PolicyName,
-                                policy => policy.Requirements.Add(new CanAccessOrderAuthorizationRequirement()));
+                options.AddPolicy(AnonymousUserForStoreAuthorizationRequirement.PolicyName,
+                                policy => policy.Requirements.Add(new AnonymousUserForStoreAuthorizationRequirement()));
             });
 
 
@@ -257,6 +259,8 @@ namespace VirtoCommerce.Storefront
                 //TODO: Try to remove in ASP.NET Core 2.2
                 options.AllowCombiningAuthorizeFilters = false;
 
+                // Thus we disable anonymous users based on "Store:AllowAnonymous" store option
+                options.Filters.AddService<AnonymousUserForStoreAuthorizationFilter>();
 
                 options.CacheProfiles.Add("Default", new CacheProfile()
                 {
@@ -268,6 +272,9 @@ namespace VirtoCommerce.Storefront
 
                 // To include only Api controllers to swagger document
                 options.Conventions.Add(new ApiExplorerApiControllersConvention());
+
+                // Use the routing logic of ASP.NET Core 2.1 or earlier:
+                options.EnableEndpointRouting = false;
             }).AddJsonOptions(options =>
             {
                 options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
@@ -286,7 +293,7 @@ namespace VirtoCommerce.Storefront
             {
                 options.ViewEngines.Add(snapshotProvider.GetService<ILiquidViewEngine>());
             })
-            .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
 
             //Register event handlers via reflection
@@ -321,12 +328,7 @@ namespace VirtoCommerce.Storefront
                 c.ParameterFilter<EnumDefaultValueParameterFilter>();
 
                 // To avoid errors with repeating type names
-                // Also need to replace some symbols for RFC3986-compliance: https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/752
-                c.CustomSchemaIds((type) => type.ToString()
-                    .Replace("[", "_")
-                    .Replace("]", "_")
-                    .Replace(",", "-")
-                    .Replace("`", "_")
+                c.CustomSchemaIds(type => type.ToString()
                 );
             });
 
