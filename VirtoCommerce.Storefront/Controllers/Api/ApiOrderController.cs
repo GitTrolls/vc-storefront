@@ -1,12 +1,10 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi;
 using VirtoCommerce.Storefront.AutoRestClients.StoreModuleApi;
 using VirtoCommerce.Storefront.Domain;
-using VirtoCommerce.Storefront.Domain.Security;
 using VirtoCommerce.Storefront.Infrastructure;
 using VirtoCommerce.Storefront.Infrastructure.Swagger;
 using VirtoCommerce.Storefront.Model;
@@ -22,20 +20,18 @@ namespace VirtoCommerce.Storefront.Controllers.Api
     {
         private readonly IOrderModule _orderApi;
         private readonly IStoreModule _storeApi;
-        private readonly IAuthorizationService _authorizationService;
 
-        public ApiOrderController(IWorkContextAccessor workContextAccessor, IStorefrontUrlBuilder urlBuilder, IOrderModule orderApi, IStoreModule storeApi, IAuthorizationService authorizationService)
+        public ApiOrderController(IWorkContextAccessor workContextAccessor, IStorefrontUrlBuilder urlBuilder, IOrderModule orderApi, IStoreModule storeApi)
             : base(workContextAccessor, urlBuilder)
         {
             _orderApi = orderApi;
             _storeApi = storeApi;
-            _authorizationService = authorizationService;
         }
 
         // POST: storefrontapi/orders/search
         [HttpPost("search")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult<CustomerOrderSearchResult>> SearchCustomerOrders([FromBody] OrderSearchCriteria criteria)
+        public async Task<ActionResult<GenericSearchResult<CustomerOrder>>> SearchCustomerOrders([FromBody] OrderSearchCriteria criteria)
         {
             if (criteria == null)
             {
@@ -46,7 +42,7 @@ namespace VirtoCommerce.Storefront.Controllers.Api
 
             var result = await _orderApi.SearchAsync(criteria.ToSearchCriteriaDto());
 
-            return new CustomerOrderSearchResult
+            return new GenericSearchResult<CustomerOrder>
             {
                 Results = result.CustomerOrders.Select(x => x.ToCustomerOrder(WorkContext.AllCurrencies, WorkContext.CurrentLanguage)).ToArray(),
                 TotalCount = result.TotalCount ?? default(int),
@@ -165,6 +161,7 @@ namespace VirtoCommerce.Storefront.Controllers.Api
                 }
                 return paymentDto;
             }
+
         }
 
         // GET: storefrontapi/orders/{orderNumber}/invoice
@@ -172,15 +169,15 @@ namespace VirtoCommerce.Storefront.Controllers.Api
         [SwaggerFileResponse]
         public async Task<ActionResult> GetInvoicePdf(string orderNumber)
         {
-            // Current user access to order checking. If order not belong current user StorefrontException will be thrown
-            await GetOrderDtoByNumber(orderNumber);
             var stream = await _orderApi.GetInvoicePdfAsync(orderNumber);
+
             return File(stream, "application/pdf");
         }
 
         private async Task<CustomerOrder> GetOrderByNumber(string number)
         {
             var order = await GetOrderDtoByNumber(number);
+
             WorkContext.CurrentOrder = order.ToCustomerOrder(WorkContext.AllCurrencies, WorkContext.CurrentLanguage);
             return WorkContext.CurrentOrder;
         }
@@ -188,9 +185,8 @@ namespace VirtoCommerce.Storefront.Controllers.Api
         private async Task<orderModel.CustomerOrder> GetOrderDtoByNumber(string number)
         {
             var order = await _orderApi.GetByNumberAsync(number);
-            var authorizationResult = await _authorizationService.AuthorizeAsync(User, order, CanAccessOrderAuthorizationRequirement.PolicyName);
 
-            if (!authorizationResult.Succeeded)
+            if (order == null || order.CustomerId != WorkContext.CurrentUser.Id)
             {
                 throw new StorefrontException($"Order with number {{ number }} not found (or not belongs to current user)");
             }
