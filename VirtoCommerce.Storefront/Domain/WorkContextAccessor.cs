@@ -1,26 +1,21 @@
-using Microsoft.AspNetCore.Http;
+using System.Threading;
 using VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.Storefront.Domain
 {
     public class WorkContextAccessor : IWorkContextAccessor
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public WorkContextAccessor(IHttpContextAccessor httpContextAccessor)
-        {
-            _httpContextAccessor = httpContextAccessor;
-        }
+        private static AsyncLocal<WorkContext> _workContextCurrent = new AsyncLocal<WorkContext>();
 
         public WorkContext WorkContext
         {
             get
             {
-                return _httpContextAccessor.HttpContext.Items["WorkContext"] as WorkContext;
+                return _workContextCurrent.Value;
             }
             set
             {
-                _httpContextAccessor.HttpContext.Items["WorkContext"] = value;
+                _workContextCurrent.Value = value;
             }
         }
 
