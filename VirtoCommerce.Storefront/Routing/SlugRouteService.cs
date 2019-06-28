@@ -201,7 +201,10 @@ namespace VirtoCommerce.Storefront.Routing
             {
                 foreach (var seo in objects)
                 {
-                    seo.SeoPath = seoPaths[seo.ObjectId] ?? seo.SeoPath;
+                    if (seoPaths.ContainsKey(seo.ObjectId))
+                    {
+                        seo.SeoPath = seoPaths[seo.ObjectId];
+                    }
                 }
             }
         }
@@ -218,20 +221,20 @@ namespace VirtoCommerce.Storefront.Routing
                     case "CatalogProduct":
                         return await GetProductSeoPathsAsync(objectIds, store, language);
                 }
-                return new Dictionary<string, string>().WithDefaultValue(null);
+                return new Dictionary<string, string>();
             });
         }
 
         protected virtual async Task<IDictionary<string, string>> GetCategorySeoPathsAsync(string[] objectIds, Store store, Language language)
         {
             var result = (await _catalogService.GetCategoriesAsync(objectIds, CategoryResponseGroup.WithOutlines | CategoryResponseGroup.WithSeo));
-            return result.ToDictionary(x => x.Id, x => x.SeoPath).WithDefaultValue(null);
+            return result.ToDictionary(x => x.Id, x => x.SeoPath);
         }
 
         protected virtual async Task<IDictionary<string, string>> GetProductSeoPathsAsync(string[] objectIds, Store store, Language language)
         {
             var result = await _catalogService.GetProductsAsync(objectIds, ItemResponseGroup.Outlines | ItemResponseGroup.Seo);
-            return result.ToDictionary(x => x.Id, x => x.SeoPath).WithDefaultValue(null);
+            return result.ToDictionary(x => x.Id, x => x.SeoPath);
         }
     }
 }

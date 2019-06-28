@@ -12,8 +12,6 @@ namespace VirtoCommerce.Storefront.Model.Marketing
         {
             Amount = new Money(currency);
         }
-
-        public string Code => PromotionId;
         /// <summary>
         /// Gets or sets the value of promotion id
         /// </summary>
@@ -23,8 +21,6 @@ namespace VirtoCommerce.Storefront.Model.Marketing
         /// Gets or sets the value of absolute discount amount per one item
         /// </summary>
         public Money Amount { get; set; }
-
-        public decimal Savings => -Amount.Amount;
 
         public string Coupon { get; set; }
 

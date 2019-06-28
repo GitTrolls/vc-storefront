@@ -4,7 +4,7 @@ namespace VirtoCommerce.Storefront.Model.Common
 {
     public abstract class Entity : ValueObject, IEntity
     {
-        public virtual string Id { get; set; }
+        public string Id { get; set; }
 
         public bool IsTransient()
         {

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model
@@ -5,7 +7,7 @@ namespace VirtoCommerce.Storefront.Model
     /// <summary>
     /// Represents site navigation menu link object
     /// </summary>
-    public class MenuLink : Entity, IAccessibleByIndexKey
+    public class MenuLink : Entity
     {
         /// <summary>
         /// Gets or sets the title of site navigation menu link
@@ -13,14 +15,8 @@ namespace VirtoCommerce.Storefront.Model
         public string Title { get; set; }
 
         /// <summary>
-        /// Returns the type of the link. The possible values are:
-        /// collection: if the link points to a collection
-        /// product: if the link points to a product page   
-        /// </summary>
-        public virtual string Type => AssociatedObjectType;
-        /// <summary>
         /// Gets or sets the URL of site navigation menu link
-        /// </summary>        
+        /// </summary>
         public string Url { get; set; }
 
         /// <summary>
@@ -39,6 +35,5 @@ namespace VirtoCommerce.Storefront.Model
         /// </summary>
         public string AssociatedObjectType { get; set; }
 
-        public string IndexKey => Id;
     }
 }

@@ -1,11 +1,10 @@
 using System.Linq;
 using VirtoCommerce.Storefront.Model;
-using VirtoCommerce.Storefront.Model.Common;
 using contentDto = VirtoCommerce.Storefront.AutoRestClients.ContentModuleApi.Models;
 
 namespace VirtoCommerce.Storefront.Domain
 {
-
+   
 
     public static partial class LinkListConverter
     {
@@ -14,7 +13,7 @@ namespace VirtoCommerce.Storefront.Domain
             var result = new MenuLinkList
             {
                 Id = menuLinkListDto.Id,
-                Name = menuLinkListDto.Name?.Handelize(),
+                Name = menuLinkListDto.Name,
                 StoreId = menuLinkListDto.StoreId,
 
 
@@ -42,7 +41,7 @@ namespace VirtoCommerce.Storefront.Domain
                 {
                     result = new CategoryMenuLink();
                 }
-            }
+            }         
             result.Id = menuLinkDto.Id;
             result.AssociatedObjectId = menuLinkDto.AssociatedObjectId;
             result.AssociatedObjectType = menuLinkDto.AssociatedObjectType;

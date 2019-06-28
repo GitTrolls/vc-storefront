@@ -105,10 +105,7 @@ namespace VirtoCommerce.Storefront.Model.Common
         {
             get { return ToString(false, true); }
         }
-        public string FormattedAmountWithoutCurrency
-        {
-            get { return ToString(false, true); }
-        }
+
         public string FormattedAmountWithoutPointAndCurrency
         {
             get { return ToString(false, false); }

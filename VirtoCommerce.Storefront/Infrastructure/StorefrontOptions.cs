@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using VirtoCommerce.LiquidThemeEngine;
-using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Infrastructure
 {
@@ -14,9 +12,6 @@ namespace VirtoCommerce.Storefront.Infrastructure
         public RequireHttpsOptions RequireHttps { get; set; }
         public bool SendAccountConfirmation { get; set; } = false;
         public int WishlistLimit { get; set; }
-
-        //The options contains mapping of urls with concrete stores
-        public IDictionary<string, string> StoreUrls { get; set; } = new Dictionary<string, string>().WithDefaultValue(null);
 
         public bool CacheEnabled { get; set; }
 

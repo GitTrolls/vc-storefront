@@ -18,8 +18,7 @@ namespace VirtoCommerce.Storefront.Domain
             //Initialize catalog search criteria
             var productSearchcriteria = new ProductSearchCriteria(workContext.CurrentLanguage, workContext.CurrentCurrency, workContext.QueryString)
             {
-                UserGroups = workContext.CurrentUser?.Contact?.UserGroups ?? new List<string>(),
-                SortBy = "priority-descending;name-ascending"
+                UserGroups = workContext.CurrentUser?.Contact?.UserGroups ?? new List<string>()
             };
             workContext.CurrentProductSearchCriteria = productSearchcriteria;
             //Initialize product response group.
@@ -67,7 +66,12 @@ namespace VirtoCommerce.Storefront.Domain
                             productSearchCriteria.SortBy = SortInfo.ToString(sortInfos2);
                         }
 
-                        return catalogService.SearchProducts(productSearchCriteria).Products;
+                        var searchResult = catalogService.SearchProducts(productSearchCriteria);
+
+                        //Because catalog search products returns also aggregations we can use it to populate workContext using C# closure
+                        //now workContext.Aggregation will be contains preloaded aggregations for current category
+                        workContext.Aggregations = new MutablePagedList<Aggregation>(searchResult.Aggregations);
+                        return searchResult.Products;
                     }, 1, ProductSearchCriteria.DefaultPageSize);
                 }
                 return result;
@@ -88,14 +92,31 @@ namespace VirtoCommerce.Storefront.Domain
                     criteria.CopyFrom(@params);
                 }
                 var result = catalogService.SearchProducts(criteria);
-                //Need change ProductSearchResult with preserve reference because Scriban engine keeps this reference and use new operator will create the new
-                //object that doesn't tracked by Scriban
-                builder.WorkContext.ProductSearchResult.Aggregations = result.Aggregations;
-                builder.WorkContext.ProductSearchResult.Products = result.Products;
+                //Prevent double api request for get aggregations
+                //Because catalog search products returns also aggregations we can use it to populate workContext using C# closure
+                //now workContext.Aggregation will be contains preloaded aggregations for current search criteria
+                workContext.Aggregations = new MutablePagedList<Aggregation>(result.Aggregations);
                 return result.Products;
             }, 1, ProductSearchCriteria.DefaultPageSize);
 
-            builder.WorkContext.ProductSearchResult.Products = builder.WorkContext.Products;
+            //This line make delay aggregation loading initialization (aggregation can be evaluated on view rendering time)
+            workContext.Aggregations = new MutablePagedList<Aggregation>((pageNumber, pageSize, sortInfos, @params) =>
+            {
+                var criteria = workContext.CurrentProductSearchCriteria.Clone() as ProductSearchCriteria;
+                criteria.PageNumber = pageNumber;
+                criteria.PageSize = pageSize;
+                if (string.IsNullOrEmpty(criteria.SortBy) && !sortInfos.IsNullOrEmpty())
+                {
+                    criteria.SortBy = SortInfo.ToString(sortInfos);
+                }
+                if (@params != null)
+                {
+                    criteria.CopyFrom(@params);
+                }
+                //Force to load products and its also populate workContext.Aggregations by preloaded values
+                workContext.Products.Slice(pageNumber, pageSize, sortInfos);
+                return workContext.Aggregations;
+            }, 1, ProductSearchCriteria.DefaultPageSize);
 
             return Task.CompletedTask;
         }

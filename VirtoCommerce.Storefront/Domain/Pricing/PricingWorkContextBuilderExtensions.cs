@@ -29,9 +29,7 @@ namespace VirtoCommerce.Storefront.Domain
                 //Do not evaluate price lists for anonymous user
                 if (builder.WorkContext.CurrentUser.IsRegisteredUser)
                 {
-					var priceListEvaluationContext = builder.WorkContext.ToPriceEvaluationContext(null);
-					priceListEvaluationContext.CertainDate = DateTime.UtcNow;
-					pricelists = pricingService.EvaluatePricesLists(priceListEvaluationContext, builder.WorkContext);
+                    pricelists = pricingService.EvaluatePricesLists(builder.WorkContext.ToPriceEvaluationContext(null), builder.WorkContext);
                 }
                 return new StaticPagedList<Pricelist>(pricelists, pageNumber, pageSize, pricelists.Count);
             };

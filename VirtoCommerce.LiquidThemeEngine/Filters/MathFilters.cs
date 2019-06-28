@@ -1,15 +1,23 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
+using DotLiquid;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace VirtoCommerce.LiquidThemeEngine.Filters
 {
-    public partial class MathFilters
+    public class MathFilters
     {
         public static object Round(object input, int digits = 0)
         {
             if (input != null)
             {
-                input = Math.Round(Convert.ToDouble(input, CultureInfo.InvariantCulture), digits);
+                input =  Math.Round(Convert.ToDouble(input, CultureInfo.InvariantCulture), digits);
             }
             return input;
         }
@@ -40,6 +48,6 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
             }
             return input;
         }
-
+  
     }
 }

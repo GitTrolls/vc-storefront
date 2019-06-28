@@ -21,7 +21,5 @@ namespace VirtoCommerce.Storefront.Model
         public SeoInfo SeoInfo { get; set; }
 
         public IMutablePagedList<Product> Products { get; set; }
-
-        public string Handle => SeoInfo?.Slug ?? Id;
     }
 }

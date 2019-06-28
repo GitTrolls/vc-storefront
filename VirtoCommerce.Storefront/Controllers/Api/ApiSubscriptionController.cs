@@ -11,7 +11,6 @@ using VirtoCommerce.Storefront.Model.Subscriptions.Services;
 namespace VirtoCommerce.Storefront.Controllers.Api
 {
     [StorefrontApiRoute("subscriptions")]
-    [ResponseCache(CacheProfileName = "None")]
     public class ApiSubscriptionController : StorefrontControllerBase
     {
         private readonly ISubscriptionService _subscriptionService;

@@ -53,27 +53,17 @@ namespace VirtoCommerce.Storefront.Controllers
 
         //GET: /account
         [HttpGet]
-        public async Task<ActionResult> GetAccount()
+        [Authorize(OnlyRegisteredUserAuthorizationRequirement.PolicyName)]
+        public ActionResult GetAccount()
         {
-            var authorizationResult = await _authorizationService.AuthorizeAsync(User, OnlyRegisteredUserAuthorizationRequirement.PolicyName);
-            if (!authorizationResult.Succeeded)
-            {
-                  return StoreFrontRedirect("~/account/login");
-            }
-
             //Customer should be already populated in WorkContext middle-ware
             return View("customers/account", WorkContext);
         }
 
         [HttpGet("order/{number}")]
-        public async Task<ActionResult> GetOrderDetails(string number)
+        [Authorize(OnlyRegisteredUserAuthorizationRequirement.PolicyName)]
+        public ActionResult GetOrderDetails(string number)
         {
-            var authorizationResult = await _authorizationService.AuthorizeAsync(User, OnlyRegisteredUserAuthorizationRequirement.PolicyName);
-            if (!authorizationResult.Succeeded)
-            {
-                 return StoreFrontRedirect("~/account/login");
-            }
-
             var order = WorkContext.CurrentUser?.Orders.FirstOrDefault(x => x.Number.EqualsInvariant(number));
             if (order != null)
             {
@@ -84,14 +74,9 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         [HttpGet("addresses")]
-        public async Task<ActionResult> GetAddresses()
+        [Authorize(OnlyRegisteredUserAuthorizationRequirement.PolicyName)]
+        public ActionResult GetAddresses()
         {
-            var authorizationResult = await _authorizationService.AuthorizeAsync(User, OnlyRegisteredUserAuthorizationRequirement.PolicyName);
-            if (!authorizationResult.Succeeded)
-            {
-                  return StoreFrontRedirect("~/account/login");
-            }
-
             return View("customers/addresses", WorkContext);
         }
 
@@ -109,9 +94,6 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             TryValidateModel(registration);
 
-            //This required for populate fields on form on post-back
-            WorkContext.Form = Form.FromObject(registration);
-
             if (ModelState.IsValid)
             {
                 //Register user
@@ -128,21 +110,10 @@ namespace VirtoCommerce.Storefront.Controllers
                     await _signInManager.SignInAsync(user, isPersistent: true);
                     await _publisher.Publish(new UserLoginEvent(WorkContext, user));
 
-                    //Send new user registration notification
-                    var registrationEmailNotification = new RegistrationEmailNotification(WorkContext.CurrentStore.Id, WorkContext.CurrentLanguage)
-                    {
-                        FirstName = registration.FirstName,
-                        LastName = registration.LastName,
-                        Login = registration.UserName,
-                        Sender = WorkContext.CurrentStore.Email,
-                        Recipient = GetUserEmail(user)
-                    };
-                    await _platformNotificationApi.SendNotificationAsync(registrationEmailNotification.ToNotificationDto());
-
                     if (_options.SendAccountConfirmation)
                     {
                         var token = await _signInManager.UserManager.GenerateEmailConfirmationTokenAsync(user);
-                        var callbackUrl = Url.Action("ConfirmEmail", "Account", new { UserId = user.Id, Token = token }, protocol: Request.Scheme, host: WorkContext.CurrentStore.Host);
+                        var callbackUrl = Url.Action("ConfirmEmail", "Account", new { UserId = user.Id, Token = token }, protocol: Request.Scheme);
                         var emailConfirmationNotification = new EmailConfirmationNotification(WorkContext.CurrentStore.Id, WorkContext.CurrentLanguage)
                         {
                             Url = callbackUrl,
@@ -158,11 +129,12 @@ namespace VirtoCommerce.Storefront.Controllers
                 {
                     foreach (var error in result.Errors)
                     {
-                        WorkContext.Form.Errors.Add(new FormError { Code = error.Code.PascalToKebabCase(), Description = error.Description });
+                        ModelState.AddModelError("form", error.Description);
                     }
                 }
             }
 
+            WorkContext.Form = registration;
             return View("customers/register", WorkContext);
         }
 
@@ -172,29 +144,36 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(email))
             {
-                WorkContext.Form.Errors.Add(SecurityErrorDescriber.InvalidUrl());
+                WorkContext.ErrorMessage = "Error in URL format";
                 return View("error", WorkContext);
             }
 
             var user = await _signInManager.UserManager.FindByEmailAsync(email);
             if (user == null)
             {
-                WorkContext.Form.Errors.Add(SecurityErrorDescriber.UserNotFound());
+                WorkContext.ErrorMessage = "User was not found.";
                 return View("error", WorkContext);
             }
 
             if (!string.IsNullOrEmpty(user.PasswordHash))
             {
-                WorkContext.Form.Errors.Add(SecurityErrorDescriber.InvitationHasAreadyBeenUsed());
+                WorkContext.ErrorMessage = "Sorry, this invitation can be used only once.";
                 return View("error", WorkContext);
             }
 
             var isValidToken = await _signInManager.UserManager.VerifyUserTokenAsync(user, _signInManager.UserManager.Options.Tokens.PasswordResetTokenProvider, UserManager<User>.ResetPasswordTokenPurpose, token);
             if (!isValidToken)
             {
-                WorkContext.Form.Errors.Add(SecurityErrorDescriber.InvalidToken());
+                WorkContext.ErrorMessage = "Invitation token is invalid or expired";
                 return View("error", WorkContext);
             }
+
+            WorkContext.Form = new UserRegistrationByInvitation
+            {
+                Email = email,
+                OrganizationId = organizationId,
+                Token = token
+            };
 
             return View("customers/confirm_invitation", WorkContext);
         }
@@ -227,14 +206,17 @@ namespace VirtoCommerce.Storefront.Controllers
                             await _publisher.Publish(new UserLoginEvent(WorkContext, user));
                         }
 
-
                         return StoreFrontRedirect("~/account");
                     }
                 }
             }
 
-            WorkContext.Form.Errors.AddRange(result.Errors.Select(x => new FormError { Code = x.Code.PascalToKebabCase(), Description = x.Description }));
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
 
+            WorkContext.Form = register;
             return View("customers/confirm_invitation", WorkContext);
         }
 
@@ -287,31 +269,27 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             TryValidateModel(login);
 
-            //This required for populate fields on form on post-back
-            WorkContext.Form = Form.FromObject(login);
-
-
             if (!ModelState.IsValid)
             {
                 return View("customers/login", WorkContext);
             }
-            login.UserName = login.UserName?.Trim();
+            login.Username = login.Username?.Trim();
 
-            var loginResult = await _signInManager.PasswordSignInAsync(login.UserName, login.Password, login.RememberMe, lockoutOnFailure: true);
+            var loginResult = await _signInManager.PasswordSignInAsync(login.Username, login.Password, login.RememberMe, lockoutOnFailure: true);
 
             if (loginResult.Succeeded)
             {
-                var user = await _signInManager.UserManager.FindByNameAsync(login.UserName);
+                var user = await _signInManager.UserManager.FindByNameAsync(login.Username);
 
                 //Check that current user can sing in to current store
-                if (new CanUserLoginToStoreSpecification(user).IsSatisfiedBy(WorkContext.CurrentStore) && new IsUserSuspendedSpecification().IsSatisfiedBy(user) == false)
+                if (new CanUserLoginToStoreSpecification(user).IsSatisfiedBy(WorkContext.CurrentStore))
                 {
                     await _publisher.Publish(new UserLoginEvent(WorkContext, user));
                     return StoreFrontRedirect(returnUrl);
                 }
                 else
                 {
-                    WorkContext.Form.Errors.Add(SecurityErrorDescriber.UserCannotLoginInStore());
+                    ModelState.AddModelError("form", "User cannot login to current store.");
                 }
             }
 
@@ -327,10 +305,11 @@ namespace VirtoCommerce.Storefront.Controllers
 
             if (loginResult is CustomSignInResult signInResult && signInResult.IsRejected)
             {
-                WorkContext.Form.Errors.Add(SecurityErrorDescriber.AccountIsBlocked());
+                ModelState.AddModelError("form", "Administrator suspended this account");
             }
 
-            WorkContext.Form.Errors.Add(SecurityErrorDescriber.LoginFailed());
+            ModelState.AddModelError("form", "Login attempt failed.");
+            WorkContext.Form = login;
 
             return View("customers/login", WorkContext);
         }
@@ -414,7 +393,10 @@ namespace VirtoCommerce.Storefront.Controllers
 
                 if (!identityResult.Succeeded)
                 {
-                    WorkContext.Form.Errors.AddRange(identityResult.Errors.Select(x => new FormError { Code = x.Code.PascalToKebabCase(), Description = x.Description }));
+                    foreach (var error in identityResult.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
                     return View("customers/login", WorkContext);
                 }
             }
@@ -457,7 +439,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
             if (user == null)
             {
-                WorkContext.Form.Errors.Add(SecurityErrorDescriber.OperationFailed());
+                ModelState.AddModelError("form", "Operation failed");
                 return View("customers/forgot_password", WorkContext);
             }
 
@@ -471,7 +453,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
                 if (string.IsNullOrEmpty(phoneNumber))
                 {
-                    WorkContext.Form.Errors.Add(SecurityErrorDescriber.OperationFailed());
+                    ModelState.AddModelError("form", "Operation failed");
                     return View("customers/forgot_password", WorkContext);
                 }
 
@@ -484,15 +466,15 @@ namespace VirtoCommerce.Storefront.Controllers
                 };
 
                 //This required for populate hidden fields on the form
-                WorkContext.Form = Form.FromObject(new ResetPasswordByCodeModel
+                WorkContext.Form = new ResetPasswordByCodeModel
                 {
                     Email = user.Email
-                });
+                };
             }
             else // "Email"
             {
                 var token = await _signInManager.UserManager.GeneratePasswordResetTokenAsync(user);
-                var callbackUrl = Url.Action("ResetPassword", "Account", new { UserId = user.Id, Token = token }, protocol: Request.Scheme, host: WorkContext.CurrentStore.Host);
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { UserId = user.Id, Token = token }, protocol: Request.Scheme);
 
                 resetPasswordNotification = new ResetPasswordEmailNotification(WorkContext.CurrentStore.Id, WorkContext.CurrentLanguage)
                 {
@@ -508,7 +490,7 @@ namespace VirtoCommerce.Storefront.Controllers
                 return View(successViewName, WorkContext);
             }
 
-            WorkContext.Form.Errors.Add(new FormError { Description = sendingResult.ErrorMessage });
+            ModelState.AddModelError("form", sendingResult.ErrorMessage);
             return View("customers/forgot_password", WorkContext);
         }
 
@@ -537,12 +519,12 @@ namespace VirtoCommerce.Storefront.Controllers
                 var sendingResult = await _platformNotificationApi.SendNotificationAsync(remindUserNameNotification.ToNotificationDto());
                 if (sendingResult.IsSuccess != true)
                 {
-                    WorkContext.Form.Errors.Add(new FormError { Description = sendingResult.ErrorMessage });
+                    ModelState.AddModelError("form", sendingResult.ErrorMessage);
                 }
             }
             else
             {
-                WorkContext.Form.Errors.Add(SecurityErrorDescriber.UserNotFound());
+                ModelState.AddModelError("form", "User not found");
             }
             return View("customers/forgot_login", WorkContext);
         }
@@ -553,7 +535,7 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             TryValidateModel(formModel);
             //Reassign the passed form to the current context to allow user post it again as hidden fields in the form
-            WorkContext.Form = Form.FromObject(formModel);
+            WorkContext.Form = formModel;
 
             if (!ModelState.IsValid)
             {
@@ -562,14 +544,14 @@ namespace VirtoCommerce.Storefront.Controllers
 
             if (!_options.ResetPasswordNotificationGateway.EqualsInvariant("Phone"))
             {
-                WorkContext.Form.Errors.Add(SecurityErrorDescriber.ResetPasswordIsTurnedOff());
+                ModelState.AddModelError("form", "Reset password by code is turned off.");
                 return View("customers/forgot_password_code", WorkContext);
             }
 
             var user = await _signInManager.UserManager.FindByEmailAsync(formModel.Email);
             if (user == null)
             {
-                WorkContext.Form.Errors.Add(SecurityErrorDescriber.OperationFailed());
+                ModelState.AddModelError("form", "Operation failed");
                 return View("customers/forgot_password_code", WorkContext);
             }
 
@@ -577,18 +559,18 @@ namespace VirtoCommerce.Storefront.Controllers
 
             if (!isValidToken)
             {
-                WorkContext.Form.Errors.Add(SecurityErrorDescriber.InvalidToken());
+                ModelState.AddModelError("form", "Reset password token is invalid or expired");
                 return View("customers/forgot_password_code", WorkContext);
             }
 
             var token = await _signInManager.UserManager.GeneratePasswordResetTokenAsync(user);
 
-            WorkContext.Form = Form.FromObject(new ResetPassword
+            WorkContext.Form = new ResetPassword
             {
                 Token = token,
                 Email = user.Email,
                 UserName = user.UserName
-            });
+            };
 
             return View("customers/reset_password", WorkContext);
         }
@@ -599,14 +581,14 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(userId))
             {
-                WorkContext.Form.Errors.Add(SecurityErrorDescriber.InvalidUrl());
+                WorkContext.ErrorMessage = "Error in URL format";
                 return View("error", WorkContext);
             }
 
             var user = await _signInManager.UserManager.FindByIdAsync(userId);
             if (user == null)
             {
-                WorkContext.Form.Errors.Add(SecurityErrorDescriber.UserNotFound());
+                WorkContext.ErrorMessage = "User was not found.";
                 return View("error", WorkContext);
             }
 
@@ -614,16 +596,16 @@ namespace VirtoCommerce.Storefront.Controllers
 
             if (!isValidToken)
             {
-                WorkContext.Form.Errors.Add(SecurityErrorDescriber.InvalidToken());
+                WorkContext.ErrorMessage = "Reset password token is invalid or expired";
                 return View("error", WorkContext);
             }
 
-            WorkContext.Form = Form.FromObject(new ResetPassword
+            WorkContext.Form = new ResetPassword
             {
                 Token = token,
                 Email = user.Email,
                 UserName = user.UserName
-            });
+            };
             return View("customers/reset_password", WorkContext);
         }
 
@@ -634,16 +616,16 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             TryValidateModel(formModel);
             //Need reassign the passed form to the current context to allow for user post it again with initial data such as Token and Email
-            WorkContext.Form = Form.FromObject(formModel);
+            WorkContext.Form = formModel;
 
             if (string.IsNullOrEmpty(formModel.Email) && string.IsNullOrEmpty(formModel.UserName))
             {
-                WorkContext.Form.Errors.Add(SecurityErrorDescriber.ResetPasswordInvalidData());
+                ModelState.AddModelError("form", "Not enough info for reseting password");
             }
 
             if (formModel.Password != formModel.PasswordConfirmation)
             {
-                WorkContext.Form.Errors.Add(SecurityErrorDescriber.PasswordAndConfirmPasswordDoesNotMatch());
+                ModelState.AddModelError("form", "Passwords aren't equal");
             }
 
             if (!ModelState.IsValid)
@@ -676,7 +658,11 @@ namespace VirtoCommerce.Storefront.Controllers
                 return View("customers/reset_password_confirmation", WorkContext);
             }
 
-            WorkContext.Form.Errors.AddRange(result.Errors.Select(x => new FormError { Code = x.Code.PascalToKebabCase(), Description = x.Description }));
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
             return View("customers/reset_password", WorkContext);
         }
 
@@ -691,7 +677,7 @@ namespace VirtoCommerce.Storefront.Controllers
             }
             else
             {
-                WorkContext.Form.Errors.AddRange(result.Errors.Select(x => new FormError { Code = x.Code.PascalToKebabCase(), Description = x.Description }));
+                ModelState.AddModelError("form", result.Errors.FirstOrDefault()?.Description);
                 return View("customers/account", WorkContext);
             }
         }
@@ -722,7 +708,7 @@ namespace VirtoCommerce.Storefront.Controllers
             catch
             {
                 result.IsSuccess = false;
-                result.ErrorMessage = "Error occurred while sending notification";
+                result.ErrorMessage = "Error occured while sending notification";
             }
 
             return result;

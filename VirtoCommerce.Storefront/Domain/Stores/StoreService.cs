@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Options;
 using VirtoCommerce.Storefront.AutoRestClients.PaymentModuleApi;
 using VirtoCommerce.Storefront.AutoRestClients.PaymentModuleApi.Models;
 using VirtoCommerce.Storefront.AutoRestClients.PlatformModuleApi.Models;
@@ -18,7 +17,6 @@ using VirtoCommerce.Storefront.Model.Stores;
 using StorePaymentMethod = VirtoCommerce.Storefront.AutoRestClients.StoreModuleApi.Models.PaymentMethod;
 using TaxProvider = VirtoCommerce.Storefront.AutoRestClients.StoreModuleApi.Models.TaxProvider;
 
-
 namespace VirtoCommerce.Storefront.Domain
 {
     /// <summary>
@@ -31,16 +29,14 @@ namespace VirtoCommerce.Storefront.Domain
         private readonly IApiChangesWatcher _apiChangesWatcher;
         private readonly IPaymentModule _paymentModule;
         private readonly ITaxModule _taxModule;
-        private readonly StorefrontOptions _storefrontOptions;
 
-        public StoreService(IStoreModule storeApi, IStorefrontMemoryCache memoryCache, IApiChangesWatcher apiChangesWatcher, IPaymentModule paymentModule, ITaxModule taxModule, IOptions<StorefrontOptions> storefrontOptions)
+        public StoreService(IStoreModule storeApi, IStorefrontMemoryCache memoryCache, IApiChangesWatcher apiChangesWatcher, IPaymentModule paymentModule, ITaxModule taxModule)
         {
             _storeApi = storeApi;
             _memoryCache = memoryCache;
             _apiChangesWatcher = apiChangesWatcher;
             _paymentModule = paymentModule;
             _taxModule = taxModule;
-            _storefrontOptions = storefrontOptions.Value;
         }
         public async Task<Model.Stores.Store[]> GetAllStoresAsync()
         {
@@ -90,8 +86,6 @@ namespace VirtoCommerce.Storefront.Domain
             {
                 result.FixedTaxRate = GetFixedTaxRate(storeDto.TaxProviders);
             }
-            //use url for stores from configuration file with hight priority than store url defined in manager
-            result.Url = _storefrontOptions.StoreUrls[result.Id] ?? result.Url;
 
             return result;
         }

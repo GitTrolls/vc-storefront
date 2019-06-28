@@ -10,7 +10,6 @@ using VirtoCommerce.Storefront.Model.StaticContent;
 namespace VirtoCommerce.Storefront.Controllers.Api
 {
     [StorefrontApiRoute("blog")]
-    [ResponseCache(CacheProfileName = "None")]
     public class ApiBlogController : StorefrontControllerBase
     {
         public ApiBlogController(IWorkContextAccessor workContextAccessor, IStorefrontUrlBuilder urlBuilder)

@@ -1,29 +1,37 @@
 using System.Collections.Generic;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Security;
+using VirtoCommerce.Storefront.Model.Stores;
 
 namespace VirtoCommerce.Storefront.Model.Marketing
 {
     /// <summary>
     /// Represents context object for promotion evaluation
     /// </summary>
-    public partial class PromotionEvaluationContext : MarketingEvaluationContextBase
+    public partial class PromotionEvaluationContext : ValueObject
     {
         public PromotionEvaluationContext(Language language, Currency currency)
-            : base(language, currency)
         {
+            Language = language;
+            Currency = currency;
         }
-
+            
+        public string StoreId { get; set; }
+        public Language Language { get; set; }
+        public Currency Currency { get; set; } 
+        public User User { get; set; }
         public Cart.ShoppingCart Cart { get; set; }
         public IList<Product> Products { get; set; } = new List<Product>();
         public Product Product { get; set; }
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
-            foreach (var baseItem in base.GetEqualityComponents())
-            {
-                yield return baseItem;
-            }
+            yield return StoreId;
+            yield return Language;
+            yield return Currency;
+            yield return User;
+            yield return Product;
 
             if (Cart != null)
             {
@@ -73,10 +81,9 @@ namespace VirtoCommerce.Storefront.Model.Marketing
             {
                 foreach (var product in Products)
                 {
-                    yield return product;
+                    yield return product;                   
                 }
             }
-            yield return Product;
         }
 
     }

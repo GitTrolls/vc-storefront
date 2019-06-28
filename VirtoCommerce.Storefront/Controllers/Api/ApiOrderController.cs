@@ -18,7 +18,6 @@ using orderModel = VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Mode
 namespace VirtoCommerce.Storefront.Controllers.Api
 {
     [StorefrontApiRoute("orders")]
-    [ResponseCache(CacheProfileName = "None")]
     public class ApiOrderController : StorefrontControllerBase
     {
         private readonly IOrderModule _orderApi;

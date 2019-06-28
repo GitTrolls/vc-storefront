@@ -12,7 +12,6 @@ namespace VirtoCommerce.Storefront.Model.Services
         Task<Product[]> GetProductsAsync(string[] ids, ItemResponseGroup responseGroup);
 
         Task<Category[]> GetCategoriesAsync(string[] ids, CategoryResponseGroup responseGroup);
-        Category[] GetCategories(string[] ids, CategoryResponseGroup responseGroup);
 
         Task<CatalogSearchResult> SearchProductsAsync(ProductSearchCriteria criteria);
 

@@ -72,6 +72,7 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             //TODO: Test with exist contact us form 
             await _storeApi.SendDynamicNotificationAnStoreEmailAsync(model.ToServiceModel(WorkContext));
+            WorkContext.Form = model;
             if (model.Contact.ContainsKey("RedirectUrl") && model.Contact["RedirectUrl"].Any())
             {
                 return StoreFrontRedirect(model.Contact["RedirectUrl"].First());

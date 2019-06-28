@@ -70,14 +70,13 @@ namespace VirtoCommerce.Storefront.Controllers
                     criteria.CopyFrom(@params);
                 }
                 var result = _searchService.SearchProducts(criteria);
-                //Need change ProductSearchResult with preserve reference because Scriban engine keeps this reference and use new operator will create the new
-                //object that doesn't tracked by Scriban
-                WorkContext.ProductSearchResult.Aggregations = result.Aggregations;
-                WorkContext.ProductSearchResult.Products = result.Products;
-
+                //Prevent double api request for get aggregations
+                //Because catalog search products returns also aggregations we can use it to populate workContext using C# closure
+                //now workContext.Aggregation will be contains preloaded aggregations for current search criteria
+                WorkContext.Aggregations = new MutablePagedList<Aggregation>(result.Aggregations);
                 return result.Products;
             }, 1, ProductSearchCriteria.DefaultPageSize);
-            WorkContext.ProductSearchResult.Products = category.Products;
+
 
             // make sure title is set
             if (string.IsNullOrEmpty(WorkContext.CurrentPageSeo.Title))

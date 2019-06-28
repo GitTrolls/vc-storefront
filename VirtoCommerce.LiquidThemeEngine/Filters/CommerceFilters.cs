@@ -1,11 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace VirtoCommerce.LiquidThemeEngine.Filters
 {
-    public partial class CommerceFilters
+    public class CommerceFilters
     {
         #region Static Fields
         private static readonly Lazy<CultureInfo[]> _cultures = new Lazy<CultureInfo[]>(
@@ -28,7 +31,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
         ///     Return the three letter ISO currency code for the current thread.
         /// </summary>
         /// <returns>current currency code in String</returns>
-        public static string CurrentCurrencyCode()
+        public static String CurrentCurrencyCode()
         {
             return new RegionInfo(Thread.CurrentThread.CurrentCulture.Name).ISOCurrencySymbol;
         }
@@ -84,10 +87,10 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
         /// <returns>Formatted currency in String</returns>
         public static string FormatCurrency(decimal amount, string currencyCode)
         {
-            return string.Format(EffectiveCulture(currencyCode), "{0:c}", amount);
+            return String.Format(EffectiveCulture(currencyCode), "{0:c}", amount);
         }
 
-
+   
         #endregion
 
         #region Methods

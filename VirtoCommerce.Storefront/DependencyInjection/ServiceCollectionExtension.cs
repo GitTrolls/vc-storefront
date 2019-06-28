@@ -180,7 +180,7 @@ namespace VirtoCommerce.Storefront.DependencyInjection
             }
 
             services.AddSingleton<ILiquidThemeEngine, ShopifyLiquidThemeEngine>();
-            services.AddSingleton<ILiquidViewEngine, LiquidThemedViewEngine>();
+            services.AddSingleton<ILiquidViewEngine, DotLiquidThemedViewEngine>();
             if (setupAction != null)
             {
                 services.Configure(setupAction);

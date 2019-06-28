@@ -143,7 +143,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
             {
                 var discount = reward.ToDiscountModel(Price - DiscountAmount);
 
-                if (reward.IsValid && discount.Amount.InternalAmount > 0)
+                if (reward.IsValid)
                 {
                     Discounts.Add(discount);
                     DiscountAmount += discount.Amount;

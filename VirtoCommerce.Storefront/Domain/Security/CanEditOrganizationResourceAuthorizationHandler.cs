@@ -5,8 +5,7 @@ using VirtoCommerce.Storefront.Model.Customer;
 
 namespace VirtoCommerce.Storefront.Domain.Security
 {
-    public class CanEditOrganizationResourceAuthorizeRequirement : IAuthorizationRequirement
-    {
+    public class CanEditOrganizationResourceAuthorizeRequirement : IAuthorizationRequirement {
         public const string PolicyName = "CanEditOrganizationResource";
     }
 
@@ -24,8 +23,8 @@ namespace VirtoCommerce.Storefront.Domain.Security
             var workContext = _workContextAccessor.WorkContext;
             //Allow to do all things with self 
 
-            var currentUserOrgIds = workContext.CurrentUser?.Contact?.OrganizationsIds;
-            var result = currentUserOrgIds != null && resource != null && currentUserOrgIds.Contains(resource.Id);
+            var currentUserOrgId = workContext.CurrentUser?.Contact?.OrganizationId;
+            var result = currentUserOrgId != null && resource != null && currentUserOrgId == resource.Id;
 
             if (result)
             {

@@ -34,8 +34,7 @@ namespace VirtoCommerce.Storefront.Model.Order
             Discounts = new List<Discount>();
 
         }
-        public string Title => ShipmentMethodCode;
-        public string Handle => ShipmentMethodCode;
+
         /// <summary>
         /// Customer organization
         /// </summary>
@@ -176,8 +175,8 @@ namespace VirtoCommerce.Storefront.Model.Order
         /// <summary>
         /// Gets or Sets TaxIncluded
         /// </summary>
-        public bool? TaxIncluded { get; set; }
-
+        public bool? TaxIncluded { get; set; }     
+       
         /// <summary>
         /// Gets or Sets IsCancelled
         /// </summary>

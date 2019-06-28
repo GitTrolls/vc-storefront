@@ -27,9 +27,6 @@ namespace VirtoCommerce.Storefront
                   logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
                   logging.AddConsole();
                   logging.AddDebug();
-                  //Enable Azure logging
-                  //https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-2.2#logging-in-azure
-                  logging.AddAzureWebAppDiagnostics();
               })
               .UseStartup<Startup>();
 
