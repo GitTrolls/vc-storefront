@@ -10,7 +10,6 @@ namespace VirtoCommerce.Storefront.Model
             Rate = new Money(currency);
         }
         public Money Rate { get; set; }
-        public decimal PercentRate { get; set; }
         public TaxLine Line { get; set; }
 
         public static decimal TaxPercentRound(decimal percent)

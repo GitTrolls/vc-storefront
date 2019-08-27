@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using VirtoCommerce.Storefront.Model.Common;
 
@@ -24,14 +22,8 @@ namespace VirtoCommerce.Storefront.Model.Order
         {
         }
 
-        public string Sort { get; set; }
-
         public string CustomerId { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
-        public string Status { get; set; }
-        public IList<string> Statuses { get; set; }
-
+        public string Sort { get; set; }
     }
 }
 

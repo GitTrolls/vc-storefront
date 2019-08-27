@@ -164,20 +164,11 @@ namespace VirtoCommerce.Storefront.Model.Cart
             }
             if (shipmentTaxRate != null && shipmentTaxRate.Rate.Amount > 0)
             {
-                if (shipmentTaxRate.PercentRate > 0)
+                var amount = Total.Amount > 0 ? Total.Amount : Price.Amount;
+                if (amount > 0)
                 {
-                    TaxPercentRate = shipmentTaxRate.PercentRate;
+                    TaxPercentRate = TaxRate.TaxPercentRound(shipmentTaxRate.Rate.Amount / amount);
                 }
-                else
-                {
-                    var amount = Total.Amount > 0 ? Total.Amount : Price.Amount;
-                    if (amount > 0)
-                    {
-                        TaxPercentRate = TaxRate.TaxPercentRound(shipmentTaxRate.Rate.Amount / amount);
-                    }
-                }
-
-                TaxDetails = shipmentTaxRate.Line.TaxDetails;
             }
         }
         #endregion

@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
 using VirtoCommerce.Storefront.Infrastructure.Swagger;
+using Newtonsoft.Json;
 using VirtoCommerce.Storefront.Model.Cart.Services;
 using VirtoCommerce.Storefront.Model.Cart.ValidationErrors;
 using VirtoCommerce.Storefront.Model.Catalog;
@@ -292,22 +292,13 @@ namespace VirtoCommerce.Storefront.Model.Cart
             {
                 lineItemTaxRate = taxRates.FirstOrDefault(x => x.Line.Code != null && x.Line.Code.EqualsInvariant(Sku ?? ""));
             }
-            if (lineItemTaxRate != null)
+            if (lineItemTaxRate != null && lineItemTaxRate.Rate.Amount > 0)
             {
-                if (lineItemTaxRate.PercentRate > 0)
+                var amount = ExtendedPrice.Amount > 0 ? ExtendedPrice.Amount : SalePrice.Amount;
+                if (amount > 0)
                 {
-                    TaxPercentRate = lineItemTaxRate.PercentRate;
+                    TaxPercentRate = TaxRate.TaxPercentRound(lineItemTaxRate.Rate.Amount / amount);
                 }
-                else
-                {
-                    var amount = ExtendedPrice.Amount > 0 ? ExtendedPrice.Amount : SalePrice.Amount;
-                    if (amount > 0)
-                    {
-                        TaxPercentRate = TaxRate.TaxPercentRound(lineItemTaxRate.Rate.Amount / amount);
-                    }
-                }
-
-                TaxDetails = lineItemTaxRate.Line.TaxDetails;
             }
         }
         #endregion

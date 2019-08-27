@@ -12,7 +12,6 @@ using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Common.Exceptions;
 using VirtoCommerce.Storefront.Model.Order;
-using VirtoCommerce.Storefront.Model.Security;
 using VirtoCommerce.Storefront.Model.Stores;
 using orderModel = VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models;
 
@@ -43,12 +42,9 @@ namespace VirtoCommerce.Storefront.Controllers.Api
             {
                 criteria = new OrderSearchCriteria();
             }
-            var authorizationResult = await _authorizationService.AuthorizeAsync(User, null, SecurityConstants.Permissions.CanViewOrders);
-            if (!authorizationResult.Succeeded)
-            {
-                //Does not allow to see a other customer orders
-                criteria.CustomerId = WorkContext.CurrentUser.Id;
-            }
+            //Does not allow to see a other customer orders
+            criteria.CustomerId = WorkContext.CurrentUser.Id;
+
             var result = await _orderApi.SearchAsync(criteria.ToSearchCriteriaDto());
 
             return new CustomerOrderSearchResult

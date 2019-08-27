@@ -22,7 +22,6 @@ namespace VirtoCommerce.Storefront.Domain
             return propertyDto.JsonConvert<coreDto.DynamicObjectProperty>().ToDynamicProperty();
         }
 
-
         public static customerDto.DynamicObjectProperty ToCustomerDynamicPropertyDto(this DynamicProperty property)
         {
             return property.ToDynamicPropertyDto().JsonConvert<customerDto.DynamicObjectProperty>();
@@ -108,7 +107,7 @@ namespace VirtoCommerce.Storefront.Domain
             var result = new Contact
             {
                 Name = userRegistration.Name ?? userRegistration.UserName,
-                FullName = string.IsNullOrWhiteSpace(userRegistration.FullName) ? string.Join(" ", userRegistration.FirstName, userRegistration.LastName) : userRegistration.FullName,
+                FullName = string.IsNullOrWhiteSpace(userRegistration.FullName)? string.Join(" ", userRegistration.FirstName, userRegistration.LastName) : userRegistration.FullName,
                 FirstName = userRegistration.FirstName,
                 LastName = userRegistration.LastName,
                 Salutation = userRegistration.Salutation,
@@ -186,6 +185,7 @@ namespace VirtoCommerce.Storefront.Domain
                 Name = organizaionDto.Name,
                 MemberType = organizaionDto.MemberType,
                 UserGroups = organizaionDto.Groups,
+                Emails = organizaionDto.Emails
             };
 
             if (organizaionDto.Addresses != null)
@@ -193,16 +193,10 @@ namespace VirtoCommerce.Storefront.Domain
                 result.Addresses = organizaionDto.Addresses.Select(ToAddress).ToList();
             }
 
-            if (organizaionDto.Phones != null)
-            {
-                result.Phones = organizaionDto.Phones;
-            }
-
             if (organizaionDto.Emails != null)
             {
                 result.Emails = organizaionDto.Emails;
             }
-
             if (!organizaionDto.DynamicProperties.IsNullOrEmpty())
             {
                 result.DynamicProperties = organizaionDto.DynamicProperties.Select(ToDynamicProperty).ToList();
@@ -277,32 +271,18 @@ namespace VirtoCommerce.Storefront.Domain
                 Name = org.Name,
                 MemberType = "Organization"
             };
-
             if (!org.UserGroups.IsNullOrEmpty())
             {
                 retVal.Groups = org.UserGroups.ToArray();
             }
-
             if (!org.Addresses.IsNullOrEmpty())
             {
                 retVal.Addresses = org.Addresses.Select(ToCustomerAddressDto).ToList();
             }
-
             if (!org.Emails.IsNullOrEmpty())
             {
                 retVal.Emails = org.Emails;
             }
-
-            if (!org.Phones.IsNullOrEmpty())
-            {
-                retVal.Phones = org.Phones;
-            }
-
-            if (!org.DynamicProperties.IsNullOrEmpty())
-            {
-                retVal.DynamicProperties = org.DynamicProperties.Select(ToCustomerDynamicPropertyDto).ToList();
-            }
-
             return retVal;
         }
 
