@@ -49,17 +49,17 @@ namespace VirtoCommerce.Storefront.Domain.Security
                     //Do not wait if is locked by another thread 
                     if (lockTaken)
                     {
-                        var result = _platformSecurityApi.SearchUsersAsync(new UserSearchCriteria()
+                        var result = _platformSecurityApi.SearchUsersAsync(new UserSearchRequest()
                         {
-                            Skip = 0,
-                            Take = int.MaxValue,
+                            SkipCount = 0,
+                            TakeCount = int.MaxValue,
                             ModifiedSinceDate = _previousChangeTimeUtcStatic
                         });
 
-                        if (result.Result.TotalCount > 0)
+                        if (result.TotalCount > 0)
                         {
                             _previousChangeTimeUtcStatic = currentTime;
-                            foreach (var userId in result.Result.Users.Select(x => x.Id))
+                            foreach (var userId in result.Users.Select(x => x.Id))
                             {
                                 SecurityCacheRegion.ExpireUser(userId);
                             }

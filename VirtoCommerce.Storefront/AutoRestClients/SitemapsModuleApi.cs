@@ -18,7 +18,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
     using System.Threading;
     using System.Threading.Tasks;
 
-    public partial class SitemapsModuleClient : ServiceClient<SitemapsModuleClient>, ISitemapsModuleClient
+    public partial class VirtoCommerceSitemapsRESTAPIdocumentation : ServiceClient<VirtoCommerceSitemapsRESTAPIdocumentation>, IVirtoCommerceSitemapsRESTAPIdocumentation
     {
         /// <summary>
         /// The base URI of the service.
@@ -46,31 +46,31 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         public virtual ISitemapsModuleApiOperations SitemapsModuleApi { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of the SitemapsModuleClient class.
+        /// Initializes a new instance of the VirtoCommerceSitemapsRESTAPIdocumentation class.
         /// </summary>
         /// <param name='httpClient'>
         /// HttpClient to be used
         /// </param>
         /// <param name='disposeHttpClient'>
-        /// True: will dispose the provided httpClient on calling SitemapsModuleClient.Dispose(). False: will not dispose provided httpClient</param>
-        protected SitemapsModuleClient(HttpClient httpClient, bool disposeHttpClient) : base(httpClient, disposeHttpClient)
+        /// True: will dispose the provided httpClient on calling VirtoCommerceSitemapsRESTAPIdocumentation.Dispose(). False: will not dispose provided httpClient</param>
+        protected VirtoCommerceSitemapsRESTAPIdocumentation(HttpClient httpClient, bool disposeHttpClient) : base(httpClient, disposeHttpClient)
         {
             Initialize();
         }
 
         /// <summary>
-        /// Initializes a new instance of the SitemapsModuleClient class.
+        /// Initializes a new instance of the VirtoCommerceSitemapsRESTAPIdocumentation class.
         /// </summary>
         /// <param name='handlers'>
         /// Optional. The delegating handlers to add to the http client pipeline.
         /// </param>
-        protected SitemapsModuleClient(params DelegatingHandler[] handlers) : base(handlers)
+        protected VirtoCommerceSitemapsRESTAPIdocumentation(params DelegatingHandler[] handlers) : base(handlers)
         {
             Initialize();
         }
 
         /// <summary>
-        /// Initializes a new instance of the SitemapsModuleClient class.
+        /// Initializes a new instance of the VirtoCommerceSitemapsRESTAPIdocumentation class.
         /// </summary>
         /// <param name='rootHandler'>
         /// Optional. The http client handler used to handle http transport.
@@ -78,13 +78,13 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         /// <param name='handlers'>
         /// Optional. The delegating handlers to add to the http client pipeline.
         /// </param>
-        protected SitemapsModuleClient(HttpClientHandler rootHandler, params DelegatingHandler[] handlers) : base(rootHandler, handlers)
+        protected VirtoCommerceSitemapsRESTAPIdocumentation(HttpClientHandler rootHandler, params DelegatingHandler[] handlers) : base(rootHandler, handlers)
         {
             Initialize();
         }
 
         /// <summary>
-        /// Initializes a new instance of the SitemapsModuleClient class.
+        /// Initializes a new instance of the VirtoCommerceSitemapsRESTAPIdocumentation class.
         /// </summary>
         /// <param name='baseUri'>
         /// Optional. The base URI of the service.
@@ -95,7 +95,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when a required parameter is null
         /// </exception>
-        protected SitemapsModuleClient(System.Uri baseUri, params DelegatingHandler[] handlers) : this(handlers)
+        protected VirtoCommerceSitemapsRESTAPIdocumentation(System.Uri baseUri, params DelegatingHandler[] handlers) : this(handlers)
         {
             if (baseUri == null)
             {
@@ -105,7 +105,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         }
 
         /// <summary>
-        /// Initializes a new instance of the SitemapsModuleClient class.
+        /// Initializes a new instance of the VirtoCommerceSitemapsRESTAPIdocumentation class.
         /// </summary>
         /// <param name='baseUri'>
         /// Optional. The base URI of the service.
@@ -119,7 +119,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when a required parameter is null
         /// </exception>
-        protected SitemapsModuleClient(System.Uri baseUri, HttpClientHandler rootHandler, params DelegatingHandler[] handlers) : this(rootHandler, handlers)
+        protected VirtoCommerceSitemapsRESTAPIdocumentation(System.Uri baseUri, HttpClientHandler rootHandler, params DelegatingHandler[] handlers) : this(rootHandler, handlers)
         {
             if (baseUri == null)
             {
@@ -129,7 +129,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         }
 
         /// <summary>
-        /// Initializes a new instance of the SitemapsModuleClient class.
+        /// Initializes a new instance of the VirtoCommerceSitemapsRESTAPIdocumentation class.
         /// </summary>
         /// <param name='credentials'>
         /// Required. Subscription credentials which uniquely identify client subscription.
@@ -140,7 +140,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when a required parameter is null
         /// </exception>
-        public SitemapsModuleClient(ServiceClientCredentials credentials, params DelegatingHandler[] handlers) : this(handlers)
+        public VirtoCommerceSitemapsRESTAPIdocumentation(ServiceClientCredentials credentials, params DelegatingHandler[] handlers) : this(handlers)
         {
             if (credentials == null)
             {
@@ -154,7 +154,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         }
 
         /// <summary>
-        /// Initializes a new instance of the SitemapsModuleClient class.
+        /// Initializes a new instance of the VirtoCommerceSitemapsRESTAPIdocumentation class.
         /// </summary>
         /// <param name='credentials'>
         /// Required. Subscription credentials which uniquely identify client subscription.
@@ -163,11 +163,11 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         /// HttpClient to be used
         /// </param>
         /// <param name='disposeHttpClient'>
-        /// True: will dispose the provided httpClient on calling SitemapsModuleClient.Dispose(). False: will not dispose provided httpClient</param>
+        /// True: will dispose the provided httpClient on calling VirtoCommerceSitemapsRESTAPIdocumentation.Dispose(). False: will not dispose provided httpClient</param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when a required parameter is null
         /// </exception>
-        public SitemapsModuleClient(ServiceClientCredentials credentials, HttpClient httpClient, bool disposeHttpClient) : this(httpClient, disposeHttpClient)
+        public VirtoCommerceSitemapsRESTAPIdocumentation(ServiceClientCredentials credentials, HttpClient httpClient, bool disposeHttpClient) : this(httpClient, disposeHttpClient)
         {
             if (credentials == null)
             {
@@ -181,7 +181,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         }
 
         /// <summary>
-        /// Initializes a new instance of the SitemapsModuleClient class.
+        /// Initializes a new instance of the VirtoCommerceSitemapsRESTAPIdocumentation class.
         /// </summary>
         /// <param name='credentials'>
         /// Required. Subscription credentials which uniquely identify client subscription.
@@ -195,7 +195,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when a required parameter is null
         /// </exception>
-        public SitemapsModuleClient(ServiceClientCredentials credentials, HttpClientHandler rootHandler, params DelegatingHandler[] handlers) : this(rootHandler, handlers)
+        public VirtoCommerceSitemapsRESTAPIdocumentation(ServiceClientCredentials credentials, HttpClientHandler rootHandler, params DelegatingHandler[] handlers) : this(rootHandler, handlers)
         {
             if (credentials == null)
             {
@@ -209,7 +209,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         }
 
         /// <summary>
-        /// Initializes a new instance of the SitemapsModuleClient class.
+        /// Initializes a new instance of the VirtoCommerceSitemapsRESTAPIdocumentation class.
         /// </summary>
         /// <param name='baseUri'>
         /// Optional. The base URI of the service.
@@ -223,7 +223,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when a required parameter is null
         /// </exception>
-        public SitemapsModuleClient(System.Uri baseUri, ServiceClientCredentials credentials, params DelegatingHandler[] handlers) : this(handlers)
+        public VirtoCommerceSitemapsRESTAPIdocumentation(System.Uri baseUri, ServiceClientCredentials credentials, params DelegatingHandler[] handlers) : this(handlers)
         {
             if (baseUri == null)
             {
@@ -242,7 +242,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         }
 
         /// <summary>
-        /// Initializes a new instance of the SitemapsModuleClient class.
+        /// Initializes a new instance of the VirtoCommerceSitemapsRESTAPIdocumentation class.
         /// </summary>
         /// <param name='baseUri'>
         /// Optional. The base URI of the service.
@@ -259,7 +259,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when a required parameter is null
         /// </exception>
-        public SitemapsModuleClient(System.Uri baseUri, ServiceClientCredentials credentials, HttpClientHandler rootHandler, params DelegatingHandler[] handlers) : this(rootHandler, handlers)
+        public VirtoCommerceSitemapsRESTAPIdocumentation(System.Uri baseUri, ServiceClientCredentials credentials, HttpClientHandler rootHandler, params DelegatingHandler[] handlers) : this(rootHandler, handlers)
         {
             if (baseUri == null)
             {
@@ -287,7 +287,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         private void Initialize()
         {
             SitemapsModuleApi = new SitemapsModuleApiOperations(this);
-            BaseUri = new System.Uri("http://localhost");
+            BaseUri = new System.Uri("http://localhost/admin");
             SerializationSettings = new JsonSerializerSettings
             {
                 Formatting = Newtonsoft.Json.Formatting.Indented,
@@ -339,7 +339,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
 
     /// <summary>
     /// </summary>
-    public partial interface ISitemapsModuleClient : System.IDisposable
+    public partial interface IVirtoCommerceSitemapsRESTAPIdocumentation : System.IDisposable
     {
         /// <summary>
         /// The base URI of the service.
@@ -394,7 +394,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
     /// <summary>
     /// SitemapsModuleApiOperations operations.
     /// </summary>
-    public partial class SitemapsModuleApiOperations : IServiceOperations<SitemapsModuleClient>, ISitemapsModuleApiOperations
+    public partial class SitemapsModuleApiOperations : IServiceOperations<VirtoCommerceSitemapsRESTAPIdocumentation>, ISitemapsModuleApiOperations
     {
         /// <summary>
         /// Initializes a new instance of the SitemapsModuleApiOperations class.
@@ -405,7 +405,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when a required parameter is null
         /// </exception>
-        public SitemapsModuleApiOperations(SitemapsModuleClient client)
+        public SitemapsModuleApiOperations(VirtoCommerceSitemapsRESTAPIdocumentation client)
         {
             if (client == null)
             {
@@ -415,9 +415,9 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         }
 
         /// <summary>
-        /// Gets a reference to the SitemapsModuleClient
+        /// Gets a reference to the VirtoCommerceSitemapsRESTAPIdocumentation
         /// </summary>
-        public SitemapsModuleClient Client { get; private set; }
+        public VirtoCommerceSitemapsRESTAPIdocumentation Client { get; private set; }
 
         /// <param name='request'>
         /// </param>
@@ -433,11 +433,21 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         /// <exception cref="SerializationException">
         /// Thrown when unable to deserialize the response
         /// </exception>
+        /// <exception cref="ValidationException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when a required parameter is null
+        /// </exception>
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<SitemapSearchResult>> SearchSitemapsWithHttpMessagesAsync(SitemapSearchCriteria request = default(SitemapSearchCriteria), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<GenericSearchResultSitemap>> SearchSitemapsWithHttpMessagesAsync(SitemapSearchCriteria request, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
+            if (request == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "request");
+            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -478,7 +488,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
             {
                 _requestContent = SafeJsonConvert.SerializeObject(request, Client.SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
-                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
+                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
             }
             // Set Credentials
             if (Client.Credentials != null)
@@ -523,7 +533,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<SitemapSearchResult>();
+            var _result = new HttpOperationResponse<GenericSearchResultSitemap>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -532,7 +542,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<SitemapSearchResult>(_responseContent, Client.DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<GenericSearchResultSitemap>(_responseContent, Client.DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -699,14 +709,20 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         /// <exception cref="HttpOperationException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
+        /// <exception cref="ValidationException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when a required parameter is null
+        /// </exception>
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse> UpdateSitemapWithHttpMessagesAsync(Sitemap sitemap = default(Sitemap), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse> UpdateSitemapWithHttpMessagesAsync(Sitemap sitemap, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (sitemap != null)
+            if (sitemap == null)
             {
-                sitemap.Validate();
+                throw new ValidationException(ValidationRules.CannotBeNull, "sitemap");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -748,7 +764,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
             {
                 _requestContent = SafeJsonConvert.SerializeObject(sitemap, Client.SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
-                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
+                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
             }
             // Set Credentials
             if (Client.Credentials != null)
@@ -770,7 +786,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 204 && (int)_statusCode != 401 && (int)_statusCode != 403)
+            if ((int)_statusCode != 204)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -814,14 +830,20 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         /// <exception cref="HttpOperationException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
+        /// <exception cref="ValidationException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when a required parameter is null
+        /// </exception>
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse> AddSitemapWithHttpMessagesAsync(Sitemap sitemap = default(Sitemap), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse> AddSitemapWithHttpMessagesAsync(Sitemap sitemap, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (sitemap != null)
+            if (sitemap == null)
             {
-                sitemap.Validate();
+                throw new ValidationException(ValidationRules.CannotBeNull, "sitemap");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -863,7 +885,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
             {
                 _requestContent = SafeJsonConvert.SerializeObject(sitemap, Client.SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
-                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
+                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
             }
             // Set Credentials
             if (Client.Credentials != null)
@@ -885,7 +907,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 204 && (int)_statusCode != 401 && (int)_statusCode != 403)
+            if ((int)_statusCode != 204)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -929,11 +951,21 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         /// <exception cref="HttpOperationException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
+        /// <exception cref="ValidationException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when a required parameter is null
+        /// </exception>
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse> DeleteSitemapWithHttpMessagesAsync(IList<string> ids = default(IList<string>), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse> DeleteSitemapWithHttpMessagesAsync(IList<string> ids, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
+            if (ids == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "ids");
+            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -1009,7 +1041,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 204 && (int)_statusCode != 401 && (int)_statusCode != 403)
+            if ((int)_statusCode != 204)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -1056,11 +1088,21 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         /// <exception cref="SerializationException">
         /// Thrown when unable to deserialize the response
         /// </exception>
+        /// <exception cref="ValidationException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when a required parameter is null
+        /// </exception>
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<SitemapItemsSearchResult>> SearchSitemapItemsWithHttpMessagesAsync(SitemapItemSearchCriteria request = default(SitemapItemSearchCriteria), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<GenericSearchResultSitemapItem>> SearchSitemapItemsWithHttpMessagesAsync(SitemapItemSearchCriteria request, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
+            if (request == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "request");
+            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -1101,7 +1143,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
             {
                 _requestContent = SafeJsonConvert.SerializeObject(request, Client.SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
-                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
+                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
             }
             // Set Credentials
             if (Client.Credentials != null)
@@ -1146,7 +1188,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<SitemapItemsSearchResult>();
+            var _result = new HttpOperationResponse<GenericSearchResultSitemapItem>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -1155,7 +1197,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<SitemapItemsSearchResult>(_responseContent, Client.DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<GenericSearchResultSitemapItem>(_responseContent, Client.DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -1196,21 +1238,15 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse> AddSitemapItemsWithHttpMessagesAsync(string sitemapId, IList<SitemapItem> items = default(IList<SitemapItem>), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse> AddSitemapItemsWithHttpMessagesAsync(string sitemapId, IList<SitemapItem> items, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (sitemapId == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "sitemapId");
             }
-            if (items != null)
+            if (items == null)
             {
-                foreach (var element in items)
-                {
-                    if (element != null)
-                    {
-                        element.Validate();
-                    }
-                }
+                throw new ValidationException(ValidationRules.CannotBeNull, "items");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -1254,7 +1290,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
             {
                 _requestContent = SafeJsonConvert.SerializeObject(items, Client.SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
-                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
+                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
             }
             // Set Credentials
             if (Client.Credentials != null)
@@ -1320,11 +1356,21 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         /// <exception cref="HttpOperationException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
+        /// <exception cref="ValidationException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when a required parameter is null
+        /// </exception>
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse> RemoveSitemapItemsWithHttpMessagesAsync(IList<string> itemIds = default(IList<string>), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse> RemoveSitemapItemsWithHttpMessagesAsync(IList<string> itemIds, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
+            if (itemIds == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "itemIds");
+            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -1447,11 +1493,21 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         /// <exception cref="SerializationException">
         /// Thrown when unable to deserialize the response
         /// </exception>
+        /// <exception cref="ValidationException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when a required parameter is null
+        /// </exception>
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<IList<string>>> GetSitemapsSchemaWithHttpMessagesAsync(string storeId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<IList<string>>> GetSitemapsSchemaWithHttpMessagesAsync(string storeId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
+            if (storeId == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "storeId");
+            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -1586,11 +1642,29 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         /// <exception cref="SerializationException">
         /// Thrown when unable to deserialize the response
         /// </exception>
+        /// <exception cref="ValidationException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when a required parameter is null
+        /// </exception>
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<Stream>> GenerateSitemapWithHttpMessagesAsync(string storeId = default(string), string baseUrl = default(string), string sitemapUrl = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<Stream>> GenerateSitemapWithHttpMessagesAsync(string storeId, string baseUrl, string sitemapUrl, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
+            if (storeId == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "storeId");
+            }
+            if (baseUrl == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "baseUrl");
+            }
+            if (sitemapUrl == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "sitemapUrl");
+            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -1720,11 +1794,25 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         /// <exception cref="SerializationException">
         /// Thrown when unable to deserialize the response
         /// </exception>
+        /// <exception cref="ValidationException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when a required parameter is null
+        /// </exception>
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<SitemapDownloadNotification>> DownloadSitemapWithHttpMessagesAsync(string storeId = default(string), string baseUrl = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<SitemapDownloadNotification>> DownloadSitemapWithHttpMessagesAsync(string storeId, string baseUrl, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
+            if (storeId == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "storeId");
+            }
+            if (baseUrl == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "baseUrl");
+            }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
             string _invocationId = null;
@@ -1887,7 +1975,10 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         /// <exception cref="Microsoft.Rest.SerializationException">
         /// Thrown when unable to deserialize the response
         /// </exception>
-        Task<HttpOperationResponse<SitemapSearchResult>> SearchSitemapsWithHttpMessagesAsync(SitemapSearchCriteria request = default(SitemapSearchCriteria), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        /// <exception cref="Microsoft.Rest.ValidationException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        Task<HttpOperationResponse<GenericSearchResultSitemap>> SearchSitemapsWithHttpMessagesAsync(SitemapSearchCriteria request, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <param name='id'>
         /// </param>
         /// <param name='customHeaders'>
@@ -1917,7 +2008,10 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         /// <exception cref="Microsoft.Rest.HttpOperationException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
-        Task<HttpOperationResponse> UpdateSitemapWithHttpMessagesAsync(Sitemap sitemap = default(Sitemap), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        /// <exception cref="Microsoft.Rest.ValidationException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        Task<HttpOperationResponse> UpdateSitemapWithHttpMessagesAsync(Sitemap sitemap, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <param name='sitemap'>
         /// </param>
         /// <param name='customHeaders'>
@@ -1929,7 +2023,10 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         /// <exception cref="Microsoft.Rest.HttpOperationException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
-        Task<HttpOperationResponse> AddSitemapWithHttpMessagesAsync(Sitemap sitemap = default(Sitemap), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        /// <exception cref="Microsoft.Rest.ValidationException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        Task<HttpOperationResponse> AddSitemapWithHttpMessagesAsync(Sitemap sitemap, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <param name='ids'>
         /// </param>
         /// <param name='customHeaders'>
@@ -1941,7 +2038,10 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         /// <exception cref="Microsoft.Rest.HttpOperationException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
-        Task<HttpOperationResponse> DeleteSitemapWithHttpMessagesAsync(IList<string> ids = default(IList<string>), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        /// <exception cref="Microsoft.Rest.ValidationException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        Task<HttpOperationResponse> DeleteSitemapWithHttpMessagesAsync(IList<string> ids, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <param name='request'>
         /// </param>
         /// <param name='customHeaders'>
@@ -1956,7 +2056,10 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         /// <exception cref="Microsoft.Rest.SerializationException">
         /// Thrown when unable to deserialize the response
         /// </exception>
-        Task<HttpOperationResponse<SitemapItemsSearchResult>> SearchSitemapItemsWithHttpMessagesAsync(SitemapItemSearchCriteria request = default(SitemapItemSearchCriteria), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        /// <exception cref="Microsoft.Rest.ValidationException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        Task<HttpOperationResponse<GenericSearchResultSitemapItem>> SearchSitemapItemsWithHttpMessagesAsync(SitemapItemSearchCriteria request, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <param name='sitemapId'>
         /// </param>
         /// <param name='items'>
@@ -1973,7 +2076,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<HttpOperationResponse> AddSitemapItemsWithHttpMessagesAsync(string sitemapId, IList<SitemapItem> items = default(IList<SitemapItem>), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse> AddSitemapItemsWithHttpMessagesAsync(string sitemapId, IList<SitemapItem> items, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <param name='itemIds'>
         /// </param>
         /// <param name='customHeaders'>
@@ -1985,7 +2088,10 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         /// <exception cref="Microsoft.Rest.HttpOperationException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
-        Task<HttpOperationResponse> RemoveSitemapItemsWithHttpMessagesAsync(IList<string> itemIds = default(IList<string>), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        /// <exception cref="Microsoft.Rest.ValidationException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        Task<HttpOperationResponse> RemoveSitemapItemsWithHttpMessagesAsync(IList<string> itemIds, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <param name='storeId'>
         /// </param>
         /// <param name='customHeaders'>
@@ -2000,7 +2106,10 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         /// <exception cref="Microsoft.Rest.SerializationException">
         /// Thrown when unable to deserialize the response
         /// </exception>
-        Task<HttpOperationResponse<IList<string>>> GetSitemapsSchemaWithHttpMessagesAsync(string storeId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        /// <exception cref="Microsoft.Rest.ValidationException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        Task<HttpOperationResponse<IList<string>>> GetSitemapsSchemaWithHttpMessagesAsync(string storeId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <param name='storeId'>
         /// </param>
         /// <param name='baseUrl'>
@@ -2019,7 +2128,10 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         /// <exception cref="Microsoft.Rest.SerializationException">
         /// Thrown when unable to deserialize the response
         /// </exception>
-        Task<HttpOperationResponse<Stream>> GenerateSitemapWithHttpMessagesAsync(string storeId = default(string), string baseUrl = default(string), string sitemapUrl = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        /// <exception cref="Microsoft.Rest.ValidationException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        Task<HttpOperationResponse<Stream>> GenerateSitemapWithHttpMessagesAsync(string storeId, string baseUrl, string sitemapUrl, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <param name='storeId'>
         /// </param>
         /// <param name='baseUrl'>
@@ -2036,7 +2148,10 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
         /// <exception cref="Microsoft.Rest.SerializationException">
         /// Thrown when unable to deserialize the response
         /// </exception>
-        Task<HttpOperationResponse<SitemapDownloadNotification>> DownloadSitemapWithHttpMessagesAsync(string storeId = default(string), string baseUrl = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        /// <exception cref="Microsoft.Rest.ValidationException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        Task<HttpOperationResponse<SitemapDownloadNotification>> DownloadSitemapWithHttpMessagesAsync(string storeId, string baseUrl, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
     }
 }
 // <auto-generated>
@@ -2069,7 +2184,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
             /// </param>
             /// <param name='request'>
             /// </param>
-            public static SitemapSearchResult SearchSitemaps(this ISitemapsModuleApiOperations operations, SitemapSearchCriteria request = default(SitemapSearchCriteria))
+            public static GenericSearchResultSitemap SearchSitemaps(this ISitemapsModuleApiOperations operations, SitemapSearchCriteria request)
             {
                 return operations.SearchSitemapsAsync(request).GetAwaiter().GetResult();
             }
@@ -2082,7 +2197,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<SitemapSearchResult> SearchSitemapsAsync(this ISitemapsModuleApiOperations operations, SitemapSearchCriteria request = default(SitemapSearchCriteria), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<GenericSearchResultSitemap> SearchSitemapsAsync(this ISitemapsModuleApiOperations operations, SitemapSearchCriteria request, CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.SearchSitemapsWithHttpMessagesAsync(request, null, cancellationToken).ConfigureAwait(false))
                 {
@@ -2121,7 +2236,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
             /// </param>
             /// <param name='sitemap'>
             /// </param>
-            public static void UpdateSitemap(this ISitemapsModuleApiOperations operations, Sitemap sitemap = default(Sitemap))
+            public static void UpdateSitemap(this ISitemapsModuleApiOperations operations, Sitemap sitemap)
             {
                 operations.UpdateSitemapAsync(sitemap).GetAwaiter().GetResult();
             }
@@ -2134,7 +2249,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task UpdateSitemapAsync(this ISitemapsModuleApiOperations operations, Sitemap sitemap = default(Sitemap), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task UpdateSitemapAsync(this ISitemapsModuleApiOperations operations, Sitemap sitemap, CancellationToken cancellationToken = default(CancellationToken))
             {
                 (await operations.UpdateSitemapWithHttpMessagesAsync(sitemap, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
@@ -2144,7 +2259,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
             /// </param>
             /// <param name='sitemap'>
             /// </param>
-            public static void AddSitemap(this ISitemapsModuleApiOperations operations, Sitemap sitemap = default(Sitemap))
+            public static void AddSitemap(this ISitemapsModuleApiOperations operations, Sitemap sitemap)
             {
                 operations.AddSitemapAsync(sitemap).GetAwaiter().GetResult();
             }
@@ -2157,7 +2272,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task AddSitemapAsync(this ISitemapsModuleApiOperations operations, Sitemap sitemap = default(Sitemap), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task AddSitemapAsync(this ISitemapsModuleApiOperations operations, Sitemap sitemap, CancellationToken cancellationToken = default(CancellationToken))
             {
                 (await operations.AddSitemapWithHttpMessagesAsync(sitemap, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
@@ -2167,7 +2282,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
             /// </param>
             /// <param name='ids'>
             /// </param>
-            public static void DeleteSitemap(this ISitemapsModuleApiOperations operations, IList<string> ids = default(IList<string>))
+            public static void DeleteSitemap(this ISitemapsModuleApiOperations operations, IList<string> ids)
             {
                 operations.DeleteSitemapAsync(ids).GetAwaiter().GetResult();
             }
@@ -2180,7 +2295,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task DeleteSitemapAsync(this ISitemapsModuleApiOperations operations, IList<string> ids = default(IList<string>), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task DeleteSitemapAsync(this ISitemapsModuleApiOperations operations, IList<string> ids, CancellationToken cancellationToken = default(CancellationToken))
             {
                 (await operations.DeleteSitemapWithHttpMessagesAsync(ids, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
@@ -2190,7 +2305,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
             /// </param>
             /// <param name='request'>
             /// </param>
-            public static SitemapItemsSearchResult SearchSitemapItems(this ISitemapsModuleApiOperations operations, SitemapItemSearchCriteria request = default(SitemapItemSearchCriteria))
+            public static GenericSearchResultSitemapItem SearchSitemapItems(this ISitemapsModuleApiOperations operations, SitemapItemSearchCriteria request)
             {
                 return operations.SearchSitemapItemsAsync(request).GetAwaiter().GetResult();
             }
@@ -2203,7 +2318,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<SitemapItemsSearchResult> SearchSitemapItemsAsync(this ISitemapsModuleApiOperations operations, SitemapItemSearchCriteria request = default(SitemapItemSearchCriteria), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<GenericSearchResultSitemapItem> SearchSitemapItemsAsync(this ISitemapsModuleApiOperations operations, SitemapItemSearchCriteria request, CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.SearchSitemapItemsWithHttpMessagesAsync(request, null, cancellationToken).ConfigureAwait(false))
                 {
@@ -2218,7 +2333,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
             /// </param>
             /// <param name='items'>
             /// </param>
-            public static void AddSitemapItems(this ISitemapsModuleApiOperations operations, string sitemapId, IList<SitemapItem> items = default(IList<SitemapItem>))
+            public static void AddSitemapItems(this ISitemapsModuleApiOperations operations, string sitemapId, IList<SitemapItem> items)
             {
                 operations.AddSitemapItemsAsync(sitemapId, items).GetAwaiter().GetResult();
             }
@@ -2233,7 +2348,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task AddSitemapItemsAsync(this ISitemapsModuleApiOperations operations, string sitemapId, IList<SitemapItem> items = default(IList<SitemapItem>), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task AddSitemapItemsAsync(this ISitemapsModuleApiOperations operations, string sitemapId, IList<SitemapItem> items, CancellationToken cancellationToken = default(CancellationToken))
             {
                 (await operations.AddSitemapItemsWithHttpMessagesAsync(sitemapId, items, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
@@ -2243,7 +2358,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
             /// </param>
             /// <param name='itemIds'>
             /// </param>
-            public static void RemoveSitemapItems(this ISitemapsModuleApiOperations operations, IList<string> itemIds = default(IList<string>))
+            public static void RemoveSitemapItems(this ISitemapsModuleApiOperations operations, IList<string> itemIds)
             {
                 operations.RemoveSitemapItemsAsync(itemIds).GetAwaiter().GetResult();
             }
@@ -2256,7 +2371,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task RemoveSitemapItemsAsync(this ISitemapsModuleApiOperations operations, IList<string> itemIds = default(IList<string>), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task RemoveSitemapItemsAsync(this ISitemapsModuleApiOperations operations, IList<string> itemIds, CancellationToken cancellationToken = default(CancellationToken))
             {
                 (await operations.RemoveSitemapItemsWithHttpMessagesAsync(itemIds, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
@@ -2266,7 +2381,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
             /// </param>
             /// <param name='storeId'>
             /// </param>
-            public static IList<string> GetSitemapsSchema(this ISitemapsModuleApiOperations operations, string storeId = default(string))
+            public static IList<string> GetSitemapsSchema(this ISitemapsModuleApiOperations operations, string storeId)
             {
                 return operations.GetSitemapsSchemaAsync(storeId).GetAwaiter().GetResult();
             }
@@ -2279,7 +2394,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<IList<string>> GetSitemapsSchemaAsync(this ISitemapsModuleApiOperations operations, string storeId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<IList<string>> GetSitemapsSchemaAsync(this ISitemapsModuleApiOperations operations, string storeId, CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.GetSitemapsSchemaWithHttpMessagesAsync(storeId, null, cancellationToken).ConfigureAwait(false))
                 {
@@ -2296,7 +2411,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
             /// </param>
             /// <param name='sitemapUrl'>
             /// </param>
-            public static Stream GenerateSitemap(this ISitemapsModuleApiOperations operations, string storeId = default(string), string baseUrl = default(string), string sitemapUrl = default(string))
+            public static Stream GenerateSitemap(this ISitemapsModuleApiOperations operations, string storeId, string baseUrl, string sitemapUrl)
             {
                 return operations.GenerateSitemapAsync(storeId, baseUrl, sitemapUrl).GetAwaiter().GetResult();
             }
@@ -2313,7 +2428,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<Stream> GenerateSitemapAsync(this ISitemapsModuleApiOperations operations, string storeId = default(string), string baseUrl = default(string), string sitemapUrl = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<Stream> GenerateSitemapAsync(this ISitemapsModuleApiOperations operations, string storeId, string baseUrl, string sitemapUrl, CancellationToken cancellationToken = default(CancellationToken))
             {
                 var _result = await operations.GenerateSitemapWithHttpMessagesAsync(storeId, baseUrl, sitemapUrl, null, cancellationToken).ConfigureAwait(false);
                 _result.Request.Dispose();
@@ -2327,7 +2442,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
             /// </param>
             /// <param name='baseUrl'>
             /// </param>
-            public static SitemapDownloadNotification DownloadSitemap(this ISitemapsModuleApiOperations operations, string storeId = default(string), string baseUrl = default(string))
+            public static SitemapDownloadNotification DownloadSitemap(this ISitemapsModuleApiOperations operations, string storeId, string baseUrl)
             {
                 return operations.DownloadSitemapAsync(storeId, baseUrl).GetAwaiter().GetResult();
             }
@@ -2342,7 +2457,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<SitemapDownloadNotification> DownloadSitemapAsync(this ISitemapsModuleApiOperations operations, string storeId = default(string), string baseUrl = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<SitemapDownloadNotification> DownloadSitemapAsync(this ISitemapsModuleApiOperations operations, string storeId, string baseUrl, CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.DownloadSitemapWithHttpMessagesAsync(storeId, baseUrl, null, cancellationToken).ConfigureAwait(false))
                 {
@@ -2445,7 +2560,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi.Models
         /// <summary>
         /// Initializes a new instance of the SitemapSearchCriteria class.
         /// </summary>
-        public SitemapSearchCriteria(string storeId = default(string), string location = default(string), string responseGroup = default(string), string objectType = default(string), IList<string> objectTypes = default(IList<string>), IList<string> objectIds = default(IList<string>), string keyword = default(string), string searchPhrase = default(string), string languageCode = default(string), string sort = default(string), IList<SortInfo> sortInfos = default(IList<SortInfo>), int? skip = default(int?), int? take = default(int?))
+        public SitemapSearchCriteria(string storeId = default(string), string location = default(string), string responseGroup = default(string), string objectType = default(string), IList<string> objectTypes = default(IList<string>), IList<string> objectIds = default(IList<string>), string searchPhrase = default(string), string languageCode = default(string), string sort = default(string), IList<SortInfo> sortInfos = default(IList<SortInfo>), int? skip = default(int?), int? take = default(int?))
         {
             StoreId = storeId;
             Location = location;
@@ -2453,7 +2568,6 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi.Models
             ObjectType = objectType;
             ObjectTypes = objectTypes;
             ObjectIds = objectIds;
-            Keyword = keyword;
             SearchPhrase = searchPhrase;
             LanguageCode = languageCode;
             Sort = sort;
@@ -2497,11 +2611,6 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi.Models
         /// </summary>
         [JsonProperty(PropertyName = "objectIds")]
         public IList<string> ObjectIds { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "keyword")]
-        public string Keyword { get; set; }
 
         /// <summary>
         /// </summary>
@@ -2790,37 +2899,6 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi.Models
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
 
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (CreatedBy != null)
-            {
-                if (CreatedBy.Length > 64)
-                {
-                    throw new ValidationException(ValidationRules.MaxLength, "CreatedBy", 64);
-                }
-                if (CreatedBy.Length < 0)
-                {
-                    throw new ValidationException(ValidationRules.MinLength, "CreatedBy", 0);
-                }
-            }
-            if (ModifiedBy != null)
-            {
-                if (ModifiedBy.Length > 64)
-                {
-                    throw new ValidationException(ValidationRules.MaxLength, "ModifiedBy", 64);
-                }
-                if (ModifiedBy.Length < 0)
-                {
-                    throw new ValidationException(ValidationRules.MinLength, "ModifiedBy", 0);
-                }
-            }
-        }
     }
 }
 // <auto-generated>
@@ -2932,104 +3010,6 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi.Models
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
 
-        /// <summary>
-        /// Validate the object.
-        /// </summary>
-        /// <exception cref="ValidationException">
-        /// Thrown if validation fails
-        /// </exception>
-        public virtual void Validate()
-        {
-            if (Items != null)
-            {
-                foreach (var element in Items)
-                {
-                    if (element != null)
-                    {
-                        element.Validate();
-                    }
-                }
-            }
-            if (CreatedBy != null)
-            {
-                if (CreatedBy.Length > 64)
-                {
-                    throw new ValidationException(ValidationRules.MaxLength, "CreatedBy", 64);
-                }
-                if (CreatedBy.Length < 0)
-                {
-                    throw new ValidationException(ValidationRules.MinLength, "CreatedBy", 0);
-                }
-            }
-            if (ModifiedBy != null)
-            {
-                if (ModifiedBy.Length > 64)
-                {
-                    throw new ValidationException(ValidationRules.MaxLength, "ModifiedBy", 64);
-                }
-                if (ModifiedBy.Length < 0)
-                {
-                    throw new ValidationException(ValidationRules.MinLength, "ModifiedBy", 0);
-                }
-            }
-        }
-    }
-}
-// <auto-generated>
-// Code generated by Microsoft (R) AutoRest Code Generator.
-// Changes may cause incorrect behavior and will be lost if the code is
-// regenerated.
-// </auto-generated>
-
-namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi.Models
-{
-    using Microsoft.Rest;
-    using Microsoft.Rest.Serialization;
-    using Newtonsoft.Json;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Http;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    public partial class SitemapSearchResult
-    {
-        /// <summary>
-        /// Initializes a new instance of the SitemapSearchResult class.
-        /// </summary>
-        public SitemapSearchResult()
-        {
-            CustomInit();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the SitemapSearchResult class.
-        /// </summary>
-        public SitemapSearchResult(int? totalCount = default(int?), IList<Sitemap> results = default(IList<Sitemap>))
-        {
-            TotalCount = totalCount;
-            Results = results;
-            CustomInit();
-        }
-
-        /// <summary>
-        /// An initialization method that performs custom operations like setting defaults
-        /// </summary>
-        partial void CustomInit();
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "totalCount")]
-        public int? TotalCount { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "results")]
-        public IList<Sitemap> Results { get; set; }
-
     }
 }
 // <auto-generated>
@@ -3065,14 +3045,13 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi.Models
         /// <summary>
         /// Initializes a new instance of the SitemapItemSearchCriteria class.
         /// </summary>
-        public SitemapItemSearchCriteria(string sitemapId = default(string), string responseGroup = default(string), string objectType = default(string), IList<string> objectTypes = default(IList<string>), IList<string> objectIds = default(IList<string>), string keyword = default(string), string searchPhrase = default(string), string languageCode = default(string), string sort = default(string), IList<SortInfo> sortInfos = default(IList<SortInfo>), int? skip = default(int?), int? take = default(int?))
+        public SitemapItemSearchCriteria(string sitemapId = default(string), string responseGroup = default(string), string objectType = default(string), IList<string> objectTypes = default(IList<string>), IList<string> objectIds = default(IList<string>), string searchPhrase = default(string), string languageCode = default(string), string sort = default(string), IList<SortInfo> sortInfos = default(IList<SortInfo>), int? skip = default(int?), int? take = default(int?))
         {
             SitemapId = sitemapId;
             ResponseGroup = responseGroup;
             ObjectType = objectType;
             ObjectTypes = objectTypes;
             ObjectIds = objectIds;
-            Keyword = keyword;
             SearchPhrase = searchPhrase;
             LanguageCode = languageCode;
             Sort = sort;
@@ -3111,11 +3090,6 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi.Models
         /// </summary>
         [JsonProperty(PropertyName = "objectIds")]
         public IList<string> ObjectIds { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "keyword")]
-        public string Keyword { get; set; }
 
         /// <summary>
         /// </summary>
@@ -3169,63 +3143,6 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi.Models
     using System.Threading;
     using System.Threading.Tasks;
 
-    public partial class SitemapItemsSearchResult
-    {
-        /// <summary>
-        /// Initializes a new instance of the SitemapItemsSearchResult class.
-        /// </summary>
-        public SitemapItemsSearchResult()
-        {
-            CustomInit();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the SitemapItemsSearchResult class.
-        /// </summary>
-        public SitemapItemsSearchResult(int? totalCount = default(int?), IList<SitemapItem> results = default(IList<SitemapItem>))
-        {
-            TotalCount = totalCount;
-            Results = results;
-            CustomInit();
-        }
-
-        /// <summary>
-        /// An initialization method that performs custom operations like setting defaults
-        /// </summary>
-        partial void CustomInit();
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "totalCount")]
-        public int? TotalCount { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "results")]
-        public IList<SitemapItem> Results { get; set; }
-
-    }
-}
-// <auto-generated>
-// Code generated by Microsoft (R) AutoRest Code Generator.
-// Changes may cause incorrect behavior and will be lost if the code is
-// regenerated.
-// </auto-generated>
-
-namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi.Models
-{
-    using Microsoft.Rest;
-    using Microsoft.Rest.Serialization;
-    using Newtonsoft.Json;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Http;
-    using System.Threading;
-    using System.Threading.Tasks;
-
     public partial class SitemapDownloadNotification
     {
         /// <summary>
@@ -3241,7 +3158,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi.Models
         /// Initializes a new instance of the SitemapDownloadNotification
         /// class.
         /// </summary>
-        public SitemapDownloadNotification(System.DateTime? finished = default(System.DateTime?), long? totalCount = default(long?), long? processedCount = default(long?), long? errorCount = default(long?), IList<string> errors = default(IList<string>), string downloadUrl = default(string), string creator = default(string), System.DateTime? created = default(System.DateTime?), bool? isNew = default(bool?), string notifyType = default(string), string description = default(string), string title = default(string), int? repeatCount = default(int?), string id = default(string))
+        public SitemapDownloadNotification(System.DateTime? finished = default(System.DateTime?), long? totalCount = default(long?), long? processedCount = default(long?), long? errorCount = default(long?), IList<string> errors = default(IList<string>), string downloadUrl = default(string), string id = default(string), string creator = default(string), System.DateTime? created = default(System.DateTime?), bool? isNew = default(bool?), string notifyType = default(string), string description = default(string), string title = default(string), int? repeatCount = default(int?))
         {
             Finished = finished;
             TotalCount = totalCount;
@@ -3249,6 +3166,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi.Models
             ErrorCount = errorCount;
             Errors = errors;
             DownloadUrl = downloadUrl;
+            Id = id;
             Creator = creator;
             Created = created;
             IsNew = isNew;
@@ -3256,7 +3174,6 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi.Models
             Description = description;
             Title = title;
             RepeatCount = repeatCount;
-            Id = id;
             CustomInit();
         }
 
@@ -3297,6 +3214,11 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi.Models
 
         /// <summary>
         /// </summary>
+        [JsonProperty(PropertyName = "id")]
+        public string Id { get; set; }
+
+        /// <summary>
+        /// </summary>
         [JsonProperty(PropertyName = "creator")]
         public string Creator { get; set; }
 
@@ -3330,10 +3252,121 @@ namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi.Models
         [JsonProperty(PropertyName = "repeatCount")]
         public int? RepeatCount { get; set; }
 
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    public partial class GenericSearchResultSitemap
+    {
+        /// <summary>
+        /// Initializes a new instance of the GenericSearchResultSitemap class.
+        /// </summary>
+        public GenericSearchResultSitemap()
+        {
+            CustomInit();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the GenericSearchResultSitemap class.
+        /// </summary>
+        public GenericSearchResultSitemap(int? totalCount = default(int?), IList<Sitemap> results = default(IList<Sitemap>))
+        {
+            TotalCount = totalCount;
+            Results = results;
+            CustomInit();
+        }
+
+        /// <summary>
+        /// An initialization method that performs custom operations like setting defaults
+        /// </summary>
+        partial void CustomInit();
+
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "id")]
-        public string Id { get; set; }
+        [JsonProperty(PropertyName = "totalCount")]
+        public int? TotalCount { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "results")]
+        public IList<Sitemap> Results { get; set; }
+
+    }
+}
+// <auto-generated>
+// Code generated by Microsoft (R) AutoRest Code Generator.
+// Changes may cause incorrect behavior and will be lost if the code is
+// regenerated.
+// </auto-generated>
+
+namespace VirtoCommerce.Storefront.AutoRestClients.SitemapsModuleApi.Models
+{
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    public partial class GenericSearchResultSitemapItem
+    {
+        /// <summary>
+        /// Initializes a new instance of the GenericSearchResultSitemapItem
+        /// class.
+        /// </summary>
+        public GenericSearchResultSitemapItem()
+        {
+            CustomInit();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the GenericSearchResultSitemapItem
+        /// class.
+        /// </summary>
+        public GenericSearchResultSitemapItem(int? totalCount = default(int?), IList<SitemapItem> results = default(IList<SitemapItem>))
+        {
+            TotalCount = totalCount;
+            Results = results;
+            CustomInit();
+        }
+
+        /// <summary>
+        /// An initialization method that performs custom operations like setting defaults
+        /// </summary>
+        partial void CustomInit();
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "totalCount")]
+        public int? TotalCount { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "results")]
+        public IList<SitemapItem> Results { get; set; }
 
     }
 }
