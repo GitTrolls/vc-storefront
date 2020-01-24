@@ -49,16 +49,7 @@ namespace VirtoCommerce.Storefront.Domain.Security
             //Need to build from an host absolute url a  relative  store-based url
             // http://localhost/Account/Login -> http://localhost/{store}/{lang}/Account/Login
             var redirectUri = new UriBuilder(uri);
-            var storeBasedRedirectPath = _storefrontUrlBuilder.ToAppAbsolute(redirectUri.Path);
-
-            // Checks whether path is absolute path (starts with scheme), and extract local path if it is
-            if (Uri.TryCreate(storeBasedRedirectPath, UriKind.Absolute, out var absoluteUri))
-            {
-                storeBasedRedirectPath = absoluteUri.AbsolutePath;
-            }
-
-            redirectUri.Path = storeBasedRedirectPath;
-
+            redirectUri.Path = _storefrontUrlBuilder.ToAppAbsolute(redirectUri.Path);
             return redirectUri.Uri.ToString();
         }
     }

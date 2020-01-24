@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using VirtoCommerce.Storefront.AutoRestClients.PlatformModuleApi;
-using VirtoCommerce.Storefront.AutoRestClients.PlatformModuleApi.Models;
+using VirtoCommerce.Storefront.AutoRestClients.NotificationsModuleApi;
+using VirtoCommerce.Storefront.AutoRestClients.NotificationsModuleApi.Models;
 using VirtoCommerce.Storefront.Domain;
 using VirtoCommerce.Storefront.Domain.Common;
 using VirtoCommerce.Storefront.Domain.Security;
@@ -58,7 +58,7 @@ namespace VirtoCommerce.Storefront.Controllers
             var authorizationResult = await _authorizationService.AuthorizeAsync(User, OnlyRegisteredUserAuthorizationRequirement.PolicyName);
             if (!authorizationResult.Succeeded)
             {
-                return Challenge();
+                return StoreFrontRedirect("~/account/login");
             }
 
             // Customer should be already populated in WorkContext middle-ware
@@ -71,7 +71,7 @@ namespace VirtoCommerce.Storefront.Controllers
             var authorizationResult = await _authorizationService.AuthorizeAsync(User, OnlyRegisteredUserAuthorizationRequirement.PolicyName);
             if (!authorizationResult.Succeeded)
             {
-                return Challenge();
+                return StoreFrontRedirect("~/account/login");
             }
 
             var order = WorkContext.CurrentUser?.Orders.FirstOrDefault(x => x.Number.EqualsInvariant(number));
@@ -89,7 +89,7 @@ namespace VirtoCommerce.Storefront.Controllers
             var authorizationResult = await _authorizationService.AuthorizeAsync(User, OnlyRegisteredUserAuthorizationRequirement.PolicyName);
             if (!authorizationResult.Succeeded)
             {
-                return Challenge();
+                return StoreFrontRedirect("~/account/login");
             }
 
             return View("customers/addresses", WorkContext);
@@ -288,7 +288,7 @@ namespace VirtoCommerce.Storefront.Controllers
         [HttpPost("login")]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login([FromForm] Login login, [FromQuery]string returnUrl)
+        public async Task<ActionResult> Login([FromForm] Login login, string returnUrl)
         {
             TryValidateModel(login);
 
@@ -316,8 +316,6 @@ namespace VirtoCommerce.Storefront.Controllers
                 else
                 {
                     WorkContext.Form.Errors.Add(SecurityErrorDescriber.UserCannotLoginInStore());
-                    await _signInManager.SignOutAsync();
-                    loginResult = Microsoft.AspNetCore.Identity.SignInResult.NotAllowed;
                 }
             }
 
@@ -885,13 +883,13 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
 
-        private async Task<SendNotificationResult> SendNotificationAsync(NotificationBase notification)
+        private async Task<NotificationSendResult> SendNotificationAsync(NotificationBase notification)
         {
-            var result = new SendNotificationResult();
+            var result = new NotificationSendResult();
 
             try
             {
-                result = await _platformNotificationApi.SendNotificationAsync(notification.ToNotificationDto());
+                result = await _platformNotificationApi.SendNotificationByRequestAsync(notification.ToNotificationDto());
             }
             catch
             {

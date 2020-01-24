@@ -23,13 +23,14 @@ namespace VirtoCommerce.Storefront.Caching.Redis
         public RedisStorefrontMemoryCache(IMemoryCache memoryCache, IOptions<StorefrontOptions> options
             , ISubscriber bus
             , IOptions<RedisCachingOptions> redisCachingOptions
-            , ILoggerFactory loggerFactory
-            ) : base(memoryCache, options, loggerFactory)
+            , ILogger<RedisStorefrontMemoryCache> log
+            ) : base(memoryCache, options, log)
         {
-            _log = loggerFactory?.CreateLogger<RedisStorefrontMemoryCache>();
+            _log = log;
             _bus = bus;
 
             _redisCachingOptions = redisCachingOptions.Value;
+            _bus.Unsubscribe(_redisCachingOptions.ChannelName);
             _bus.Subscribe(_redisCachingOptions.ChannelName, OnMessage);
 
             _retryPolicy = Policy.Handle<Exception>().WaitAndRetry(
