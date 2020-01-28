@@ -376,7 +376,7 @@ namespace VirtoCommerce.Storefront.Controllers.Api
                 };
                 //Process order asynchronously
                 var incomingPaymentDto = orderDto.InPayments?.FirstOrDefault();
-                Task<orderModel.ProcessPaymentRequestResult> processPaymentTask = null;
+                Task<orderModel.ProcessPaymentResult> processPaymentTask = null;
                 if (incomingPaymentDto != null)
                 {
                     processPaymentTask = _orderApi.ProcessOrderPaymentsAsync(orderDto.Id, incomingPaymentDto.Id, bankCardInfo.ToBankCardInfoDto());

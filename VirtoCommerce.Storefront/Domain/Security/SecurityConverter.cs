@@ -64,9 +64,9 @@ namespace VirtoCommerce.Storefront.Domain.Security
             return result;
         }
 
-        public static dto.ApplicationUser ToUserDto(this User user)
+        public static dto.ApplicationUserExtended ToUserDto(this User user)
         {
-            var result = new dto.ApplicationUser
+            var result = new dto.ApplicationUserExtended
             {
                 Id = user.Id,
                 Email = user.Email,
@@ -104,7 +104,7 @@ namespace VirtoCommerce.Storefront.Domain.Security
             return result;
         }
 
-        public static User ToUser(this dto.ApplicationUser userDto)
+        public static User ToUser(this dto.ApplicationUserExtended userDto)
         {
             var result = new User()
             {

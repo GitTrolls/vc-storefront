@@ -91,7 +91,7 @@ namespace VirtoCommerce.Storefront.Domain
             var existContact = await GetContactByIdAsync(contactId);
             if (existContact != null)
             {
-                await _customerApi.UpdateAddessesAsync(addresses.Select(x => x.ToCustomerAddressDto()).ToList(), contactId);
+                await _customerApi.UpdateAddessesAsync(contactId, addresses.Select(x => x.ToCustomerAddressDto()).ToList());
 
                 //Invalidate cache
                 CustomerCacheRegion.ExpireMember(existContact.Id);
@@ -210,7 +210,7 @@ namespace VirtoCommerce.Storefront.Domain
                 SearchPhrase = criteria.SearchPhrase
             };
 
-            var searchResult = await _customerApi.SearchMemberAsync(criteriaDto);
+            var searchResult = await _customerApi.SearchAsync(criteriaDto);
             var contacts = _customerApi.GetContactsByIds(searchResult.Results.Select(x => x.Id).ToList()).Select(x => x.ToContact()).ToList();
 
             return new StaticPagedList<Contact>(contacts, criteria.PageNumber, criteria.PageSize, searchResult.TotalCount.Value);

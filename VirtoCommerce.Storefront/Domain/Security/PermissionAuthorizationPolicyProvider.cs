@@ -48,7 +48,7 @@ namespace VirtoCommerce.Storefront.Domain.Security
                 cacheEntry.AddExpirationToken(SecurityCacheRegion.CreateChangeToken());
 
                 var resultLookup = new Dictionary<string, AuthorizationPolicy>();
-                foreach (var permission in await _platformSecurityApi.GetAllRegisteredPermissionsAsync())
+                foreach (var permission in await _platformSecurityApi.GetPermissionsAsync())
                 {
                     resultLookup[permission.Id] = new AuthorizationPolicyBuilder().AddRequirements(new PermissionAuthorizationRequirement { Permission = permission.Id }).Build();
                 }
