@@ -179,8 +179,7 @@ namespace VirtoCommerce.Storefront.DependencyInjection
             {
                 throw new ArgumentNullException(nameof(services));
             }
-            
-            services.AddSingleton<ISassFileManager, SassFileManager>();
+
             services.AddSingleton<ILiquidThemeEngine, ShopifyLiquidThemeEngine>();
             services.AddSingleton<ILiquidViewEngine, LiquidThemedViewEngine>();
             if (setupAction != null)

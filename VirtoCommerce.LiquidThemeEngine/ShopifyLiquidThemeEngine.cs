@@ -46,19 +46,17 @@ namespace VirtoCommerce.LiquidThemeEngine
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IStorefrontMemoryCache _memoryCache;
         private readonly IContentBlobProvider _themeBlobProvider;
-        private readonly ISassFileManager _sassFileManager;
 
-        public ShopifyLiquidThemeEngine(IStorefrontMemoryCache memoryCache, IWorkContextAccessor workContextAccessor, IHttpContextAccessor httpContextAccessor,
-                                        IStorefrontUrlBuilder storeFrontUrlBuilder, IContentBlobProvider contentBlobProvider, ISassFileManager sassFileManager, IOptions<LiquidThemeEngineOptions> options)
+        public ShopifyLiquidThemeEngine(IStorefrontMemoryCache memoryCache, IWorkContextAccessor workContextAccessor,
+                                        IHttpContextAccessor httpContextAccessor,
+                                        IStorefrontUrlBuilder storeFrontUrlBuilder, IContentBlobProvider contentBlobProvder, IOptions<LiquidThemeEngineOptions> options)
         {
             _workContextAccessor = workContextAccessor;
             _httpContextAccessor = httpContextAccessor;
             UrlBuilder = storeFrontUrlBuilder;
             _options = options.Value;
             _memoryCache = memoryCache;
-            _themeBlobProvider = contentBlobProvider;
-            _sassFileManager = sassFileManager;
-            SassCompiler.FileManager = sassFileManager;
+            _themeBlobProvider = contentBlobProvder;
         }
 
         /// <summary>
@@ -186,7 +184,6 @@ namespace VirtoCommerce.LiquidThemeEngine
                 try
                 {
                     //handle scss resources
-                    _sassFileManager.CurrentDirectory = Path.GetDirectoryName(filePath);
                     var result = SassCompiler.Compile(content);
                     content = result.CompiledContent;
 
