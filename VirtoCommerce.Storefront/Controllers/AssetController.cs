@@ -1,10 +1,11 @@
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using VirtoCommerce.LiquidThemeEngine;
+using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Extensions;
 using VirtoCommerce.Storefront.Infrastructure;
 using VirtoCommerce.Storefront.Model;
@@ -19,10 +20,10 @@ namespace VirtoCommerce.Storefront.Controllers
     {
         private readonly ILiquidThemeEngine _themeEngine;
         private readonly IContentBlobProvider _contentBlobProvider;
-        private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
         public AssetController(IWorkContextAccessor workContextAccessor, IStorefrontUrlBuilder urlBuilder, ILiquidThemeEngine themeEngine,
-                               IContentBlobProvider staticContentBlobProvider, IWebHostEnvironment hostingEnvironment)
+                               IContentBlobProvider staticContentBlobProvider, IHostingEnvironment hostingEnvironment)
             : base(workContextAccessor, urlBuilder)
         {
             _themeEngine = themeEngine;
