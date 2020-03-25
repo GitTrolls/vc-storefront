@@ -152,9 +152,5 @@ namespace VirtoCommerce.Storefront.Model.Security
         public Address DefaultBillingAddress => Contact?.DefaultBillingAddress;
         public Address DefaultShippingAddress => Contact?.DefaultShippingAddress;
         public IList<Address> Addresses => Contact?.Addresses;
-        /// <summary>
-        /// Indicates that user has no orders
-        /// </summary>
-        public bool IsFirstTimeBuyer { get; set; }
     }
 }

@@ -207,8 +207,7 @@ namespace VirtoCommerce.Storefront.Domain
                 Skip = (criteria.PageNumber - 1) * criteria.PageSize,
                 Take = criteria.PageSize,
                 Sort = criteria.Sort,
-                SearchPhrase = criteria.SearchPhrase,
-                ObjectType = "Member"
+                SearchPhrase = criteria.SearchPhrase
             };
 
             var searchResult = await _customerApi.SearchAsync(criteriaDto);

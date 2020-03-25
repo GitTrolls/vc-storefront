@@ -1,9 +1,12 @@
+using System.Text.Encodings.Web;
 using Microsoft.ApplicationInsights.AspNetCore.Extensions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Storefront.Extensions;
 using VirtoCommerce.Storefront.Infrastructure;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
+using System.Collections.Specialized;
 
 namespace VirtoCommerce.Storefront.Domain
 {
@@ -13,7 +16,8 @@ namespace VirtoCommerce.Storefront.Domain
         {
             HttpContext = httpContext;
 
-            var qs = HttpContext.Request.Query.ToNameValueCollection();
+            var htmlEncoder = httpContext.RequestServices.GetRequiredService<HtmlEncoder>();
+            var qs = HttpContext.Request.Query.ToNameValueCollection(htmlEncoder);
 
             WorkContext = new WorkContext
             {
