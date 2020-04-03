@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using PagedList.Core;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -78,25 +77,13 @@ namespace VirtoCommerce.Storefront.Controllers
 
                 return result.Products;
             }, 1, ProductSearchCriteria.DefaultPageSize);
-
-            WorkContext.ProductSearchResult = new CatalogSearchResult(criteria)
-            {
-                Products = category.Products,
-                Category = category
-            };
-              
+            WorkContext.ProductSearchResult.Products = category.Products;
 
             // make sure title is set
             if (string.IsNullOrEmpty(WorkContext.CurrentPageSeo.Title))
             {
                 WorkContext.CurrentPageSeo.Title = category.Name;
             }
-            //Lazy initialize category breadcrumbs
-            WorkContext.Breadcrumbs = new MutablePagedList<Breadcrumb>((pageNumber, pageSize, sortInfos, @params) =>
-            {
-                var breadcrumbs = WorkContext.ProductSearchResult.GetBreadcrumbs().ToList();
-                return new StaticPagedList<Breadcrumb>(breadcrumbs, pageNumber, pageSize, breadcrumbs.Count);
-            }, 1, int.MaxValue);
 
             if (string.IsNullOrEmpty(view))
             {

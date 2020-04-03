@@ -7,7 +7,7 @@ using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model.Catalog
 {
-    public partial class ProductSearchCriteria : PagedSearchCriteria, IHasQueryKeyValues
+    public partial class ProductSearchCriteria : PagedSearchCriteria
     {
         public static int DefaultPageSize { get; set; } = 20;
 
@@ -58,21 +58,31 @@ namespace VirtoCommerce.Storefront.Model.Catalog
             var result = base.Clone() as ProductSearchCriteria;
             if (Terms != null)
             {
-                result.Terms = Terms.Select(x => new Term { Name = x.Name, Value = x.Value }).ToList();
+                result.Terms = Terms.Select(x => new Term { Name = x.Name, Value = x.Value }).ToArray();
             }
 
             return result;
         }
-        public override IEnumerable<KeyValuePair<string, string>> GetQueryKeyValues()
+        public override IEnumerable<KeyValuePair<string, string>> GetKeyValues()
         {
-            foreach (var basePair in base.GetQueryKeyValues())
+			 foreach (var basePair in base.GetKeyValues())
             {
                 yield return basePair;
             }
-            //Need to return all keys even with null values in order to get known all keys and be able to remove them from the query string
-            yield return new KeyValuePair<string, string>("keyword", Keyword);
-            yield return new KeyValuePair<string, string>("sort_by", SortBy);
-            yield return new KeyValuePair<string, string>("terms", !Terms.IsNullOrEmpty() ? string.Join(";", Terms.ToStrings()) : null);
+            if (!string.IsNullOrEmpty(Keyword))
+            {
+                yield return new KeyValuePair<string, string>("keyword", Keyword);
+            }
+            if (!string.IsNullOrEmpty(SortBy))
+            {
+                yield return new KeyValuePair<string, string>("sort_by", SortBy);
+            }
+            if (!Terms.IsNullOrEmpty())
+            {
+                var termsString = string.Join(";", Terms.ToStrings());
+                yield return new KeyValuePair<string, string>("terms", termsString);
+            }
+
         }
 
         private void Parse(NameValueCollection queryString)

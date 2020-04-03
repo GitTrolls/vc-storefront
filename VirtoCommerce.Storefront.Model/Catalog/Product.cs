@@ -9,7 +9,7 @@ using VirtoCommerce.Storefront.Model.Subscriptions;
 
 namespace VirtoCommerce.Storefront.Model.Catalog
 {
-    public partial class Product : Entity, IDiscountable, ITaxable, IAccessibleByIndexKey, IHasBreadcrumbs
+    public partial class Product : Entity, IDiscountable, ITaxable, IAccessibleByIndexKey
     {
         public Product()
         {
@@ -29,10 +29,6 @@ namespace VirtoCommerce.Storefront.Model.Catalog
             Currency = currency;
             Price = new ProductPrice(currency);
         }
-
-        [JsonIgnore]
-        public Lazy<Category> Category { get; set; }
-
         public string Handle => SeoInfo?.Slug ?? Id;
 
         public string IndexKey => Id;
@@ -465,23 +461,6 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         public override string ToString()
         {
             return string.Format(CultureInfo.InvariantCulture, "product #{0} sku: {1} name: {2}", Id ?? "undef", Sku ?? "undef", Name ?? "undef");
-        }
-
-        public IEnumerable<Breadcrumb> GetBreadcrumbs()
-        {
-            if (Category != null)
-            {
-                foreach (var breadCrumb in Category.Value.GetBreadcrumbs().Distinct())
-                {
-                    yield return breadCrumb;
-                }
-            }
-            yield return new ProductBreadcrumb(this)
-            {
-                Title = Title,
-                SeoPath = SeoPath,
-                Url = Url
-            };
         }
     }
 }

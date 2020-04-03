@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Web;
-using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.LiquidThemeEngine.Extensions
 {
@@ -34,23 +33,5 @@ namespace VirtoCommerce.LiquidThemeEngine.Extensions
 
             return result.Uri;
         }
-
-        public static Uri SetQueryParameters(this Uri uri, IHasQueryKeyValues hasQueryKeyValues)
-        {
-            if (uri == null)
-            {
-                throw new ArgumentNullException(nameof(uri));
-            }
-            if (hasQueryKeyValues == null)
-            {
-                throw new ArgumentNullException(nameof(hasQueryKeyValues));
-            }
-          
-            foreach (var keyValue in hasQueryKeyValues.GetQueryKeyValues())
-            {
-                uri = uri.SetQueryParameter(keyValue.Key, keyValue.Value);
-            }
-            return uri;
-        }       
     }
 }

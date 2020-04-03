@@ -56,8 +56,6 @@ namespace VirtoCommerce.Storefront.Model
 
         public IMutablePagedList<Country> Countries { get; set; }
 
-        //Contains  the collections of breadcrumbs are relevant to  the current request
-        public IMutablePagedList<Breadcrumb> Breadcrumbs { get; set; }
         /// <summary>
         /// Current user
         /// </summary>

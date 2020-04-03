@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using Newtonsoft.Json;
 using VirtoCommerce.Storefront.Model.Common;
 
@@ -27,19 +25,5 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         public object Value { get; set; }
         public string Lower { get; set; }
         public string Upper { get; set; }
-
-        public bool TermEquals(Term term)
-        {
-            return Group.Field.EqualsInvariant(term.Name) && Value.ToString().EqualsInvariant(term.Value);
-        }
-
-        public virtual void PostLoadInit(AggregationPostLoadContext context)
-        {
-            if (context == null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-            IsApplied = context.ProductSearchCriteria.Terms.Any(x => TermEquals(x));
-        }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.Storefront.Common;
@@ -175,7 +176,6 @@ namespace VirtoCommerce.Storefront.Domain
             result.CustomerId = promoEvalContext.User.Id;
             result.IsEveryone = true;
             result.IsRegisteredUser = promoEvalContext.User.IsRegisteredUser;
-            result.IsFirstTimeBuyer = promoEvalContext.User.IsFirstTimeBuyer;
 
             result.Currency = promoEvalContext.Currency != null ? promoEvalContext.Currency.Code : null;
             result.Language = promoEvalContext.Language != null ? promoEvalContext.Language.CultureName : null;
