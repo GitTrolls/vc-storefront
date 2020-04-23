@@ -21,6 +21,7 @@ namespace VirtoCommerce.Storefront.Domain.Security
 {
     //Stub for UserManager
     public sealed class UserStoreStub :
+        IUserStore<User>,
         IUserEmailStore<User>,
         IUserPasswordStore<User>,
         IUserLockoutStore<User>,
@@ -62,12 +63,6 @@ namespace VirtoCommerce.Storefront.Domain.Security
             var resultDto = await _platformSecurityApi.CreateAsyncAsync(dtoUser);
             return resultDto.ToIdentityResult();
         }
-        public async Task<IdentityResult> CreateAsync(Role role, CancellationToken cancellationToken)
-        {
-            var result = IdentityResult.Success;
-            await _platformSecurityApi.UpdateRoleAsync(role.ToRoleDto());
-            return result;
-        }
 
         public async Task<IdentityResult> DeleteAsync(User user, CancellationToken cancellationToken)
         {
@@ -75,38 +70,6 @@ namespace VirtoCommerce.Storefront.Domain.Security
             //Evict user from the cache
             SecurityCacheRegion.ExpireUser(user.Id);
             return IdentityResult.Success;
-        }
-        public Task<IdentityResult> DeleteAsync(Role role, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IdentityResult> UpdateAsync(User user, CancellationToken cancellationToken)
-        {
-            if (user.Contact != null)
-            {
-                if (user.Contact.IsTransient())
-                {
-                    user.Contact = await _memberService.CreateContactAsync(user.Contact);
-                }
-                else
-                {
-                    await _memberService.UpdateContactAsync(user.Contact);
-                }
-            }
-
-            var dtoUser = user.ToUserDto();
-            var resultDto = await _platformSecurityApi.UpdateAsyncAsync(dtoUser);
-
-            //Evict user from the cache
-            SecurityCacheRegion.ExpireUser(user.Id);
-            return resultDto.ToIdentityResult();
-        }
-        public async Task<IdentityResult> UpdateAsync(Role role, CancellationToken cancellationToken)
-        {
-            var result = IdentityResult.Success;
-            await _platformSecurityApi.UpdateRoleAsync(role.ToRoleDto());
-            return result;
         }
 
         public async Task<User> FindByIdAsync(string userId, CancellationToken cancellationToken)
@@ -170,6 +133,28 @@ namespace VirtoCommerce.Storefront.Domain.Security
         {
             user.UserName = userName;
             return Task.CompletedTask;
+        }
+
+        public async Task<IdentityResult> UpdateAsync(User user, CancellationToken cancellationToken)
+        {
+            if (user.Contact != null)
+            {
+                if (user.Contact.IsTransient())
+                {
+                    user.Contact = await _memberService.CreateContactAsync(user.Contact);
+                }
+                else
+                {
+                    await _memberService.UpdateContactAsync(user.Contact);
+                }
+            }
+
+            var dtoUser = user.ToUserDto();
+            var resultDto = await _platformSecurityApi.UpdateAsyncAsync(dtoUser);
+
+            //Evict user from the cache
+            SecurityCacheRegion.ExpireUser(user.Id);
+            return resultDto.ToIdentityResult();
         }
 
         #endregion
@@ -449,6 +434,25 @@ namespace VirtoCommerce.Storefront.Domain.Security
         #endregion
 
         #region IRoleStore<Role> members
+
+        public async Task<IdentityResult> CreateAsync(Role role, CancellationToken cancellationToken)
+        {
+            var result = IdentityResult.Success;
+            await _platformSecurityApi.UpdateRoleAsync(role.ToRoleDto());
+            return result;
+        }
+
+        public async Task<IdentityResult> UpdateAsync(Role role, CancellationToken cancellationToken)
+        {
+            var result = IdentityResult.Success;
+            await _platformSecurityApi.UpdateRoleAsync(role.ToRoleDto());
+            return result;
+        }
+
+        public Task<IdentityResult> DeleteAsync(Role role, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
 
         public Task<string> GetRoleIdAsync(Role role, CancellationToken cancellationToken)
         {
