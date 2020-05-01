@@ -8,7 +8,6 @@ using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Model.Security;
 using VirtoCommerce.Storefront.Model.Stores;
 using coreDto = VirtoCommerce.Storefront.AutoRestClients.CoreModuleApi.Models;
-using platformDto = VirtoCommerce.Storefront.AutoRestClients.PlatformModuleApi.Models;
 using customerDto = VirtoCommerce.Storefront.AutoRestClients.CustomerModuleApi.Models;
 
 namespace VirtoCommerce.Storefront.Domain
@@ -20,7 +19,7 @@ namespace VirtoCommerce.Storefront.Domain
 
         public static DynamicProperty ToDynamicProperty(this customerDto.DynamicObjectProperty propertyDto)
         {
-            return propertyDto.JsonConvert<platformDto.DynamicObjectProperty>().ToDynamicProperty();
+            return propertyDto.JsonConvert<coreDto.DynamicObjectProperty>().ToDynamicProperty();
         }
 
 
@@ -29,14 +28,14 @@ namespace VirtoCommerce.Storefront.Domain
             return property.ToDynamicPropertyDto().JsonConvert<customerDto.DynamicObjectProperty>();
         }
 
-        public static Address ToAddress(this customerDto.CustomerAddress addressDto)
+        public static Address ToAddress(this customerDto.Address addressDto)
         {
             return addressDto.JsonConvert<coreDto.Address>().ToAddress();
         }
 
-        public static customerDto.CustomerAddress ToCustomerAddressDto(this Address address)
+        public static customerDto.Address ToCustomerAddressDto(this Address address)
         {
-            return address.ToCoreAddressDto().JsonConvert<customerDto.CustomerAddress>();
+            return address.ToCoreAddressDto().JsonConvert<customerDto.Address>();
         }
 
         public static Vendor ToVendor(this customerDto.Vendor vendorDto, Language currentLanguage, Store store)
@@ -233,7 +232,7 @@ namespace VirtoCommerce.Storefront.Domain
             }
             if (!customer.Addresses.IsNullOrEmpty())
             {
-                retVal.Addresses = new List<customerDto.CustomerAddress>();
+                retVal.Addresses = new List<customerDto.Address>();
                 foreach (var address in customer.Addresses)
                 {
                     var addressDto = address.ToCustomerAddressDto();
@@ -307,9 +306,9 @@ namespace VirtoCommerce.Storefront.Domain
             return retVal;
         }
 
-        public static customerDto.Contact ToCoreContactDto(this Contact contact)
+        public static coreDto.Contact ToCoreContactDto(this Contact contact)
         {
-            return contact.ToContactDto().JsonConvert<customerDto.Contact>();
+            return contact.ToContactDto().JsonConvert<coreDto.Contact>();
         }
     }
 }

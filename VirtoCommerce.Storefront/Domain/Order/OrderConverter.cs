@@ -6,10 +6,8 @@ using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Marketing;
 using VirtoCommerce.Storefront.Model.Order;
 using coreDto = VirtoCommerce.Storefront.AutoRestClients.CoreModuleApi.Models;
-using platformDto = VirtoCommerce.Storefront.AutoRestClients.PlatformModuleApi.Models;
 using orderDto = VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models;
 using storeDto = VirtoCommerce.Storefront.AutoRestClients.StoreModuleApi.Models;
-using paymentDto = VirtoCommerce.Storefront.AutoRestClients.PaymentModuleApi.Models;
 
 namespace VirtoCommerce.Storefront.Domain
 {
@@ -63,7 +61,7 @@ namespace VirtoCommerce.Storefront.Domain
 
         public static DynamicProperty ToDynamicProperty(this orderDto.DynamicObjectProperty propertyDto)
         {
-            return propertyDto.JsonConvert<platformDto.DynamicObjectProperty>().ToDynamicProperty();
+            return propertyDto.JsonConvert<coreDto.DynamicObjectProperty>().ToDynamicProperty();
         }
 
         public static orderDto.DynamicObjectProperty ToOrderDynamicPropertyDto(this DynamicProperty property)
@@ -71,12 +69,12 @@ namespace VirtoCommerce.Storefront.Domain
             return property.ToDynamicPropertyDto().JsonConvert<orderDto.DynamicObjectProperty>();
         }
 
-        public static orderDto.OrderAddress ToOrderAddressDto(this Address address)
+        public static orderDto.Address ToOrderAddressDto(this Address address)
         {
-            return address.ToCoreAddressDto().JsonConvert<orderDto.OrderAddress>();
+            return address.ToCoreAddressDto().JsonConvert<orderDto.Address>();
         }
 
-        public static Address ToAddress(this orderDto.OrderAddress addressDto)
+        public static Address ToAddress(this orderDto.Address addressDto)
         {
             return addressDto.JsonConvert<coreDto.Address>().ToAddress();
         }
@@ -104,7 +102,7 @@ namespace VirtoCommerce.Storefront.Domain
             return result;
         }
 
-        public static ShipmentItem ToShipmentItem(this orderDto.OrderShipmentItem shipmentItemDto, IEnumerable<Currency> availCurrencies, Language language)
+        public static ShipmentItem ToShipmentItem(this orderDto.ShipmentItem shipmentItemDto, IEnumerable<Currency> availCurrencies, Language language)
         {
             var result = new ShipmentItem();
 
@@ -121,7 +119,7 @@ namespace VirtoCommerce.Storefront.Domain
             return result;
         }
 
-        public static Shipment ToOrderShipment(this orderDto.OrderShipment shipmentDto, IEnumerable<Currency> availCurrencies, Language language)
+        public static Shipment ToOrderShipment(this orderDto.Shipment shipmentDto, IEnumerable<Currency> availCurrencies, Language language)
         {
             var currency = availCurrencies.FirstOrDefault(x => x.Equals(shipmentDto.Currency)) ?? new Currency(language, shipmentDto.Currency);
             var result = new Shipment(currency)
@@ -200,7 +198,7 @@ namespace VirtoCommerce.Storefront.Domain
             return result;
         }
 
-        public static LineItem ToOrderLineItem(this orderDto.OrderLineItem lineItemDto, IEnumerable<Currency> availCurrencies, Language language)
+        public static LineItem ToOrderLineItem(this orderDto.LineItem lineItemDto, IEnumerable<Currency> availCurrencies, Language language)
         {
             var currency = availCurrencies.FirstOrDefault(x => x.Equals(lineItemDto.Currency)) ?? new Currency(language, lineItemDto.Currency);
 
@@ -516,14 +514,14 @@ namespace VirtoCommerce.Storefront.Domain
 
         public static PaymentMethod ToPaymentMethod(this orderDto.PaymentMethod paymentMethodDto, CustomerOrder order)
         {
-            return paymentMethodDto.JsonConvert<paymentDto.PaymentMethod>().ToStorePaymentMethod(order.Currency);
+            return paymentMethodDto.JsonConvert<storeDto.PaymentMethod>().ToStorePaymentMethod(order.Currency);
         }
 
-        public static ProcessPaymentResult ToProcessPaymentResult(this orderDto.ProcessPaymentRequestResult processPaymentResultDto, CustomerOrder order)
+        public static ProcessPaymentResult ToProcessPaymentResult(this orderDto.ProcessPaymentResult processPaymentResultDto, CustomerOrder order)
         {
             return new ProcessPaymentResult()
             {
-                Error = processPaymentResultDto.ErrorMessage,
+                Error = processPaymentResultDto.Error,
                 HtmlForm = processPaymentResultDto.HtmlForm,
                 IsSuccess = processPaymentResultDto.IsSuccess ?? false,
                 NewPaymentStatus = processPaymentResultDto.NewPaymentStatus,
