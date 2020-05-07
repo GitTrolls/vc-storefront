@@ -1,6 +1,11 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace VirtoCommerce.Storefront
@@ -12,23 +17,21 @@ namespace VirtoCommerce.Storefront
             CreateWebHostBuilder(args).Build().Run();
         }
 
-        public static IHostBuilder CreateWebHostBuilder(string[] args) =>
-           Host.CreateDefaultBuilder(args)
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+           WebHost.CreateDefaultBuilder(args)
+              .UseApplicationInsights()
               .UseContentRoot(Directory.GetCurrentDirectory())
+              .UseIISIntegration()
               .ConfigureLogging((hostingContext, logging) =>
               {
                   logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
                   logging.AddConsole();
                   logging.AddDebug();
                   //Enable Azure logging
-                  //https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-3.1#logging-in-azure
+                  //https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-2.2#logging-in-azure
                   logging.AddAzureWebAppDiagnostics();
               })
-              .ConfigureWebHostDefaults(webBuilder =>
-              {
-                  webBuilder.UseStartup<Startup>();
-                  webBuilder.UseIISIntegration();
-              });
+              .UseStartup<Startup>();
 
     }
 

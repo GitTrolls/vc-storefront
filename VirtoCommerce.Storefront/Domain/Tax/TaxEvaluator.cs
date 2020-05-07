@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using VirtoCommerce.Storefront.AutoRestClients.CoreModuleApi;
-using VirtoCommerce.Storefront.AutoRestClients.TaxModuleApi;
 using VirtoCommerce.Storefront.Caching;
 using VirtoCommerce.Storefront.Extensions;
 using VirtoCommerce.Storefront.Model;
@@ -13,17 +12,17 @@ using VirtoCommerce.Storefront.Model.Caching;
 using VirtoCommerce.Storefront.Model.Common.Caching;
 using VirtoCommerce.Storefront.Model.Tax;
 using VirtoCommerce.Storefront.Model.Tax.Services;
-using taxDto = VirtoCommerce.Storefront.AutoRestClients.TaxModuleApi.Models;
+using coreService = VirtoCommerce.Storefront.AutoRestClients.CoreModuleApi.Models;
 
 namespace VirtoCommerce.Storefront.Domain
 {
     public class TaxEvaluator : ITaxEvaluator
     {
-        private readonly ITaxModule _taxApi;
+        private readonly ICommerce _commerceApi;
         private readonly IStorefrontMemoryCache _memoryCache;
-        public TaxEvaluator(ITaxModule taxApi, IStorefrontMemoryCache memoryCache)
+        public TaxEvaluator(ICommerce commerceApi, IStorefrontMemoryCache memoryCache)
         {
-            _taxApi = taxApi;
+            _commerceApi = commerceApi;
             _memoryCache = memoryCache;
         }
 
@@ -39,7 +38,7 @@ namespace VirtoCommerce.Storefront.Domain
             {
                 throw new ArgumentNullException(nameof(owners));
             }
-            IList<taxDto.TaxRate> taxRates = new List<taxDto.TaxRate>();
+            IList<coreService.TaxRate> taxRates = new List<coreService.TaxRate>();
             if (context.StoreTaxCalculationEnabled)
             {
                 //Do not execute platform API for tax evaluation if fixed tax rate is used
@@ -47,7 +46,7 @@ namespace VirtoCommerce.Storefront.Domain
                 {
                     foreach (var line in context.Lines ?? Enumerable.Empty<TaxLine>())
                     {
-                        var rate = new taxDto.TaxRate()
+                        var rate = new coreService.TaxRate()
                         {
                             Rate = (double)(line.Amount * context.FixedTaxRate * 0.01m).Amount,
                             Currency = context.Currency.Code,
@@ -62,7 +61,7 @@ namespace VirtoCommerce.Storefront.Domain
                     taxRates = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, (cacheEntry) =>
                     {
                         cacheEntry.AddExpirationToken(TaxCacheRegion.CreateChangeToken());
-                        return _taxApi. EvaluateTaxesAsync(context.StoreId, context.ToTaxEvaluationContextDto());
+                        return _commerceApi.EvaluateTaxesAsync(context.StoreId, context.ToTaxEvaluationContextDto());
                     });
                 }
             }
@@ -71,7 +70,7 @@ namespace VirtoCommerce.Storefront.Domain
 
         #endregion
 
-        private static void ApplyTaxRates(IList<taxDto.TaxRate> taxRates, IEnumerable<ITaxable> owners)
+        private static void ApplyTaxRates(IList<coreService.TaxRate> taxRates, IEnumerable<ITaxable> owners)
         {
             if (taxRates == null)
             {

@@ -21,6 +21,7 @@ namespace VirtoCommerce.Storefront.Domain.Security
 {
     //Stub for UserManager
     public sealed class UserStoreStub :
+        IUserStore<User>,
         IUserEmailStore<User>,
         IUserPasswordStore<User>,
         IUserLockoutStore<User>,
@@ -59,33 +60,16 @@ namespace VirtoCommerce.Storefront.Domain.Security
                 user.Contact = await _memberService.CreateContactAsync(user.Contact);
             }
             var dtoUser = user.ToUserDto();
-            var resultDto = await _platformSecurityApi.CreateAsync(dtoUser);
+            var resultDto = await _platformSecurityApi.CreateAsyncAsync(dtoUser);
             return resultDto.ToIdentityResult();
-        }
-        public async Task<IdentityResult> CreateAsync(Role role, CancellationToken cancellationToken)
-        {
-            var result = IdentityResult.Success;
-            await _platformSecurityApi.UpdateRoleAsync(role.ToRoleDto());
-            return result;
         }
 
         public async Task<IdentityResult> DeleteAsync(User user, CancellationToken cancellationToken)
         {
-            await _platformSecurityApi.DeleteAsync(new[] { user.UserName });
+            await _platformSecurityApi.DeleteAsyncAsync(new[] { user.UserName });
             //Evict user from the cache
             SecurityCacheRegion.ExpireUser(user.Id);
             return IdentityResult.Success;
-        }
-        public Task<IdentityResult> DeleteAsync(Role role, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IdentityResult> UpdateAsync(Role role, CancellationToken cancellationToken)
-        {
-            var result = IdentityResult.Success;
-            await _platformSecurityApi.UpdateRoleAsync(role.ToRoleDto());
-            return result;
         }
 
         public async Task<User> FindByIdAsync(string userId, CancellationToken cancellationToken)
@@ -166,7 +150,7 @@ namespace VirtoCommerce.Storefront.Domain.Security
             }
 
             var dtoUser = user.ToUserDto();
-            var resultDto = await _platformSecurityApi.UpdateAsync(dtoUser);
+            var resultDto = await _platformSecurityApi.UpdateAsyncAsync(dtoUser);
 
             //Evict user from the cache
             SecurityCacheRegion.ExpireUser(user.Id);
@@ -451,6 +435,25 @@ namespace VirtoCommerce.Storefront.Domain.Security
 
         #region IRoleStore<Role> members
 
+        public async Task<IdentityResult> CreateAsync(Role role, CancellationToken cancellationToken)
+        {
+            var result = IdentityResult.Success;
+            await _platformSecurityApi.UpdateRoleAsync(role.ToRoleDto());
+            return result;
+        }
+
+        public async Task<IdentityResult> UpdateAsync(Role role, CancellationToken cancellationToken)
+        {
+            var result = IdentityResult.Success;
+            await _platformSecurityApi.UpdateRoleAsync(role.ToRoleDto());
+            return result;
+        }
+
+        public Task<IdentityResult> DeleteAsync(Role role, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<string> GetRoleIdAsync(Role role, CancellationToken cancellationToken)
         {
             return Task.FromResult(role.Id);
@@ -508,12 +511,12 @@ namespace VirtoCommerce.Storefront.Domain.Security
             // Cleanup
         }
 
-        private async Task<User> PrepareUserResultAsync(MemoryCacheEntryOptions options, AutoRestClients.PlatformModuleApi.Models.ApplicationUser userDto)
+        private async Task<User> PrepareUserResultAsync(MemoryCacheEntryOptions options, AutoRestClients.PlatformModuleApi.Models.ApplicationUserExtended userDto)
         {
             if (userDto != null)
             {
                 var user = userDto.ToUser();
-                var orderSearchResult = await _orderModule.SearchCustomerOrderAsync(new CustomerOrderSearchCriteria()
+                var orderSearchResult = await _orderModule.SearchAsync(new CustomerOrderSearchCriteria()
                 {
                     CustomerId = user.Id,
                     Take = 0,
