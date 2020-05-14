@@ -5,7 +5,6 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Text.Encodings.Web;
-using DotLiquid.ViewEngine.Extensions;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.DependencyInjection;
@@ -111,8 +110,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
             var collection = source as ICollection;
             var pagedList = source as IPagedList;
             var requestUrl = context.GetValue(new ScriptVariableGlobal("request_url")) as Uri;
-            var pageNumber = context.GetValue(new ScriptVariableGlobal("page_number"))?.ToString().SafeParseInt(1) ?? 1;
-            var effectivePageSize = context.GetValue(new ScriptVariableGlobal("page_size"))?.ToString().SafeParseInt(pageSize) ?? pageSize;
+            var pageNumber = (int)(context.GetValue(new ScriptVariableGlobal("page_number")) ?? 1);
+            pageSize = (int)(context.GetValue(new ScriptVariableGlobal("page_size")) ?? pageSize);
             var @params = new NameValueCollection();
 
             if (!string.IsNullOrEmpty(filterJson))
@@ -126,12 +125,12 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
 
             if (source is IMutablePagedList mutablePagedList)
             {
-                mutablePagedList.Slice(pageNumber, effectivePageSize, mutablePagedList.SortInfos, @params);
+                mutablePagedList.Slice(pageNumber, pageSize, mutablePagedList.SortInfos, @params);
                 pagedList = mutablePagedList;
             }
             else if (collection != null)
             {
-                pagedList = new PagedList<object>(collection.OfType<object>().AsQueryable(), pageNumber, effectivePageSize);
+                pagedList = new PagedList<object>(collection.OfType<object>().AsQueryable(), pageNumber, pageSize);
                 //TODO: Need find way to replace ICollection instance in liquid context to paged instance
                 //var hash = context.Environments.FirstOrDefault(s => s.ContainsKey(_collectionName));
                 //hash[_collectionName] = pagedList;

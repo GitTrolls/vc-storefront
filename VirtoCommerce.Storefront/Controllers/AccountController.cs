@@ -2,7 +2,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -27,7 +26,6 @@ namespace VirtoCommerce.Storefront.Controllers
     [StorefrontRoute("account")]
     public class AccountController : StorefrontControllerBase
     {
-        private readonly IStorefrontUrlBuilder _urlBuilder;
         private readonly SignInManager<User> _signInManager;
         private readonly IEventPublisher _publisher;
         private readonly StorefrontOptions _options;
@@ -46,7 +44,6 @@ namespace VirtoCommerce.Storefront.Controllers
             IOptions<StorefrontOptions> options)
             : base(workContextAccessor, urlBuilder)
         {
-            _urlBuilder = urlBuilder;
             _signInManager = signInManager;
             _publisher = publisher;
             _options = options.Value;
@@ -312,21 +309,7 @@ namespace VirtoCommerce.Storefront.Controllers
                 return View("customers/login", WorkContext);
             }
 
-            if (!new CanUserLoginToStoreSpecification(user).IsSatisfiedBy(WorkContext.CurrentStore))
-            {
-                if (login.ForceLoginToAccountStore)
-                {
-                    var store = WorkContext.AllStores.First(x => x.Id == user.StoreId);
-                    var url = HttpContext.Request.GetEncodedUrl();
-                    var redirectUrl = _urlBuilder.ToStoreAbsolute(url, store, store.DefaultLanguage);
-                    return RedirectPreserveMethod(redirectUrl);
-                }
-
-                WorkContext.Form.Errors.Add(SecurityErrorDescriber.UserCannotLoginInStore());
-                return View("customers/login", WorkContext);
-            }
-
-            if (new IsUserSuspendedSpecification().IsSatisfiedBy(user))
+            if (!new CanUserLoginToStoreSpecification(user).IsSatisfiedBy(WorkContext.CurrentStore) || new IsUserSuspendedSpecification().IsSatisfiedBy(user))
             {
                 WorkContext.Form.Errors.Add(SecurityErrorDescriber.UserCannotLoginInStore());
                 return View("customers/login", WorkContext);
