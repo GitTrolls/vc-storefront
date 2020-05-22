@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -47,7 +46,7 @@ namespace VirtoCommerce.Storefront.JsonConverters
                 SerializationBinder = jsonSettings.SerializationBinder,
                 TypeNameAssemblyFormatHandling = jsonSettings.TypeNameAssemblyFormatHandling,
                 // exclude  BackCompatibilityJsonConverter from  Converters  to prevent infinite loops when serializing
-                Converters = jsonSettings.Converters.Except( jsonSettings.Converters.Where( x=> x.GetType() == typeof(UserBackwardCompatibilityJsonConverter))).ToList()
+                Converters = null
             };
 
         }

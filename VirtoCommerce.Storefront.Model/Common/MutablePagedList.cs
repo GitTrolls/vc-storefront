@@ -86,7 +86,7 @@ namespace VirtoCommerce.Storefront.Model.Common
                 _pagedList = null;
             }
 
-            ReloadPagedData();
+            TryReloadPagedData();
         }
 
         #endregion
@@ -99,7 +99,7 @@ namespace VirtoCommerce.Storefront.Model.Common
         /// <returns>A BasePagedList&lt;T&gt;.Enumerator for the BasePagedList&lt;T&gt;.</returns>
         public IEnumerator<T> GetEnumerator()
         {
-            ReloadPagedData();
+            TryReloadPagedData();
             return _pagedList.GetEnumerator();
         }
 
@@ -120,7 +120,7 @@ namespace VirtoCommerce.Storefront.Model.Common
         {
             get
             {
-                ReloadPagedData();
+                TryReloadPagedData();
                 return _pagedList[index];
             }
         }
@@ -132,7 +132,7 @@ namespace VirtoCommerce.Storefront.Model.Common
         {
             get
             {
-                ReloadPagedData();
+                TryReloadPagedData();
                 return _pagedList.Count;
             }
         }
@@ -143,7 +143,7 @@ namespace VirtoCommerce.Storefront.Model.Common
         ///<returns>A non-enumerable copy of this paged list.</returns>
         public IPagedList GetMetaData()
         {
-            ReloadPagedData();
+            TryReloadPagedData();
             return new PagedListMetaData(this);
         }
 
@@ -154,7 +154,7 @@ namespace VirtoCommerce.Storefront.Model.Common
         {
             get
             {
-                ReloadPagedData();
+                TryReloadPagedData();
                 return _pagedList.OfType<object>().ToList()[index];
 
             }
@@ -238,19 +238,14 @@ namespace VirtoCommerce.Storefront.Model.Common
         {
             get
             {
-               ReloadPagedData();
-               var dictionary = _pagedList.OfType<IAccessibleByIndexKey>().ToDictionary(x => x.IndexKey, x => x);
-               return dictionary.Keys;
-               
+                throw new NotImplementedException();
             }
         }
         public ICollection Values
         {
             get
             {
-                ReloadPagedData();
-                var dictionary = _pagedList.OfType<IAccessibleByIndexKey>().ToDictionary(x => x.IndexKey, x => x);
-                return dictionary.Values;
+                throw new NotImplementedException();
             }
         }
 
@@ -272,9 +267,7 @@ namespace VirtoCommerce.Storefront.Model.Common
         
         IDictionaryEnumerator IDictionary.GetEnumerator()
         {
-            ReloadPagedData();
-            var dictionary = _pagedList.OfType<IAccessibleByIndexKey>().ToDictionary(x => x.IndexKey, x => x);
-            return dictionary.GetEnumerator();
+            throw new NotImplementedException();
         }
         #endregion
 
@@ -286,7 +279,7 @@ namespace VirtoCommerce.Storefront.Model.Common
             }
 
             value = null;
-            ReloadPagedData();
+            TryReloadPagedData();
             if (key is string stringKey)
             {
                 if (stringKey == "size")
@@ -309,7 +302,7 @@ namespace VirtoCommerce.Storefront.Model.Common
             return value != null;
         }
 
-        private void ReloadPagedData()
+        private void TryReloadPagedData()
         {
             if (_pagedList == null)
             {

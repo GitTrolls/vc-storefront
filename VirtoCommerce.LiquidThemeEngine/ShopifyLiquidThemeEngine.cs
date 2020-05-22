@@ -24,7 +24,6 @@ using VirtoCommerce.Storefront.Model.Caching;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Common.Caching;
 using VirtoCommerce.Storefront.Model.Common.Exceptions;
-using VirtoCommerce.Storefront.Model.Features;
 using VirtoCommerce.Storefront.Model.StaticContent;
 
 namespace VirtoCommerce.LiquidThemeEngine
@@ -48,10 +47,9 @@ namespace VirtoCommerce.LiquidThemeEngine
         private readonly IStorefrontMemoryCache _memoryCache;
         private readonly IContentBlobProvider _themeBlobProvider;
         private readonly ISassFileManager _sassFileManager;
-        private readonly IFeaturesAgent _featuresAgent;
 
         public ShopifyLiquidThemeEngine(IStorefrontMemoryCache memoryCache, IWorkContextAccessor workContextAccessor, IHttpContextAccessor httpContextAccessor,
-                                        IStorefrontUrlBuilder storeFrontUrlBuilder, IContentBlobProvider contentBlobProvider, ISassFileManager sassFileManager, IOptions<LiquidThemeEngineOptions> options, IFeaturesAgent featuresAgent)
+                                        IStorefrontUrlBuilder storeFrontUrlBuilder, IContentBlobProvider contentBlobProvider, ISassFileManager sassFileManager, IOptions<LiquidThemeEngineOptions> options)
         {
             _workContextAccessor = workContextAccessor;
             _httpContextAccessor = httpContextAccessor;
@@ -60,7 +58,6 @@ namespace VirtoCommerce.LiquidThemeEngine
             _memoryCache = memoryCache;
             _themeBlobProvider = contentBlobProvider;
             _sassFileManager = sassFileManager;
-            _featuresAgent = featuresAgent;
             SassCompiler.FileManager = sassFileManager;
         }
 
@@ -477,7 +474,7 @@ namespace VirtoCommerce.LiquidThemeEngine
             return result;
         }
 
-
+      
 
         private string ReadTemplateByPath(string templatePath)
         {
@@ -501,27 +498,6 @@ namespace VirtoCommerce.LiquidThemeEngine
         {
             var prefix = _httpContextAccessor.HttpContext.Request.Query["preview_mode"];
             return prefix.ToString().IsNullOrEmpty() ? "settings_data.json" : $"drafts\\{prefix}_settings_data.json";
-        }
-
-        public bool IsFeatureActive(string featureName)
-        {
-            var cacheKey = CacheKey.With(GetType(), nameof(IsFeatureActive), featureName);
-
-            return _memoryCache.GetOrCreateExclusive(cacheKey, cacheEntry =>
-            {
-                var changeToken = ThemeEngineCacheRegion.CreateChangeToken();
-                var watchChangeToken = _themeBlobProvider.Watch(CurrentThemeSettingPath);
-                var tokens = new[]
-                           {
-                               changeToken, watchChangeToken
-                           };
-                var compositeChangeToken = new CompositeChangeToken(tokens);
-                cacheEntry.AddExpirationToken(compositeChangeToken);
-
-                var settingJObject = InnerGetAllSettings(_themeBlobProvider, CurrentThemeSettingPath);
-                var result = _featuresAgent.IsActive(featureName, settingJObject);
-                return result;
-            });
         }
     }
 }
