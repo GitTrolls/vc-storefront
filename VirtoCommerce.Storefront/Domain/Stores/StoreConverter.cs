@@ -8,7 +8,6 @@ using VirtoCommerce.Storefront.Model.Stores;
 using coreDto = VirtoCommerce.Storefront.AutoRestClients.CoreModuleApi.Models;
 using platformDto = VirtoCommerce.Storefront.AutoRestClients.PlatformModuleApi.Models;
 using storeDto = VirtoCommerce.Storefront.AutoRestClients.StoreModuleApi.Models;
-using paymentDto = VirtoCommerce.Storefront.AutoRestClients.PaymentModuleApi.Models;
 
 namespace VirtoCommerce.Storefront.Domain
 {
@@ -23,7 +22,7 @@ namespace VirtoCommerce.Storefront.Domain
 
         public static DynamicProperty ToDynamicProperty(this storeDto.DynamicObjectProperty propertyDto)
         {
-            return propertyDto.JsonConvert<platformDto.DynamicObjectProperty>().ToDynamicProperty();
+            return propertyDto.JsonConvert<coreDto.DynamicObjectProperty>().ToDynamicProperty();
         }
 
         public static Store ToStore(this storeDto.Store storeDto)
@@ -77,7 +76,7 @@ namespace VirtoCommerce.Storefront.Domain
             if (!storeDto.Settings.IsNullOrEmpty())
             {
                 result.Settings = new MutablePagedList<SettingEntry>(storeDto.Settings.Where(x => !x.ValueType.EqualsInvariant("SecureString"))
-                                                                                      .Select(x => x.JsonConvert<platformDto.ObjectSettingEntry>()
+                                                                                      .Select(x => x.JsonConvert<platformDto.Setting>()
                                                                                       .ToSettingEntry()));
             }
 
@@ -94,7 +93,7 @@ namespace VirtoCommerce.Storefront.Domain
         }
 
 
-        public static PaymentMethod ToStorePaymentMethod(this paymentDto.PaymentMethod paymentMethodDto, Currency currency)
+        public static PaymentMethod ToStorePaymentMethod(this storeDto.PaymentMethod paymentMethodDto, Currency currency)
         {
             var retVal = new PaymentMethod(currency)
             {
@@ -112,7 +111,7 @@ namespace VirtoCommerce.Storefront.Domain
 
             if (paymentMethodDto.Settings != null)
             {
-                retVal.Settings = paymentMethodDto.Settings.Where(x => !x.ValueType.EqualsInvariant("SecureString")).Select(x => x.JsonConvert<AutoRestClients.PlatformModuleApi.Models.ObjectSettingEntry>().ToSettingEntry()).ToList();
+                retVal.Settings = paymentMethodDto.Settings.Where(x => !x.ValueType.EqualsInvariant("SecureString")).Select(x => x.JsonConvert<AutoRestClients.PlatformModuleApi.Models.Setting>().ToSettingEntry()).ToList();
             }
 
             retVal.Currency = currency;
@@ -128,7 +127,7 @@ namespace VirtoCommerce.Storefront.Domain
             return retVal;
         }
 
-        public static TaxDetail ToTaxDetail(this paymentDto.TaxDetail dto, Currency currency)
+        public static TaxDetail ToTaxDetail(this storeDto.TaxDetail dto, Currency currency)
         {
             var result = new TaxDetail(currency)
             {

@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Storefront.Domain;
 using VirtoCommerce.Storefront.Domain.Security;
@@ -20,11 +19,11 @@ namespace VirtoCommerce.Storefront.Middleware
     {
         private readonly IConfiguration _configuration;
         private readonly RequestDelegate _next;
-        private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly StorefrontOptions _options;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly Dictionary<string, object> _applicationSettings;
-        public WorkContextBuildMiddleware(RequestDelegate next, IWebHostEnvironment hostingEnvironment,
+        public WorkContextBuildMiddleware(RequestDelegate next, IHostingEnvironment hostingEnvironment,
                                           IOptions<StorefrontOptions> options, IWorkContextAccessor workContextAccessor, IConfiguration configuration)
         {
             _next = next;
