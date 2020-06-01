@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using VirtoCommerce.Storefront.AutoRestClients.PlatformModuleApi;
-using VirtoCommerce.Storefront.AutoRestClients.PlatformModuleApi.Models;
+using VirtoCommerce.Storefront.AutoRestClients.NotificationsModuleApi;
 using VirtoCommerce.Storefront.Domain;
 using VirtoCommerce.Storefront.Domain.Common;
 using VirtoCommerce.Storefront.Domain.Security;
@@ -176,7 +174,7 @@ namespace VirtoCommerce.Storefront.Controllers.Api
         [ValidateAntiForgeryToken]
         public async Task<ActionResult<IdentityResult>> RegisterUser([FromBody] OrganizationUserRegistration registration)
         {
-            var result = IdentityResult.Success;
+            IdentityResult result;
 
             TryValidateModel(registration);
 
@@ -264,7 +262,7 @@ namespace VirtoCommerce.Storefront.Controllers.Api
                             Sender = WorkContext.CurrentStore.Email,
                             Recipient = user.Email
                         };
-                        var sendingResult = await _platformNotificationApi.SendNotificationAsync(inviteNotification.ToNotificationDto());
+                        var sendingResult = await _platformNotificationApi.SendNotificationByRequestAsync(inviteNotification.ToNotificationDto());
                         if (sendingResult.IsSuccess != true)
                         {
                             var errors = result.Errors.Concat(new IdentityError[] { new IdentityError() { Description = sendingResult.ErrorMessage } }).ToArray();
@@ -321,7 +319,7 @@ namespace VirtoCommerce.Storefront.Controllers.Api
             if (searchCriteria.OrganizationId != null)
             {
                 var contactsSearchResult = await _memberService.SearchOrganizationContactsAsync(searchCriteria);
-                var userIds = contactsSearchResult.Select(x => x.SecurityAccounts?.FirstOrDefault()).OfType<SecurityAccount>().Select(x => x.Id);
+                var userIds = contactsSearchResult.Select(x => x.SecurityAccounts?.FirstOrDefault()).Select(x => x.Id);
                 var users = new List<User>();
                 foreach (var userId in userIds)
                 {
@@ -440,14 +438,7 @@ namespace VirtoCommerce.Storefront.Controllers.Api
         [ValidateAntiForgeryToken]
         public async Task<ActionResult<PasswordChangeResult>> ChangePassword([FromBody] ChangePassword formModel)
         {
-            var changePassword = new ChangePasswordInfo
-            {
-                OldPassword = formModel.OldPassword,
-                NewPassword = formModel.NewPassword,
-            };
-
             var result = await _userManager.ChangePasswordAsync(WorkContext.CurrentUser, formModel.OldPassword, formModel.NewPassword);
-
             return new PasswordChangeResult { Succeeded = result.Succeeded, Errors = result.Errors.Select(x => new FormError { Code = x.Code.PascalToKebabCase(), Description = x.Description }).ToList() };
         }
 
