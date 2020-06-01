@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using VirtoCommerce.Storefront.AutoRestClients.NotificationsModuleApi;
-using VirtoCommerce.Storefront.AutoRestClients.NotificationsModuleApi.Models;
+using VirtoCommerce.Storefront.AutoRestClients.PlatformModuleApi;
+using VirtoCommerce.Storefront.AutoRestClients.PlatformModuleApi.Models;
 using VirtoCommerce.Storefront.Domain;
 using VirtoCommerce.Storefront.Domain.Common;
 using VirtoCommerce.Storefront.Domain.Security;
@@ -893,21 +893,18 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
 
-        private async Task<NotificationSendResult> SendNotificationAsync(NotificationBase notification)
+        private async Task<SendNotificationResult> SendNotificationAsync(NotificationBase notification)
         {
-            NotificationSendResult result;
+            var result = new SendNotificationResult();
 
             try
             {
-                result = await _platformNotificationApi.SendNotificationByRequestAsync(notification.ToNotificationDto());
+                result = await _platformNotificationApi.SendNotificationAsync(notification.ToNotificationDto());
             }
             catch
             {
-                result = new NotificationSendResult
-                {
-                    IsSuccess = false,
-                    ErrorMessage = "Error occurred while sending notification"
-                };
+                result.IsSuccess = false;
+                result.ErrorMessage = "Error occurred while sending notification";
             }
 
             return result;

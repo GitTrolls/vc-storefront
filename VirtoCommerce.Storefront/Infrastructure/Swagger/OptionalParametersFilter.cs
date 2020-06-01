@@ -1,29 +1,28 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace VirtoCommerce.Storefront.Infrastructure.Swagger
 {
     public class OptionalParametersFilter : IOperationFilter
     {
-        public void Apply(OpenApiOperation operation, OperationFilterContext context)
+        public void Apply(Operation operation, OperationFilterContext context)
         {
-            if (operation.Parameters == null || !operation.Parameters.Any())
+            if (operation.Parameters?.Any() == true)
             {
-                return;
-            }
+                var optionalParameters = context.ApiDescription.ParameterDescriptions
+                    .Where(x => x.ParameterDescriptor != null &&
+                        ((ControllerParameterDescriptor)x.ParameterDescriptor).ParameterInfo.CustomAttributes.Any(attr => attr.AttributeType == typeof(SwaggerOptionalAttribute)))
+                    .ToList();
 
-            var optionalParameters = context.ApiDescription.ParameterDescriptions
-                .Where(p => p.ParameterDescriptor != null &&
-                ((ControllerParameterDescriptor)p.ParameterDescriptor).ParameterInfo.CustomAttributes.Any(attr => attr.AttributeType == typeof(SwaggerOptionalAttribute))).ToList();
-
-            foreach (var apiParameter in optionalParameters)
-            {
-                var parameter = operation.Parameters.FirstOrDefault(p => p.Name == apiParameter.Name);
-                if (parameter != null)
+                foreach (var apiParameter in optionalParameters)
                 {
-                    parameter.Required = false;
+                    var parameter = operation.Parameters.FirstOrDefault(x => x.Name == apiParameter.Name);
+                    if (parameter != null)
+                    {
+                        parameter.Required = false;
+                    }
                 }
             }
         }

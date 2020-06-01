@@ -15,6 +15,8 @@ using VirtoCommerce.Storefront.Model.Caching;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Common.Caching;
 using VirtoCommerce.Storefront.Model.Stores;
+using StorePaymentMethod = VirtoCommerce.Storefront.AutoRestClients.StoreModuleApi.Models.PaymentMethod;
+using TaxProvider = VirtoCommerce.Storefront.AutoRestClients.StoreModuleApi.Models.TaxProvider;
 using StoreApi = VirtoCommerce.Storefront.AutoRestClients.StoreModuleApi.Models;
 
 namespace VirtoCommerce.Storefront.Domain
@@ -49,7 +51,7 @@ namespace VirtoCommerce.Storefront.Domain
                 cacheEntry.AddExpirationToken(_apiChangesWatcher.CreateChangeToken());
 
                 var storeDtos = await _storeApi.GetStoresAsync();
-                return await Task.WhenAll(storeDtos.Select(x => ConvertStoreAndLoadDependeciesAsync(x)));
+                return  await Task.WhenAll(storeDtos.Select(x => ConvertStoreAndLoadDependeciesAsync(x)));
             }, cacheNullValue: false);
         }
 
@@ -70,7 +72,13 @@ namespace VirtoCommerce.Storefront.Domain
         {
             var result = storeDto.ToStore();
 
-            if (currency != null)
+            if (!storeDto.PaymentMethods.IsNullOrEmpty() && currency != null)
+            {
+                result.PaymentMethods = storeDto.PaymentMethods
+                    .Where(pm => pm.IsActive != null && pm.IsActive.Value)
+                    .Select(pm => pm.ToStorePaymentMethod(currency)).ToArray();
+            }
+            else if (storeDto.PaymentMethods.IsNullOrEmpty() && currency != null)
             {
                 var paymentSearchCriteria = new PaymentMethodsSearchCriteria { StoreId = result.Id };
                 var paymentsSearchResult = await _paymentModule.SearchPaymentMethodsAsync(paymentSearchCriteria);
@@ -79,15 +87,22 @@ namespace VirtoCommerce.Storefront.Domain
                     .Where(pm => pm.IsActive != null && pm.IsActive.Value)
                     .Select(pm =>
                     {
-                        var paymentMethod = pm.ToStorePaymentMethod(currency);
+                        var paymentMethod = pm.JsonConvert<StorePaymentMethod>().ToStorePaymentMethod(currency);
                         paymentMethod.Name = pm.TypeName;
                         return paymentMethod;
                     }).ToArray();
             }
-            var taxSearchCriteria = new TaxProviderSearchCriteria { StoreId = result.Id };
-            var taxProviderSearchResult = await _taxModule.SearchTaxProvidersAsync(taxSearchCriteria);
-            result.FixedTaxRate = GetFixedTaxRate(taxProviderSearchResult.Results.Select(xp => xp.JsonConvert<TaxProvider>()).ToArray());
 
+            if (storeDto.TaxProviders.IsNullOrEmpty())
+            {
+                var taxSearchCriteria = new TaxProviderSearchCriteria { StoreId = result.Id };
+                var taxProviderSearchResult = await _taxModule.SearchTaxProvidersAsync(taxSearchCriteria);
+                result.FixedTaxRate = GetFixedTaxRate(taxProviderSearchResult.Results.Select(xp => xp.JsonConvert<TaxProvider>()).ToArray());
+            }
+            else
+            {
+                result.FixedTaxRate = GetFixedTaxRate(storeDto.TaxProviders);
+            }
             //use url for stores from configuration file with hight priority than store url defined in manager
             result.Url = _storefrontOptions.StoreUrls[result.Id] ?? result.Url;
 
@@ -101,7 +116,7 @@ namespace VirtoCommerce.Storefront.Domain
             if (fixedTaxProvider != null && !fixedTaxProvider.Settings.IsNullOrEmpty())
             {
                 result = fixedTaxProvider.Settings
-                    .Select(x => x.JsonConvert<AutoRestClients.PlatformModuleApi.Models.ObjectSettingEntry>().ToSettingEntry())
+                    .Select(x => x.JsonConvert<Setting>().ToSettingEntry())
                     .GetSettingValue("VirtoCommerce.Core.FixedTaxRateProvider.Rate", 0.00m);
             }
 
