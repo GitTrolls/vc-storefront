@@ -134,8 +134,6 @@ namespace VirtoCommerce.Storefront.Model.Stores
 
         public decimal FixedTaxRate { get; set; }
 
-        public string CartValidationRuleSet { get; set; }
-
 
         public IMutablePagedList<DynamicProperty> DynamicProperties { get; set; }
 

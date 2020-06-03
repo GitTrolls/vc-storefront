@@ -752,7 +752,6 @@ namespace VirtoCommerce.Storefront.Domain
                 Width = (double?)lineItem.Width,
                 Length = (double?)lineItem.Length,
                 Height = (double?)lineItem.Height,
-                Note = lineItem.Comment,
 
                 Currency = lineItem.Currency.Code,
                 Discounts = lineItem.Discounts.Select(ToCartDiscountDto).ToList(),

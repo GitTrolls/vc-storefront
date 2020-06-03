@@ -97,11 +97,8 @@ namespace VirtoCommerce.Storefront.Controllers.Api
                 var products = await _catalogService.GetProductsAsync(new[] { cartItem.ProductId }, Model.Catalog.ItemResponseGroup.Inventory | Model.Catalog.ItemResponseGroup.ItemWithPrices);
                 if (products != null && products.Any())
                 {
-                    cartItem.Product = products.First();
-                    if (await cartBuilder.AddItemAsync(cartItem))
-                    {
-                        await cartBuilder.SaveAsync();
-                    }
+                    await cartBuilder.AddItemAsync(products.First(), cartItem.Quantity);
+                    await cartBuilder.SaveAsync();
                 }
                 return new ShoppingCartItems { ItemsCount = cartBuilder.Cart.ItemsQuantity };
             }
@@ -118,8 +115,21 @@ namespace VirtoCommerce.Storefront.Controllers.Api
             using (await AsyncLock.GetLockByKey(WorkContext.CurrentCart.Value.GetCacheKey()).LockAsync())
             {
                 var cartBuilder = await LoadOrCreateCartAsync();
-                await cartBuilder.ChangeItemPriceAsync(newPrice);
 
+                var lineItem = cartBuilder.Cart.Items.FirstOrDefault(x => x.Id == newPrice.LineItemId);
+                if (lineItem != null)
+                {
+                    var newPriceMoney = new Money(newPrice.NewPrice, cartBuilder.Cart.Currency);
+                    //do not allow to set less price via this API call
+                    if (lineItem.ListPrice < newPriceMoney)
+                    {
+                        lineItem.ListPrice = newPriceMoney;
+                    }
+                    if (lineItem.SalePrice < newPriceMoney)
+                    {
+                        lineItem.SalePrice = newPriceMoney;
+                    }
+                }
                 await cartBuilder.SaveAsync();
 
             }
@@ -138,8 +148,12 @@ namespace VirtoCommerce.Storefront.Controllers.Api
             {
                 var cartBuilder = await LoadOrCreateCartAsync();
 
-                await cartBuilder.ChangeItemQuantityAsync(changeQty);
-                await cartBuilder.SaveAsync();
+                var lineItem = cartBuilder.Cart.Items.FirstOrDefault(i => i.Id == changeQty.LineItemId);
+                if (lineItem != null)
+                {
+                    await cartBuilder.ChangeItemQuantityAsync(changeQty.LineItemId, changeQty.Quantity);
+                    await cartBuilder.SaveAsync();
+                }
             }
             return Ok();
         }

@@ -1,7 +1,8 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using Newtonsoft.Json;
+using System.Runtime.Serialization;
 
 namespace VirtoCommerce.Storefront.Model.Common
 {
@@ -22,7 +23,6 @@ namespace VirtoCommerce.Storefront.Model.Common
                 }
                 catch (Exception)
                 {
-                    // No actions needed
                 }
             }
         }

@@ -47,14 +47,9 @@ namespace VirtoCommerce.Storefront.Model.Cart
             DynamicProperties = new List<DynamicProperty>();
             ValidationErrors = new List<ValidationError>();
             AvailablePaymentMethods = new List<PaymentMethod>();
+            IsValid = true;
         }
 
-        /// <summary>
-        /// Contains a new of validation rule set that will be executed each time the basket is changed.
-        /// FluentValidation RuleSets allow you to group validation rules together which can be executed together as a group. You can set exists rule set name to evaluate default.
-        /// <see cref="CartValidator"/>
-        /// </summary>        
-        public string ValidationRuleSet { get; set; } = "default, strict";
         /// <summary>
         /// Gets or sets the value of shopping cart name
         /// </summary>
@@ -345,7 +340,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public PaymentPlan PaymentPlan { get; set; }
 
         #region IValidatable Members
-        public bool IsValid { get; set; } = true;
+        public bool IsValid { get; set; }
         public IList<ValidationError> ValidationErrors { get; set; }
         #endregion
 

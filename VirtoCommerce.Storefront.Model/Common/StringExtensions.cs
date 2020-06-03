@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -92,17 +91,6 @@ namespace VirtoCommerce.Storefront.Model.Common
         public static bool FilePathHasMaskChars(this string path)
         {
             return (!string.IsNullOrEmpty(path) && path.IndexOfAny(_maskChars) >= 0);
-        }
-
-        public static string AddIfNotContains(this string inputStr, string str, char separator = ',')
-        {
-            if(inputStr == null)
-            {
-                throw new ArgumentNullException(nameof(inputStr));
-            }
-            var strHashSet = inputStr.Split(separator, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToHashSet(StringComparer.OrdinalIgnoreCase);
-            strHashSet.Add(str);
-            return string.Join(separator, strHashSet);
         }
 
         public static bool FitsMask(this string fileName, string fileMask)
