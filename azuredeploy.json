@@ -2,12 +2,6 @@
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "appServicePlanName": {
-      "type": "string",
-      "metadata": {
-        "description": "The name of application service plan."
-      }
-    },
     "siteName": {
       "type": "string"
     },
@@ -32,6 +26,13 @@
         "description": "Describes plan's pricing tier and capacity. Check details at https://azure.microsoft.com/pricing/details/app-service/"
       }
     },
+    "siteLocation": {
+      "type": "string",
+      "defaultValue": "West US",
+      "metadata": {
+        "description": "Location for all resources."
+      }
+    },
     "virtoCommercePlatformUrl": {
       "type": "string",
       "metadata": {
@@ -53,31 +54,32 @@
     "contentStorageConnectionString": {
       "type": "string",
       "metadata": {
-        "description": "Connection string to content. Check details at https://virtocommerce.com/docs/latest/getting-started/deploy-from-precompiled-binaries-azure/"
+        "description": "Connection string to content. Check details at https://virtocommerce.com/docs/latest/getting-started/connect-storefront-to-platform-v3/"
       }
     },
     "repoUrl": {
-      "type": "string",
-      "defaultValue": "https://github.com/VirtoCommerce/vc-storefront"
+      "type": "string"
     },
     "branch": {
-      "type": "string",
-      "defaultValue": "master"
+      "type": "string"
+    },
+    "hostingPlanName": {
+      "type": "string"
     }
   },
   "resources": [
     {
       "apiVersion": "2018-02-01",
       "type": "Microsoft.Web/serverfarms",
-      "name": "[parameters('appServicePlanName')]",
-      "location": "[resourceGroup().location]",
+      "name": "[parameters('hostingPlanName')]",
+      "location": "[parameters('siteLocation')]",
       "kind": "app",
       "sku": {
         "name": "[parameters('appServicePlanSkuName')]",
         "capacity": 1
       },
       "properties": {
-        "name": "[parameters('appServicePlanName')]",
+        "name": "[parameters('hostingPlanName')]",
         "numberOfWorkers": "1",
         "reserved": false
       }
@@ -86,17 +88,17 @@
       "apiVersion": "2018-11-01",
       "type": "Microsoft.Web/sites",
       "name": "[parameters('siteName')]",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters('siteLocation')]",
       "kind": "app",
       "dependsOn": [
-        "[concat('Microsoft.Web/serverFarms/', parameters('appServicePlanName'))]"
+        "[concat('Microsoft.Web/serverFarms/', parameters('hostingPlanName'))]"
       ],
       "tags": {
-        "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('appServicePlanName'))]": "empty"
+        "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]": "empty"
       },
       "properties": {
         "name": "[parameters('siteName')]",
-        "serverFarmId": "[concat( resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('appServicePlanName'))]",
+        "serverFarmId": "[concat( resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
         "siteConfig": {
           "appSettings": [
             {
