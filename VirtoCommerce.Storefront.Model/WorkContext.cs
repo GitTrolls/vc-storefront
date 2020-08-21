@@ -135,11 +135,6 @@ namespace VirtoCommerce.Storefront.Model
         /// </summary>
         public IEnumerable<Role> AvailableRoles { get; set; }
 
-        /// <summary>
-        /// List of all b2b roles
-        /// </summary>
-        public IEnumerable<Role> BusinessToBusinessRoles { get; set; }
-
         public string ErrorMessage { get; set; }
         /// <summary>
         /// List of active pricelists

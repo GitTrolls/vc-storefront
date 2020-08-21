@@ -8,7 +8,6 @@ using VirtoCommerce.Storefront.AutoRestClients.CoreModuleApi;
 using VirtoCommerce.Storefront.Caching;
 using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Extensions;
-using VirtoCommerce.Storefront.Infrastructure;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Caching;
 using VirtoCommerce.Storefront.Model.Catalog;
@@ -26,14 +25,12 @@ namespace VirtoCommerce.Storefront.Routing
         private readonly IStorefrontMemoryCache _memoryCache;
         private readonly ICommerce _coreApi;
         private readonly ICatalogService _catalogService;
-        private readonly IApiChangesWatcher _apiChangesWatcher;
 
-        public SlugRouteService(IStorefrontMemoryCache memoryCache, ICommerce coreApi, ICatalogService catalogService, ICatalogModuleProducts catalogProductsApi, IApiChangesWatcher apiChangesWatcher)
+        public SlugRouteService(IStorefrontMemoryCache memoryCache, ICommerce coreApi, ICatalogService catalogService, ICatalogModuleProducts catalogProductsApi)
         {
             _memoryCache = memoryCache;
             _coreApi = coreApi;
             _catalogService = catalogService;
-            _apiChangesWatcher = apiChangesWatcher;
         }
 
         public virtual async Task<SlugRouteResponse> HandleSlugRequestAsync(string slugPath, WorkContext workContext)
@@ -183,7 +180,6 @@ namespace VirtoCommerce.Storefront.Routing
                 var apiResult = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
                 {
                     cacheEntry.AddExpirationToken(RoutingCacheRegion.CreateChangeToken());
-                    cacheEntry.AddExpirationToken(_apiChangesWatcher.CreateChangeToken());
                     return await _coreApi.GetSeoInfoBySlugAsync(slug);
                 });
                 result.AddRange(apiResult);
@@ -215,8 +211,6 @@ namespace VirtoCommerce.Storefront.Routing
             var cacheKey = CacheKey.With(GetType(), "GetFullSeoPaths", store.Id, objectType, string.Join("-", objectIds.OrderBy(x => x)));
             return await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
             {
-                cacheEntry.AddExpirationToken(RoutingCacheRegion.CreateChangeToken());
-                cacheEntry.AddExpirationToken(_apiChangesWatcher.CreateChangeToken());
                 switch (objectType)
                 {
                     case "Category":

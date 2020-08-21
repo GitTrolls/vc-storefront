@@ -31,12 +31,6 @@ namespace VirtoCommerce.Storefront.Model.Security
                 Name = "Organization employee",
                 Permissions = new string[] { Permissions.CanSeeOrganizationDetail }
             };
-            public static readonly Role PurchasingAgent = new Role
-            {
-                Id = "purchasing-agent",
-                Name = "Purchasing agent",
-                Permissions = new string[] { Permissions.CanSeeOrganizationDetail }
-            };
 
             public static readonly Role StoreAdministrator = new Role
             {
@@ -51,8 +45,7 @@ namespace VirtoCommerce.Storefront.Model.Security
                 Permissions = new string[] { Permissions.CanSeeOrganizationDetail, Permissions.CanViewOrders, Permissions.CanChangeOrderStatus }
             };
 
-            public static readonly IEnumerable<Role> AllRoles = new[] { OrganizationMaintainer, OrganizationEmployee, PurchasingAgent, StoreAdministrator, StoreManager };
-            public static readonly IEnumerable<Role> B2BRoles = new[] { OrganizationMaintainer, OrganizationEmployee, PurchasingAgent };
+            public static readonly IEnumerable<Role> AllRoles = new[] { OrganizationMaintainer, OrganizationEmployee, StoreAdministrator, StoreManager };
         }
 
         public static class Permissions

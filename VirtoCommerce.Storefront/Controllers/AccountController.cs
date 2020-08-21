@@ -342,17 +342,6 @@ namespace VirtoCommerce.Storefront.Controllers
 
             if (loginResult.Succeeded)
             {
-                if (new IsUserPasswordExpiredSpecification().IsSatisfiedBy(user))
-                {
-                    WorkContext.Form = Form.FromObject(new ResetPassword
-                    {
-                        Token = await _signInManager.UserManager.GenerateUserTokenAsync(user, TokenOptions.DefaultProvider, "ResetPassword"),
-                        Email = user.Email,
-                        UserName = user.UserName
-                    });
-                    return View("customers/reset_password", WorkContext);
-                }
-
                 await _publisher.Publish(new UserLoginEvent(WorkContext, user));
                 return StoreFrontRedirect(returnUrl);
             }
