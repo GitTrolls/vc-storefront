@@ -155,16 +155,8 @@ namespace VirtoCommerce.Storefront.Domain
                 result.Addresses = contactDto.Addresses.Select(ToAddress).ToList();
             }
 
-            result.DefaultBillingAddress = result.Addresses
-                .Where(a => contactDto.DefaultBillingAddressId != null ? a.Id == contactDto.DefaultBillingAddressId : (a.Type & AddressType.Billing) == AddressType.Billing)
-                // Stabilize order
-                .OrderBy(a => a.Id)
-                .FirstOrDefault();
-            result.DefaultShippingAddress = result.Addresses
-                .Where(a => contactDto.DefaultShippingAddressId != null ? a.Id == contactDto.DefaultShippingAddressId : (a.Type & AddressType.Shipping) == AddressType.Shipping)
-                // Stabilize order
-                .OrderBy(a => a.Id)
-                .FirstOrDefault();
+            result.DefaultBillingAddress = result.Addresses.FirstOrDefault(a => (a.Type & AddressType.Billing) == AddressType.Billing);
+            result.DefaultShippingAddress = result.Addresses.FirstOrDefault(a => (a.Type & AddressType.Shipping) == AddressType.Shipping);
 
             if (contactDto.Emails != null)
             {
@@ -261,16 +253,6 @@ namespace VirtoCommerce.Storefront.Domain
                 }
             }
 
-            if (customer.DefaultShippingAddress != null)
-            {
-                retVal.DefaultShippingAddressId = customer.DefaultShippingAddress.Id;
-            }
-
-            if (customer.DefaultBillingAddress != null)
-            {
-                retVal.DefaultBillingAddressId = customer.DefaultBillingAddress.Id;
-            }
-
             if (!customer.Emails.IsNullOrEmpty())
             {
                 retVal.Emails = customer.Emails;
@@ -283,11 +265,6 @@ namespace VirtoCommerce.Storefront.Domain
             if (customer.OrganizationsIds != null)
             {
                 retVal.Organizations = customer.OrganizationsIds.Concat(retVal.Organizations ?? Array.Empty<string>()).Distinct().ToArray();
-            }
-
-            if (!customer.DynamicProperties.IsNullOrEmpty())
-            {
-                retVal.DynamicProperties = customer.DynamicProperties.Select(ToCustomerDynamicPropertyDto).ToList();
             }
 
             return retVal;
