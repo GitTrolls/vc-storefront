@@ -75,10 +75,7 @@ namespace VirtoCommerce.Storefront.Middleware
                 await builder.WithUserQuotesAsync();
             }
             await builder.WithUserOrdersAsync();
-            if (workContext.CurrentStore.SubscriptionEnabled)
-            {
-                await builder.WithUserSubscriptionsAsync();
-            }
+            await builder.WithUserSubscriptionsAsync();
             await builder.WithVendorsAsync(workContext.CurrentStore, workContext.CurrentLanguage);
             await builder.WithFulfillmentCentersAsync();
 
