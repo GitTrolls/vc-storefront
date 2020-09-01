@@ -208,9 +208,6 @@ namespace VirtoCommerce.Storefront.Controllers.Api
                 else
                 {
                     paymentDto.BillingAddress = payment.BillingAddress != null ? payment.BillingAddress.ToOrderAddressDto() : null;
-                    paymentDto.Status = payment.Status;
-                    paymentDto.GatewayCode = payment.GatewayCode;
-                    paymentDto.PaymentMethod.PaymentMethodType = payment.PaymentMethodType;
                 }
 
                 await _orderApi.UpdateOrderAsync(orderDto);

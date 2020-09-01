@@ -6,11 +6,16 @@
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 {
-    using System.Collections.Generic;
-    using System.Net.Http;
     using Microsoft.Rest;
     using Microsoft.Rest.Serialization;
+    using Models;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class OrdersModuleClient : ServiceClient<OrdersModuleClient>, IOrdersModuleClient
     {
@@ -296,7 +301,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
                 NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore,
                 ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Serialize,
                 ContractResolver = new ReadOnlyJsonContractResolver(),
-                Converters = new List<JsonConverter>
+                Converters = new  List<JsonConverter>
                     {
                         new Iso8601TimeSpanConverter()
                     }
@@ -326,7 +331,15 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 {
     using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Models;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// </summary>
@@ -374,16 +387,18 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 {
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Net;
-    using System.Net.Http;
-    using System.Threading;
-    using System.Threading.Tasks;
     using Microsoft.Rest;
     using Microsoft.Rest.Serialization;
     using Models;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// OrderModule operations.
@@ -460,7 +475,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             if (customHeaders != null)
             {
-                foreach (var _header in customHeaders)
+                foreach(var _header in customHeaders)
                 {
                     if (_httpRequest.Headers.Contains(_header.Key))
                     {
@@ -472,11 +487,11 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             // Serialize Request
             string _requestContent = null;
-            if (body != null)
+            if(body != null)
             {
                 _requestContent = SafeJsonConvert.SerializeObject(body, Client.SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
-                _httpRequest.Content.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
+                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
             }
             // Set Credentials
             if (Client.Credentials != null)
@@ -501,12 +516,10 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
             if ((int)_statusCode != 200 && (int)_statusCode != 401 && (int)_statusCode != 403)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
-                if (_httpResponse.Content != null)
-                {
+                if (_httpResponse.Content != null) {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 }
-                else
-                {
+                else {
                     _responseContent = string.Empty;
                 }
                 ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
@@ -621,7 +634,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             if (customHeaders != null)
             {
-                foreach (var _header in customHeaders)
+                foreach(var _header in customHeaders)
                 {
                     if (_httpRequest.Headers.Contains(_header.Key))
                     {
@@ -656,12 +669,10 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
             if ((int)_statusCode != 200 && (int)_statusCode != 401 && (int)_statusCode != 403)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
-                if (_httpResponse.Content != null)
-                {
+                if (_httpResponse.Content != null) {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 }
-                else
-                {
+                else {
                     _responseContent = string.Empty;
                 }
                 ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
@@ -776,7 +787,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             if (customHeaders != null)
             {
-                foreach (var _header in customHeaders)
+                foreach(var _header in customHeaders)
                 {
                     if (_httpRequest.Headers.Contains(_header.Key))
                     {
@@ -811,12 +822,10 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
             if ((int)_statusCode != 200 && (int)_statusCode != 401 && (int)_statusCode != 403)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
-                if (_httpResponse.Content != null)
-                {
+                if (_httpResponse.Content != null) {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 }
-                else
-                {
+                else {
                     _responseContent = string.Empty;
                 }
                 ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
@@ -911,7 +920,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             if (customHeaders != null)
             {
-                foreach (var _header in customHeaders)
+                foreach(var _header in customHeaders)
                 {
                     if (_httpRequest.Headers.Contains(_header.Key))
                     {
@@ -923,11 +932,11 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             // Serialize Request
             string _requestContent = null;
-            if (body != null)
+            if(body != null)
             {
                 _requestContent = SafeJsonConvert.SerializeObject(body, Client.SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
-                _httpRequest.Content.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
+                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
             }
             // Set Credentials
             if (Client.Credentials != null)
@@ -952,12 +961,10 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
             if ((int)_statusCode != 200 && (int)_statusCode != 401 && (int)_statusCode != 403)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
-                if (_httpResponse.Content != null)
-                {
+                if (_httpResponse.Content != null) {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 }
-                else
-                {
+                else {
                     _responseContent = string.Empty;
                 }
                 ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
@@ -1076,7 +1083,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             if (customHeaders != null)
             {
-                foreach (var _header in customHeaders)
+                foreach(var _header in customHeaders)
                 {
                     if (_httpRequest.Headers.Contains(_header.Key))
                     {
@@ -1088,11 +1095,11 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             // Serialize Request
             string _requestContent = null;
-            if (body != null)
+            if(body != null)
             {
                 _requestContent = SafeJsonConvert.SerializeObject(body, Client.SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
-                _httpRequest.Content.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
+                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
             }
             // Set Credentials
             if (Client.Credentials != null)
@@ -1117,12 +1124,10 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
             if ((int)_statusCode != 200 && (int)_statusCode != 401 && (int)_statusCode != 403)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
-                if (_httpResponse.Content != null)
-                {
+                if (_httpResponse.Content != null) {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 }
-                else
-                {
+                else {
                     _responseContent = string.Empty;
                 }
                 ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
@@ -1225,7 +1230,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             if (customHeaders != null)
             {
-                foreach (var _header in customHeaders)
+                foreach(var _header in customHeaders)
                 {
                     if (_httpRequest.Headers.Contains(_header.Key))
                     {
@@ -1260,12 +1265,10 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
             if ((int)_statusCode != 200 && (int)_statusCode != 401 && (int)_statusCode != 403)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
-                if (_httpResponse.Content != null)
-                {
+                if (_httpResponse.Content != null) {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 }
-                else
-                {
+                else {
                     _responseContent = string.Empty;
                 }
                 ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
@@ -1357,7 +1360,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             if (customHeaders != null)
             {
-                foreach (var _header in customHeaders)
+                foreach(var _header in customHeaders)
                 {
                     if (_httpRequest.Headers.Contains(_header.Key))
                     {
@@ -1369,11 +1372,11 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             // Serialize Request
             string _requestContent = null;
-            if (body != null)
+            if(body != null)
             {
                 _requestContent = SafeJsonConvert.SerializeObject(body, Client.SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
-                _httpRequest.Content.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
+                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
             }
             // Set Credentials
             if (Client.Credentials != null)
@@ -1398,12 +1401,10 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
             if ((int)_statusCode != 200 && (int)_statusCode != 401 && (int)_statusCode != 403)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
-                if (_httpResponse.Content != null)
-                {
+                if (_httpResponse.Content != null) {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 }
-                else
-                {
+                else {
                     _responseContent = string.Empty;
                 }
                 ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
@@ -1492,7 +1493,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             if (customHeaders != null)
             {
-                foreach (var _header in customHeaders)
+                foreach(var _header in customHeaders)
                 {
                     if (_httpRequest.Headers.Contains(_header.Key))
                     {
@@ -1504,11 +1505,11 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             // Serialize Request
             string _requestContent = null;
-            if (body != null)
+            if(body != null)
             {
                 _requestContent = SafeJsonConvert.SerializeObject(body, Client.SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
-                _httpRequest.Content.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
+                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
             }
             // Set Credentials
             if (Client.Credentials != null)
@@ -1533,12 +1534,10 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
             if ((int)_statusCode != 204 && (int)_statusCode != 401 && (int)_statusCode != 403)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
-                if (_httpResponse.Content != null)
-                {
+                if (_httpResponse.Content != null) {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 }
-                else
-                {
+                else {
                     _responseContent = string.Empty;
                 }
                 ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
@@ -1618,7 +1617,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             if (customHeaders != null)
             {
-                foreach (var _header in customHeaders)
+                foreach(var _header in customHeaders)
                 {
                     if (_httpRequest.Headers.Contains(_header.Key))
                     {
@@ -1653,12 +1652,10 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
             if ((int)_statusCode != 204 && (int)_statusCode != 401 && (int)_statusCode != 403)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
-                if (_httpResponse.Content != null)
-                {
+                if (_httpResponse.Content != null) {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 }
-                else
-                {
+                else {
                     _responseContent = string.Empty;
                 }
                 ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
@@ -1746,7 +1743,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             if (customHeaders != null)
             {
-                foreach (var _header in customHeaders)
+                foreach(var _header in customHeaders)
                 {
                     if (_httpRequest.Headers.Contains(_header.Key))
                     {
@@ -1781,12 +1778,10 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
             if ((int)_statusCode != 200 && (int)_statusCode != 401 && (int)_statusCode != 403)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
-                if (_httpResponse.Content != null)
-                {
+                if (_httpResponse.Content != null) {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 }
-                else
-                {
+                else {
                     _responseContent = string.Empty;
                 }
                 ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
@@ -1892,7 +1887,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             if (customHeaders != null)
             {
-                foreach (var _header in customHeaders)
+                foreach(var _header in customHeaders)
                 {
                     if (_httpRequest.Headers.Contains(_header.Key))
                     {
@@ -1927,12 +1922,10 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
             if ((int)_statusCode != 200 && (int)_statusCode != 401 && (int)_statusCode != 403)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
-                if (_httpResponse.Content != null)
-                {
+                if (_httpResponse.Content != null) {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 }
-                else
-                {
+                else {
                     _responseContent = string.Empty;
                 }
                 ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
@@ -2041,7 +2034,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             if (customHeaders != null)
             {
-                foreach (var _header in customHeaders)
+                foreach(var _header in customHeaders)
                 {
                     if (_httpRequest.Headers.Contains(_header.Key))
                     {
@@ -2076,12 +2069,10 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
             if ((int)_statusCode != 200 && (int)_statusCode != 401 && (int)_statusCode != 403)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
-                if (_httpResponse.Content != null)
-                {
+                if (_httpResponse.Content != null) {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 }
-                else
-                {
+                else {
                     _responseContent = string.Empty;
                 }
                 ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
@@ -2174,7 +2165,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             if (customHeaders != null)
             {
-                foreach (var _header in customHeaders)
+                foreach(var _header in customHeaders)
                 {
                     if (_httpRequest.Headers.Contains(_header.Key))
                     {
@@ -2186,11 +2177,11 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             // Serialize Request
             string _requestContent = null;
-            if (body != null)
+            if(body != null)
             {
                 _requestContent = SafeJsonConvert.SerializeObject(body, Client.SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
-                _httpRequest.Content.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
+                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
             }
             // Set Credentials
             if (Client.Credentials != null)
@@ -2215,12 +2206,10 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
             if ((int)_statusCode != 200 && (int)_statusCode != 401 && (int)_statusCode != 403)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
-                if (_httpResponse.Content != null)
-                {
+                if (_httpResponse.Content != null) {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 }
-                else
-                {
+                else {
                     _responseContent = string.Empty;
                 }
                 ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
@@ -2288,7 +2277,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<Stream>> GetInvoicePdfWithHttpMessagesAsync(string orderNumber, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<string>> GetInvoicePdfWithHttpMessagesAsync(string orderNumber, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (orderNumber == null)
             {
@@ -2319,7 +2308,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             if (customHeaders != null)
             {
-                foreach (var _header in customHeaders)
+                foreach(var _header in customHeaders)
                 {
                     if (_httpRequest.Headers.Contains(_header.Key))
                     {
@@ -2343,7 +2332,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
                 ServiceClientTracing.SendRequest(_invocationId, _httpRequest);
             }
             cancellationToken.ThrowIfCancellationRequested();
-            _httpResponse = await Client.HttpClient.SendAsync(_httpRequest, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+            _httpResponse = await Client.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
             if (_shouldTrace)
             {
                 ServiceClientTracing.ReceiveResponse(_invocationId, _httpResponse);
@@ -2354,12 +2343,10 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
             if ((int)_statusCode != 200 && (int)_statusCode != 401 && (int)_statusCode != 403)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
-                if (_httpResponse.Content != null)
-                {
+                if (_httpResponse.Content != null) {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 }
-                else
-                {
+                else {
                     _responseContent = string.Empty;
                 }
                 ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
@@ -2376,13 +2363,26 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<Stream>();
+            var _result = new HttpOperationResponse<string>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
             if ((int)_statusCode == 200)
             {
-                _result.Body = await _httpResponse.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                try
+                {
+                    _result.Body = SafeJsonConvert.DeserializeObject<string>(_responseContent, Client.DeserializationSettings);
+                }
+                catch (JsonException ex)
+                {
+                    _httpRequest.Dispose();
+                    if (_httpResponse != null)
+                    {
+                        _httpResponse.Dispose();
+                    }
+                    throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
+                }
             }
             if (_shouldTrace)
             {
@@ -2390,7 +2390,6 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
             }
             return _result;
         }
-
 
         /// <param name='id'>
         /// </param>
@@ -2446,7 +2445,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             if (customHeaders != null)
             {
-                foreach (var _header in customHeaders)
+                foreach(var _header in customHeaders)
                 {
                     if (_httpRequest.Headers.Contains(_header.Key))
                     {
@@ -2481,12 +2480,10 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
             if ((int)_statusCode != 200 && (int)_statusCode != 401 && (int)_statusCode != 403)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
-                if (_httpResponse.Content != null)
-                {
+                if (_httpResponse.Content != null) {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 }
-                else
-                {
+                else {
                     _responseContent = string.Empty;
                 }
                 ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
@@ -2574,7 +2571,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             if (customHeaders != null)
             {
-                foreach (var _header in customHeaders)
+                foreach(var _header in customHeaders)
                 {
                     if (_httpRequest.Headers.Contains(_header.Key))
                     {
@@ -2586,11 +2583,11 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             // Serialize Request
             string _requestContent = null;
-            if (body != null)
+            if(body != null)
             {
                 _requestContent = SafeJsonConvert.SerializeObject(body, Client.SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
-                _httpRequest.Content.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
+                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
             }
             // Set Credentials
             if (Client.Credentials != null)
@@ -2615,12 +2612,10 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
             if ((int)_statusCode != 200 && (int)_statusCode != 401 && (int)_statusCode != 403)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
-                if (_httpResponse.Content != null)
-                {
+                if (_httpResponse.Content != null) {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 }
-                else
-                {
+                else {
                     _responseContent = string.Empty;
                 }
                 ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
@@ -2675,12 +2670,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 {
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Models;
+    using Newtonsoft.Json;
+    using System.Collections;
     using System.Collections.Generic;
-    using System.IO;
+    using System.Net;
+    using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
-    using Microsoft.Rest;
-    using Models;
 
     /// <summary>
     /// OrderModule operations.
@@ -3000,7 +2999,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<HttpOperationResponse<Stream>> GetInvoicePdfWithHttpMessagesAsync(string orderNumber, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<string>> GetInvoicePdfWithHttpMessagesAsync(string orderNumber, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <param name='id'>
         /// </param>
         /// <param name='customHeaders'>
@@ -3044,597 +3043,603 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 {
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Models;
+    using Newtonsoft.Json;
+    using System.Collections;
     using System.Collections.Generic;
-    using System.IO;
+    using System.Net;
+    using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
-    using Models;
 
     /// <summary>
     /// Extension methods for OrderModule.
     /// </summary>
     public static partial class OrderModuleExtensions
     {
-        /// <summary>
-        /// Search customer orders by given criteria
-        /// </summary>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='body'>
-        /// criteria
-        /// </param>
-        public static CustomerOrderSearchResult SearchCustomerOrder(this IOrderModule operations, CustomerOrderSearchCriteria body = default(CustomerOrderSearchCriteria))
-        {
-            return operations.SearchCustomerOrderAsync(body).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Search customer orders by given criteria
-        /// </summary>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='body'>
-        /// criteria
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        public static async Task<CustomerOrderSearchResult> SearchCustomerOrderAsync(this IOrderModule operations, CustomerOrderSearchCriteria body = default(CustomerOrderSearchCriteria), CancellationToken cancellationToken = default(CancellationToken))
-        {
-            using (var _result = await operations.SearchCustomerOrderWithHttpMessagesAsync(body, null, cancellationToken).ConfigureAwait(false))
+            /// <summary>
+            /// Search customer orders by given criteria
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='body'>
+            /// criteria
+            /// </param>
+            public static CustomerOrderSearchResult SearchCustomerOrder(this IOrderModule operations, CustomerOrderSearchCriteria body = default(CustomerOrderSearchCriteria))
             {
-                return _result.Body;
+                return operations.SearchCustomerOrderAsync(body).GetAwaiter().GetResult();
             }
-        }
 
-        /// <summary>
-        /// Find customer order by number
-        /// </summary>
-        /// <remarks>
-        /// Return a single customer order with all nested documents or null if order
-        /// was not found
-        /// </remarks>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='number'>
-        /// customer order number
-        /// </param>
-        /// <param name='respGroup'>
-        /// </param>
-        public static CustomerOrder GetByNumber(this IOrderModule operations, string number, string respGroup)
-        {
-            return operations.GetByNumberAsync(number, respGroup).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Find customer order by number
-        /// </summary>
-        /// <remarks>
-        /// Return a single customer order with all nested documents or null if order
-        /// was not found
-        /// </remarks>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='number'>
-        /// customer order number
-        /// </param>
-        /// <param name='respGroup'>
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        public static async Task<CustomerOrder> GetByNumberAsync(this IOrderModule operations, string number, string respGroup, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            using (var _result = await operations.GetByNumberWithHttpMessagesAsync(number, respGroup, null, cancellationToken).ConfigureAwait(false))
+            /// <summary>
+            /// Search customer orders by given criteria
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='body'>
+            /// criteria
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<CustomerOrderSearchResult> SearchCustomerOrderAsync(this IOrderModule operations, CustomerOrderSearchCriteria body = default(CustomerOrderSearchCriteria), CancellationToken cancellationToken = default(CancellationToken))
             {
-                return _result.Body;
+                using (var _result = await operations.SearchCustomerOrderWithHttpMessagesAsync(body, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
             }
-        }
 
-        /// <summary>
-        /// Find customer order by id
-        /// </summary>
-        /// <remarks>
-        /// Return a single customer order with all nested documents or null if order
-        /// was not found
-        /// </remarks>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='id'>
-        /// customer order id
-        /// </param>
-        /// <param name='respGroup'>
-        /// </param>
-        public static CustomerOrder GetById(this IOrderModule operations, string id, string respGroup)
-        {
-            return operations.GetByIdAsync(id, respGroup).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Find customer order by id
-        /// </summary>
-        /// <remarks>
-        /// Return a single customer order with all nested documents or null if order
-        /// was not found
-        /// </remarks>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='id'>
-        /// customer order id
-        /// </param>
-        /// <param name='respGroup'>
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        public static async Task<CustomerOrder> GetByIdAsync(this IOrderModule operations, string id, string respGroup, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            using (var _result = await operations.GetByIdWithHttpMessagesAsync(id, respGroup, null, cancellationToken).ConfigureAwait(false))
+            /// <summary>
+            /// Find customer order by number
+            /// </summary>
+            /// <remarks>
+            /// Return a single customer order with all nested documents or null if order
+            /// was not found
+            /// </remarks>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='number'>
+            /// customer order number
+            /// </param>
+            /// <param name='respGroup'>
+            /// </param>
+            public static CustomerOrder GetByNumber(this IOrderModule operations, string number, string respGroup)
             {
-                return _result.Body;
+                return operations.GetByNumberAsync(number, respGroup).GetAwaiter().GetResult();
             }
-        }
 
-        /// <summary>
-        /// Calculate order totals after changes
-        /// </summary>
-        /// <remarks>
-        /// Return order with recalculated totals
-        /// </remarks>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='body'>
-        /// Customer order
-        /// </param>
-        public static CustomerOrder CalculateTotals(this IOrderModule operations, CustomerOrder body = default(CustomerOrder))
-        {
-            return operations.CalculateTotalsAsync(body).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Calculate order totals after changes
-        /// </summary>
-        /// <remarks>
-        /// Return order with recalculated totals
-        /// </remarks>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='body'>
-        /// Customer order
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        public static async Task<CustomerOrder> CalculateTotalsAsync(this IOrderModule operations, CustomerOrder body = default(CustomerOrder), CancellationToken cancellationToken = default(CancellationToken))
-        {
-            using (var _result = await operations.CalculateTotalsWithHttpMessagesAsync(body, null, cancellationToken).ConfigureAwait(false))
+            /// <summary>
+            /// Find customer order by number
+            /// </summary>
+            /// <remarks>
+            /// Return a single customer order with all nested documents or null if order
+            /// was not found
+            /// </remarks>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='number'>
+            /// customer order number
+            /// </param>
+            /// <param name='respGroup'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<CustomerOrder> GetByNumberAsync(this IOrderModule operations, string number, string respGroup, CancellationToken cancellationToken = default(CancellationToken))
             {
-                return _result.Body;
+                using (var _result = await operations.GetByNumberWithHttpMessagesAsync(number, respGroup, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
             }
-        }
 
-        /// <summary>
-        /// Register customer order payment in external payment system
-        /// </summary>
-        /// <remarks>
-        /// Used in storefront checkout or manual order payment registration
-        /// </remarks>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='orderId'>
-        /// customer order id
-        /// </param>
-        /// <param name='paymentId'>
-        /// payment id
-        /// </param>
-        /// <param name='body'>
-        /// banking card information
-        /// </param>
-        public static ProcessPaymentRequestResult ProcessOrderPayments(this IOrderModule operations, string orderId, string paymentId, BankCardInfo body = default(BankCardInfo))
-        {
-            return operations.ProcessOrderPaymentsAsync(orderId, paymentId, body).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Register customer order payment in external payment system
-        /// </summary>
-        /// <remarks>
-        /// Used in storefront checkout or manual order payment registration
-        /// </remarks>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='orderId'>
-        /// customer order id
-        /// </param>
-        /// <param name='paymentId'>
-        /// payment id
-        /// </param>
-        /// <param name='body'>
-        /// banking card information
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        public static async Task<ProcessPaymentRequestResult> ProcessOrderPaymentsAsync(this IOrderModule operations, string orderId, string paymentId, BankCardInfo body = default(BankCardInfo), CancellationToken cancellationToken = default(CancellationToken))
-        {
-            using (var _result = await operations.ProcessOrderPaymentsWithHttpMessagesAsync(orderId, paymentId, body, null, cancellationToken).ConfigureAwait(false))
+            /// <summary>
+            /// Find customer order by id
+            /// </summary>
+            /// <remarks>
+            /// Return a single customer order with all nested documents or null if order
+            /// was not found
+            /// </remarks>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='id'>
+            /// customer order id
+            /// </param>
+            /// <param name='respGroup'>
+            /// </param>
+            public static CustomerOrder GetById(this IOrderModule operations, string id, string respGroup)
             {
-                return _result.Body;
+                return operations.GetByIdAsync(id, respGroup).GetAwaiter().GetResult();
             }
-        }
 
-        /// <summary>
-        /// Create new customer order based on shopping cart.
-        /// </summary>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='cartId'>
-        /// shopping cart id
-        /// </param>
-        public static CustomerOrder CreateOrderFromCart(this IOrderModule operations, string cartId)
-        {
-            return operations.CreateOrderFromCartAsync(cartId).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Create new customer order based on shopping cart.
-        /// </summary>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='cartId'>
-        /// shopping cart id
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        public static async Task<CustomerOrder> CreateOrderFromCartAsync(this IOrderModule operations, string cartId, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            using (var _result = await operations.CreateOrderFromCartWithHttpMessagesAsync(cartId, null, cancellationToken).ConfigureAwait(false))
+            /// <summary>
+            /// Find customer order by id
+            /// </summary>
+            /// <remarks>
+            /// Return a single customer order with all nested documents or null if order
+            /// was not found
+            /// </remarks>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='id'>
+            /// customer order id
+            /// </param>
+            /// <param name='respGroup'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<CustomerOrder> GetByIdAsync(this IOrderModule operations, string id, string respGroup, CancellationToken cancellationToken = default(CancellationToken))
             {
-                return _result.Body;
+                using (var _result = await operations.GetByIdWithHttpMessagesAsync(id, respGroup, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
             }
-        }
 
-        /// <summary>
-        /// Add new customer order to system
-        /// </summary>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='body'>
-        /// customer order
-        /// </param>
-        public static CustomerOrder CreateOrder(this IOrderModule operations, CustomerOrder body = default(CustomerOrder))
-        {
-            return operations.CreateOrderAsync(body).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Add new customer order to system
-        /// </summary>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='body'>
-        /// customer order
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        public static async Task<CustomerOrder> CreateOrderAsync(this IOrderModule operations, CustomerOrder body = default(CustomerOrder), CancellationToken cancellationToken = default(CancellationToken))
-        {
-            using (var _result = await operations.CreateOrderWithHttpMessagesAsync(body, null, cancellationToken).ConfigureAwait(false))
+            /// <summary>
+            /// Calculate order totals after changes
+            /// </summary>
+            /// <remarks>
+            /// Return order with recalculated totals
+            /// </remarks>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='body'>
+            /// Customer order
+            /// </param>
+            public static CustomerOrder CalculateTotals(this IOrderModule operations, CustomerOrder body = default(CustomerOrder))
             {
-                return _result.Body;
+                return operations.CalculateTotalsAsync(body).GetAwaiter().GetResult();
             }
-        }
 
-        /// <summary>
-        /// Update a existing customer order
-        /// </summary>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='body'>
-        /// customer order
-        /// </param>
-        public static void UpdateOrder(this IOrderModule operations, CustomerOrder body = default(CustomerOrder))
-        {
-            operations.UpdateOrderAsync(body).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Update a existing customer order
-        /// </summary>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='body'>
-        /// customer order
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        public static async Task UpdateOrderAsync(this IOrderModule operations, CustomerOrder body = default(CustomerOrder), CancellationToken cancellationToken = default(CancellationToken))
-        {
-            (await operations.UpdateOrderWithHttpMessagesAsync(body, null, cancellationToken).ConfigureAwait(false)).Dispose();
-        }
-
-        /// <summary>
-        /// Delete a whole customer orders
-        /// </summary>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='ids'>
-        /// customer order ids for delete
-        /// </param>
-        public static void DeleteOrdersByIds(this IOrderModule operations, IList<string> ids = default(IList<string>))
-        {
-            operations.DeleteOrdersByIdsAsync(ids).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Delete a whole customer orders
-        /// </summary>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='ids'>
-        /// customer order ids for delete
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        public static async Task DeleteOrdersByIdsAsync(this IOrderModule operations, IList<string> ids = default(IList<string>), CancellationToken cancellationToken = default(CancellationToken))
-        {
-            (await operations.DeleteOrdersByIdsWithHttpMessagesAsync(ids, null, cancellationToken).ConfigureAwait(false)).Dispose();
-        }
-
-        /// <summary>
-        /// Get new shipment for specified customer order
-        /// </summary>
-        /// <remarks>
-        /// Return new shipment document with populates all required properties.
-        /// </remarks>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='id'>
-        /// customer order id
-        /// </param>
-        public static OrderShipment GetNewShipment(this IOrderModule operations, string id)
-        {
-            return operations.GetNewShipmentAsync(id).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Get new shipment for specified customer order
-        /// </summary>
-        /// <remarks>
-        /// Return new shipment document with populates all required properties.
-        /// </remarks>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='id'>
-        /// customer order id
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        public static async Task<OrderShipment> GetNewShipmentAsync(this IOrderModule operations, string id, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            using (var _result = await operations.GetNewShipmentWithHttpMessagesAsync(id, null, cancellationToken).ConfigureAwait(false))
+            /// <summary>
+            /// Calculate order totals after changes
+            /// </summary>
+            /// <remarks>
+            /// Return order with recalculated totals
+            /// </remarks>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='body'>
+            /// Customer order
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<CustomerOrder> CalculateTotalsAsync(this IOrderModule operations, CustomerOrder body = default(CustomerOrder), CancellationToken cancellationToken = default(CancellationToken))
             {
-                return _result.Body;
+                using (var _result = await operations.CalculateTotalsWithHttpMessagesAsync(body, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
             }
-        }
 
-        /// <summary>
-        /// Get new payment for specified customer order
-        /// </summary>
-        /// <remarks>
-        /// Return new payment  document with populates all required properties.
-        /// </remarks>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='id'>
-        /// customer order id
-        /// </param>
-        public static PaymentIn GetNewPayment(this IOrderModule operations, string id)
-        {
-            return operations.GetNewPaymentAsync(id).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Get new payment for specified customer order
-        /// </summary>
-        /// <remarks>
-        /// Return new payment  document with populates all required properties.
-        /// </remarks>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='id'>
-        /// customer order id
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        public static async Task<PaymentIn> GetNewPaymentAsync(this IOrderModule operations, string id, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            using (var _result = await operations.GetNewPaymentWithHttpMessagesAsync(id, null, cancellationToken).ConfigureAwait(false))
+            /// <summary>
+            /// Register customer order payment in external payment system
+            /// </summary>
+            /// <remarks>
+            /// Used in storefront checkout or manual order payment registration
+            /// </remarks>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='orderId'>
+            /// customer order id
+            /// </param>
+            /// <param name='paymentId'>
+            /// payment id
+            /// </param>
+            /// <param name='body'>
+            /// banking card information
+            /// </param>
+            public static ProcessPaymentRequestResult ProcessOrderPayments(this IOrderModule operations, string orderId, string paymentId, BankCardInfo body = default(BankCardInfo))
             {
-                return _result.Body;
+                return operations.ProcessOrderPaymentsAsync(orderId, paymentId, body).GetAwaiter().GetResult();
             }
-        }
 
-        /// <summary>
-        /// Get a some order statistic information for Commerce manager dashboard
-        /// </summary>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='start'>
-        /// start interval date
-        /// </param>
-        /// <param name='end'>
-        /// end interval date
-        /// </param>
-        public static DashboardStatisticsResult GetDashboardStatisticsAsync(this IOrderModule operations, System.DateTime? start = default(System.DateTime?), System.DateTime? end = default(System.DateTime?))
-        {
-            return operations.GetDashboardStatisticsAsyncAsync(start, end).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Get a some order statistic information for Commerce manager dashboard
-        /// </summary>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='start'>
-        /// start interval date
-        /// </param>
-        /// <param name='end'>
-        /// end interval date
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        public static async Task<DashboardStatisticsResult> GetDashboardStatisticsAsyncAsync(this IOrderModule operations, System.DateTime? start = default(System.DateTime?), System.DateTime? end = default(System.DateTime?), CancellationToken cancellationToken = default(CancellationToken))
-        {
-            using (var _result = await operations.GetDashboardStatisticsAsyncWithHttpMessagesAsync(start, end, null, cancellationToken).ConfigureAwait(false))
+            /// <summary>
+            /// Register customer order payment in external payment system
+            /// </summary>
+            /// <remarks>
+            /// Used in storefront checkout or manual order payment registration
+            /// </remarks>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='orderId'>
+            /// customer order id
+            /// </param>
+            /// <param name='paymentId'>
+            /// payment id
+            /// </param>
+            /// <param name='body'>
+            /// banking card information
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<ProcessPaymentRequestResult> ProcessOrderPaymentsAsync(this IOrderModule operations, string orderId, string paymentId, BankCardInfo body = default(BankCardInfo), CancellationToken cancellationToken = default(CancellationToken))
             {
-                return _result.Body;
+                using (var _result = await operations.ProcessOrderPaymentsWithHttpMessagesAsync(orderId, paymentId, body, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
             }
-        }
 
-        /// <summary>
-        /// Payment callback operation used by external payment services to inform post
-        /// process payment in our system
-        /// </summary>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='body'>
-        /// payment callback parameters
-        /// </param>
-        public static PostProcessPaymentRequestResult PostProcessPayment(this IOrderModule operations, PaymentCallbackParameters body = default(PaymentCallbackParameters))
-        {
-            return operations.PostProcessPaymentAsync(body).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Payment callback operation used by external payment services to inform post
-        /// process payment in our system
-        /// </summary>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='body'>
-        /// payment callback parameters
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        public static async Task<PostProcessPaymentRequestResult> PostProcessPaymentAsync(this IOrderModule operations, PaymentCallbackParameters body = default(PaymentCallbackParameters), CancellationToken cancellationToken = default(CancellationToken))
-        {
-            using (var _result = await operations.PostProcessPaymentWithHttpMessagesAsync(body, null, cancellationToken).ConfigureAwait(false))
+            /// <summary>
+            /// Create new customer order based on shopping cart.
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='cartId'>
+            /// shopping cart id
+            /// </param>
+            public static CustomerOrder CreateOrderFromCart(this IOrderModule operations, string cartId)
             {
-                return _result.Body;
+                return operations.CreateOrderFromCartAsync(cartId).GetAwaiter().GetResult();
             }
-        }
 
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='orderNumber'>
-        /// </param>
-        public static Stream GetInvoicePdf(this IOrderModule operations, string orderNumber)
-        {
-            return operations.GetInvoicePdfAsync(orderNumber).GetAwaiter().GetResult();
-        }
-
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='orderNumber'>
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        public static async Task<Stream> GetInvoicePdfAsync(this IOrderModule operations, string orderNumber, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            var _result = await operations.GetInvoicePdfWithHttpMessagesAsync(orderNumber, null, cancellationToken).ConfigureAwait(false);
-            _result.Request.Dispose();
-            return _result.Body;
-        }
-
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='id'>
-        /// </param>
-        public static IList<OperationLog> GetOrderChanges(this IOrderModule operations, string id)
-        {
-            return operations.GetOrderChangesAsync(id).GetAwaiter().GetResult();
-        }
-
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='id'>
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        public static async Task<IList<OperationLog>> GetOrderChangesAsync(this IOrderModule operations, string id, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            using (var _result = await operations.GetOrderChangesWithHttpMessagesAsync(id, null, cancellationToken).ConfigureAwait(false))
+            /// <summary>
+            /// Create new customer order based on shopping cart.
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='cartId'>
+            /// shopping cart id
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<CustomerOrder> CreateOrderFromCartAsync(this IOrderModule operations, string cartId, CancellationToken cancellationToken = default(CancellationToken))
             {
-                return _result.Body;
+                using (var _result = await operations.CreateOrderFromCartWithHttpMessagesAsync(cartId, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
             }
-        }
 
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='body'>
-        /// </param>
-        public static ChangeLogSearchResult SearchOrderChanges(this IOrderModule operations, CustomerOrderHistorySearchCriteria body = default(CustomerOrderHistorySearchCriteria))
-        {
-            return operations.SearchOrderChangesAsync(body).GetAwaiter().GetResult();
-        }
-
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='body'>
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        public static async Task<ChangeLogSearchResult> SearchOrderChangesAsync(this IOrderModule operations, CustomerOrderHistorySearchCriteria body = default(CustomerOrderHistorySearchCriteria), CancellationToken cancellationToken = default(CancellationToken))
-        {
-            using (var _result = await operations.SearchOrderChangesWithHttpMessagesAsync(body, null, cancellationToken).ConfigureAwait(false))
+            /// <summary>
+            /// Add new customer order to system
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='body'>
+            /// customer order
+            /// </param>
+            public static CustomerOrder CreateOrder(this IOrderModule operations, CustomerOrder body = default(CustomerOrder))
             {
-                return _result.Body;
+                return operations.CreateOrderAsync(body).GetAwaiter().GetResult();
             }
-        }
+
+            /// <summary>
+            /// Add new customer order to system
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='body'>
+            /// customer order
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<CustomerOrder> CreateOrderAsync(this IOrderModule operations, CustomerOrder body = default(CustomerOrder), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.CreateOrderWithHttpMessagesAsync(body, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <summary>
+            /// Update a existing customer order
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='body'>
+            /// customer order
+            /// </param>
+            public static void UpdateOrder(this IOrderModule operations, CustomerOrder body = default(CustomerOrder))
+            {
+                operations.UpdateOrderAsync(body).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Update a existing customer order
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='body'>
+            /// customer order
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task UpdateOrderAsync(this IOrderModule operations, CustomerOrder body = default(CustomerOrder), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                (await operations.UpdateOrderWithHttpMessagesAsync(body, null, cancellationToken).ConfigureAwait(false)).Dispose();
+            }
+
+            /// <summary>
+            /// Delete a whole customer orders
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='ids'>
+            /// customer order ids for delete
+            /// </param>
+            public static void DeleteOrdersByIds(this IOrderModule operations, IList<string> ids = default(IList<string>))
+            {
+                operations.DeleteOrdersByIdsAsync(ids).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Delete a whole customer orders
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='ids'>
+            /// customer order ids for delete
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task DeleteOrdersByIdsAsync(this IOrderModule operations, IList<string> ids = default(IList<string>), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                (await operations.DeleteOrdersByIdsWithHttpMessagesAsync(ids, null, cancellationToken).ConfigureAwait(false)).Dispose();
+            }
+
+            /// <summary>
+            /// Get new shipment for specified customer order
+            /// </summary>
+            /// <remarks>
+            /// Return new shipment document with populates all required properties.
+            /// </remarks>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='id'>
+            /// customer order id
+            /// </param>
+            public static OrderShipment GetNewShipment(this IOrderModule operations, string id)
+            {
+                return operations.GetNewShipmentAsync(id).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Get new shipment for specified customer order
+            /// </summary>
+            /// <remarks>
+            /// Return new shipment document with populates all required properties.
+            /// </remarks>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='id'>
+            /// customer order id
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<OrderShipment> GetNewShipmentAsync(this IOrderModule operations, string id, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.GetNewShipmentWithHttpMessagesAsync(id, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <summary>
+            /// Get new payment for specified customer order
+            /// </summary>
+            /// <remarks>
+            /// Return new payment  document with populates all required properties.
+            /// </remarks>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='id'>
+            /// customer order id
+            /// </param>
+            public static PaymentIn GetNewPayment(this IOrderModule operations, string id)
+            {
+                return operations.GetNewPaymentAsync(id).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Get new payment for specified customer order
+            /// </summary>
+            /// <remarks>
+            /// Return new payment  document with populates all required properties.
+            /// </remarks>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='id'>
+            /// customer order id
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<PaymentIn> GetNewPaymentAsync(this IOrderModule operations, string id, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.GetNewPaymentWithHttpMessagesAsync(id, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <summary>
+            /// Get a some order statistic information for Commerce manager dashboard
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='start'>
+            /// start interval date
+            /// </param>
+            /// <param name='end'>
+            /// end interval date
+            /// </param>
+            public static DashboardStatisticsResult GetDashboardStatisticsAsync(this IOrderModule operations, System.DateTime? start = default(System.DateTime?), System.DateTime? end = default(System.DateTime?))
+            {
+                return operations.GetDashboardStatisticsAsyncAsync(start, end).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Get a some order statistic information for Commerce manager dashboard
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='start'>
+            /// start interval date
+            /// </param>
+            /// <param name='end'>
+            /// end interval date
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<DashboardStatisticsResult> GetDashboardStatisticsAsyncAsync(this IOrderModule operations, System.DateTime? start = default(System.DateTime?), System.DateTime? end = default(System.DateTime?), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.GetDashboardStatisticsAsyncWithHttpMessagesAsync(start, end, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <summary>
+            /// Payment callback operation used by external payment services to inform post
+            /// process payment in our system
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='body'>
+            /// payment callback parameters
+            /// </param>
+            public static PostProcessPaymentRequestResult PostProcessPayment(this IOrderModule operations, PaymentCallbackParameters body = default(PaymentCallbackParameters))
+            {
+                return operations.PostProcessPaymentAsync(body).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Payment callback operation used by external payment services to inform post
+            /// process payment in our system
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='body'>
+            /// payment callback parameters
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<PostProcessPaymentRequestResult> PostProcessPaymentAsync(this IOrderModule operations, PaymentCallbackParameters body = default(PaymentCallbackParameters), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.PostProcessPaymentWithHttpMessagesAsync(body, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='orderNumber'>
+            /// </param>
+            public static string GetInvoicePdf(this IOrderModule operations, string orderNumber)
+            {
+                return operations.GetInvoicePdfAsync(orderNumber).GetAwaiter().GetResult();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='orderNumber'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<string> GetInvoicePdfAsync(this IOrderModule operations, string orderNumber, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.GetInvoicePdfWithHttpMessagesAsync(orderNumber, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='id'>
+            /// </param>
+            public static IList<OperationLog> GetOrderChanges(this IOrderModule operations, string id)
+            {
+                return operations.GetOrderChangesAsync(id).GetAwaiter().GetResult();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='id'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<IList<OperationLog>> GetOrderChangesAsync(this IOrderModule operations, string id, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.GetOrderChangesWithHttpMessagesAsync(id, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='body'>
+            /// </param>
+            public static ChangeLogSearchResult SearchOrderChanges(this IOrderModule operations, CustomerOrderHistorySearchCriteria body = default(CustomerOrderHistorySearchCriteria))
+            {
+                return operations.SearchOrderChangesAsync(body).GetAwaiter().GetResult();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='body'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<ChangeLogSearchResult> SearchOrderChangesAsync(this IOrderModule operations, CustomerOrderHistorySearchCriteria body = default(CustomerOrderHistorySearchCriteria), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.SearchOrderChangesWithHttpMessagesAsync(body, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
 
     }
 }
@@ -3646,15 +3651,18 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 {
-    using System.Collections.Generic;
-    using System.Net;
-    using System.Net.Http;
-    using System.Threading;
-    using System.Threading.Tasks;
     using Microsoft.Rest;
     using Microsoft.Rest.Serialization;
     using Models;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// OrderModulePayments operations.
@@ -3731,7 +3739,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             if (customHeaders != null)
             {
-                foreach (var _header in customHeaders)
+                foreach(var _header in customHeaders)
                 {
                     if (_httpRequest.Headers.Contains(_header.Key))
                     {
@@ -3743,11 +3751,11 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             // Serialize Request
             string _requestContent = null;
-            if (body != null)
+            if(body != null)
             {
                 _requestContent = SafeJsonConvert.SerializeObject(body, Client.SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
-                _httpRequest.Content.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
+                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
             }
             // Set Credentials
             if (Client.Credentials != null)
@@ -3772,12 +3780,10 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
             if ((int)_statusCode != 200 && (int)_statusCode != 401 && (int)_statusCode != 403)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
-                if (_httpResponse.Content != null)
-                {
+                if (_httpResponse.Content != null) {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 }
-                else
-                {
+                else {
                     _responseContent = string.Empty;
                 }
                 ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
@@ -3892,7 +3898,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             if (customHeaders != null)
             {
-                foreach (var _header in customHeaders)
+                foreach(var _header in customHeaders)
                 {
                     if (_httpRequest.Headers.Contains(_header.Key))
                     {
@@ -3927,12 +3933,10 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
             if ((int)_statusCode != 200 && (int)_statusCode != 401 && (int)_statusCode != 403)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
-                if (_httpResponse.Content != null)
-                {
+                if (_httpResponse.Content != null) {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 }
-                else
-                {
+                else {
                     _responseContent = string.Empty;
                 }
                 ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
@@ -4024,7 +4028,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             if (customHeaders != null)
             {
-                foreach (var _header in customHeaders)
+                foreach(var _header in customHeaders)
                 {
                     if (_httpRequest.Headers.Contains(_header.Key))
                     {
@@ -4036,11 +4040,11 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             // Serialize Request
             string _requestContent = null;
-            if (body != null)
+            if(body != null)
             {
                 _requestContent = SafeJsonConvert.SerializeObject(body, Client.SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
-                _httpRequest.Content.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
+                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
             }
             // Set Credentials
             if (Client.Credentials != null)
@@ -4065,12 +4069,10 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
             if ((int)_statusCode != 200 && (int)_statusCode != 401 && (int)_statusCode != 403)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
-                if (_httpResponse.Content != null)
-                {
+                if (_httpResponse.Content != null) {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 }
-                else
-                {
+                else {
                     _responseContent = string.Empty;
                 }
                 ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
@@ -4158,7 +4160,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             if (customHeaders != null)
             {
-                foreach (var _header in customHeaders)
+                foreach(var _header in customHeaders)
                 {
                     if (_httpRequest.Headers.Contains(_header.Key))
                     {
@@ -4170,11 +4172,11 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             // Serialize Request
             string _requestContent = null;
-            if (body != null)
+            if(body != null)
             {
                 _requestContent = SafeJsonConvert.SerializeObject(body, Client.SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
-                _httpRequest.Content.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
+                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
             }
             // Set Credentials
             if (Client.Credentials != null)
@@ -4199,12 +4201,10 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
             if ((int)_statusCode != 200 && (int)_statusCode != 401 && (int)_statusCode != 403)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
-                if (_httpResponse.Content != null)
-                {
+                if (_httpResponse.Content != null) {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 }
-                else
-                {
+                else {
                     _responseContent = string.Empty;
                 }
                 ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
@@ -4302,7 +4302,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
             if (customHeaders != null)
             {
-                foreach (var _header in customHeaders)
+                foreach(var _header in customHeaders)
                 {
                     if (_httpRequest.Headers.Contains(_header.Key))
                     {
@@ -4337,12 +4337,10 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
             if ((int)_statusCode != 200 && (int)_statusCode != 401 && (int)_statusCode != 403)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
-                if (_httpResponse.Content != null)
-                {
+                if (_httpResponse.Content != null) {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 }
-                else
-                {
+                else {
                     _responseContent = string.Empty;
                 }
                 ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
@@ -4379,11 +4377,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 {
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Models;
+    using Newtonsoft.Json;
+    using System.Collections;
     using System.Collections.Generic;
+    using System.Net;
+    using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
-    using Microsoft.Rest;
-    using Models;
 
     /// <summary>
     /// OrderModulePayments operations.
@@ -4497,186 +4500,192 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 {
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
+    using Models;
+    using Newtonsoft.Json;
+    using System.Collections;
     using System.Collections.Generic;
+    using System.Net;
+    using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
-    using Models;
 
     /// <summary>
     /// Extension methods for OrderModulePayments.
     /// </summary>
     public static partial class OrderModulePaymentsExtensions
     {
-        /// <summary>
-        /// Search  order payments by given criteria
-        /// </summary>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='body'>
-        /// criteria
-        /// </param>
-        public static PaymentSearchResult SearchOrderPayments(this IOrderModulePayments operations, PaymentSearchCriteria body = default(PaymentSearchCriteria))
-        {
-            return operations.SearchOrderPaymentsAsync(body).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Search  order payments by given criteria
-        /// </summary>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='body'>
-        /// criteria
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        public static async Task<PaymentSearchResult> SearchOrderPaymentsAsync(this IOrderModulePayments operations, PaymentSearchCriteria body = default(PaymentSearchCriteria), CancellationToken cancellationToken = default(CancellationToken))
-        {
-            using (var _result = await operations.SearchOrderPaymentsWithHttpMessagesAsync(body, null, cancellationToken).ConfigureAwait(false))
+            /// <summary>
+            /// Search  order payments by given criteria
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='body'>
+            /// criteria
+            /// </param>
+            public static PaymentSearchResult SearchOrderPayments(this IOrderModulePayments operations, PaymentSearchCriteria body = default(PaymentSearchCriteria))
             {
-                return _result.Body;
+                return operations.SearchOrderPaymentsAsync(body).GetAwaiter().GetResult();
             }
-        }
 
-        /// <summary>
-        /// Find  order payment by id
-        /// </summary>
-        /// <remarks>
-        /// Return a single order payment with all nested documents or null if payment
-        /// was not found
-        /// </remarks>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='id'>
-        /// order payment id
-        /// </param>
-        /// <param name='respGroup'>
-        /// </param>
-        public static PaymentIn GetById(this IOrderModulePayments operations, string id, string respGroup)
-        {
-            return operations.GetByIdAsync(id, respGroup).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Find  order payment by id
-        /// </summary>
-        /// <remarks>
-        /// Return a single order payment with all nested documents or null if payment
-        /// was not found
-        /// </remarks>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='id'>
-        /// order payment id
-        /// </param>
-        /// <param name='respGroup'>
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        public static async Task<PaymentIn> GetByIdAsync(this IOrderModulePayments operations, string id, string respGroup, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            using (var _result = await operations.GetByIdWithHttpMessagesAsync(id, respGroup, null, cancellationToken).ConfigureAwait(false))
+            /// <summary>
+            /// Search  order payments by given criteria
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='body'>
+            /// criteria
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<PaymentSearchResult> SearchOrderPaymentsAsync(this IOrderModulePayments operations, PaymentSearchCriteria body = default(PaymentSearchCriteria), CancellationToken cancellationToken = default(CancellationToken))
             {
-                return _result.Body;
+                using (var _result = await operations.SearchOrderPaymentsWithHttpMessagesAsync(body, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
             }
-        }
 
-        /// <summary>
-        /// Create or update order payment
-        /// </summary>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='body'>
-        /// payment
-        /// </param>
-        public static CustomerOrder CreatePayment(this IOrderModulePayments operations, PaymentIn body = default(PaymentIn))
-        {
-            return operations.CreatePaymentAsync(body).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Create or update order payment
-        /// </summary>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='body'>
-        /// payment
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        public static async Task<CustomerOrder> CreatePaymentAsync(this IOrderModulePayments operations, PaymentIn body = default(PaymentIn), CancellationToken cancellationToken = default(CancellationToken))
-        {
-            using (var _result = await operations.CreatePaymentWithHttpMessagesAsync(body, null, cancellationToken).ConfigureAwait(false))
+            /// <summary>
+            /// Find  order payment by id
+            /// </summary>
+            /// <remarks>
+            /// Return a single order payment with all nested documents or null if payment
+            /// was not found
+            /// </remarks>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='id'>
+            /// order payment id
+            /// </param>
+            /// <param name='respGroup'>
+            /// </param>
+            public static PaymentIn GetById(this IOrderModulePayments operations, string id, string respGroup)
             {
-                return _result.Body;
+                return operations.GetByIdAsync(id, respGroup).GetAwaiter().GetResult();
             }
-        }
 
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='body'>
-        /// </param>
-        public static CustomerOrder UpdatePayment(this IOrderModulePayments operations, PaymentIn body = default(PaymentIn))
-        {
-            return operations.UpdatePaymentAsync(body).GetAwaiter().GetResult();
-        }
-
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='body'>
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        public static async Task<CustomerOrder> UpdatePaymentAsync(this IOrderModulePayments operations, PaymentIn body = default(PaymentIn), CancellationToken cancellationToken = default(CancellationToken))
-        {
-            using (var _result = await operations.UpdatePaymentWithHttpMessagesAsync(body, null, cancellationToken).ConfigureAwait(false))
+            /// <summary>
+            /// Find  order payment by id
+            /// </summary>
+            /// <remarks>
+            /// Return a single order payment with all nested documents or null if payment
+            /// was not found
+            /// </remarks>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='id'>
+            /// order payment id
+            /// </param>
+            /// <param name='respGroup'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<PaymentIn> GetByIdAsync(this IOrderModulePayments operations, string id, string respGroup, CancellationToken cancellationToken = default(CancellationToken))
             {
-                return _result.Body;
+                using (var _result = await operations.GetByIdWithHttpMessagesAsync(id, respGroup, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
             }
-        }
 
-        /// <summary>
-        /// Delete an order payment
-        /// </summary>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='ids'>
-        /// order payment ids
-        /// </param>
-        public static void DeleteOrderPaymentsByIds(this IOrderModulePayments operations, IList<string> ids = default(IList<string>))
-        {
-            operations.DeleteOrderPaymentsByIdsAsync(ids).GetAwaiter().GetResult();
-        }
+            /// <summary>
+            /// Create or update order payment
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='body'>
+            /// payment
+            /// </param>
+            public static CustomerOrder CreatePayment(this IOrderModulePayments operations, PaymentIn body = default(PaymentIn))
+            {
+                return operations.CreatePaymentAsync(body).GetAwaiter().GetResult();
+            }
 
-        /// <summary>
-        /// Delete an order payment
-        /// </summary>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='ids'>
-        /// order payment ids
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        public static async Task DeleteOrderPaymentsByIdsAsync(this IOrderModulePayments operations, IList<string> ids = default(IList<string>), CancellationToken cancellationToken = default(CancellationToken))
-        {
-            (await operations.DeleteOrderPaymentsByIdsWithHttpMessagesAsync(ids, null, cancellationToken).ConfigureAwait(false)).Dispose();
-        }
+            /// <summary>
+            /// Create or update order payment
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='body'>
+            /// payment
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<CustomerOrder> CreatePaymentAsync(this IOrderModulePayments operations, PaymentIn body = default(PaymentIn), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.CreatePaymentWithHttpMessagesAsync(body, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='body'>
+            /// </param>
+            public static CustomerOrder UpdatePayment(this IOrderModulePayments operations, PaymentIn body = default(PaymentIn))
+            {
+                return operations.UpdatePaymentAsync(body).GetAwaiter().GetResult();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='body'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<CustomerOrder> UpdatePaymentAsync(this IOrderModulePayments operations, PaymentIn body = default(PaymentIn), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.UpdatePaymentWithHttpMessagesAsync(body, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <summary>
+            /// Delete an order payment
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='ids'>
+            /// order payment ids
+            /// </param>
+            public static void DeleteOrderPaymentsByIds(this IOrderModulePayments operations, IList<string> ids = default(IList<string>))
+            {
+                operations.DeleteOrderPaymentsByIdsAsync(ids).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Delete an order payment
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='ids'>
+            /// order payment ids
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task DeleteOrderPaymentsByIdsAsync(this IOrderModulePayments operations, IList<string> ids = default(IList<string>), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                (await operations.DeleteOrderPaymentsByIdsWithHttpMessagesAsync(ids, null, cancellationToken).ConfigureAwait(false)).Dispose();
+            }
 
     }
 }
@@ -4688,7 +4697,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class OperationLog
     {
@@ -4781,7 +4799,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class SortInfo
     {
@@ -4831,8 +4858,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
-    using System.Collections.Generic;
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class CustomerOrderSearchCriteria
     {
@@ -5048,7 +5083,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class OrderAddress
     {
@@ -5195,8 +5239,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
-    using System.Collections.Generic;
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class ObjectSettingEntry
     {
@@ -5308,7 +5360,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class TaxDetail
     {
@@ -5361,8 +5422,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
-    using System.Collections.Generic;
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class PaymentMethod
     {
@@ -5543,7 +5612,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class ProcessPaymentRequestResult
     {
@@ -5628,7 +5706,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class Discount
     {
@@ -5705,7 +5792,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class PaymentGatewayTransaction
     {
@@ -5874,8 +5970,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
-    using System.Collections.Generic;
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class IOperation
     {
@@ -5890,15 +5994,15 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
         /// <summary>
         /// Initializes a new instance of the IOperation class.
         /// </summary>
-        public IOperation(string operationType = default(string), string parentOperationId = default(string), string number = default(string), bool? isApproved = default(bool?), string status = default(string), string comment = default(string), string currency = default(string), IList<IOperation> childrenOperations = default(IList<IOperation>), string id = default(string))
+        public IOperation(string operationType = default(string), string number = default(string), bool? isApproved = default(bool?), string status = default(string), string comment = default(string), string currency = default(string), string parentOperationId = default(string), IList<IOperation> childrenOperations = default(IList<IOperation>), string id = default(string))
         {
             OperationType = operationType;
-            ParentOperationId = parentOperationId;
             Number = number;
             IsApproved = isApproved;
             Status = status;
             Comment = comment;
             Currency = currency;
+            ParentOperationId = parentOperationId;
             ChildrenOperations = childrenOperations;
             Id = id;
             CustomInit();
@@ -5913,11 +6017,6 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
         /// </summary>
         [JsonProperty(PropertyName = "operationType")]
         public string OperationType { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "parentOperationId")]
-        public string ParentOperationId { get; set; }
 
         /// <summary>
         /// </summary>
@@ -5946,6 +6045,11 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
         /// <summary>
         /// </summary>
+        [JsonProperty(PropertyName = "parentOperationId")]
+        public string ParentOperationId { get; set; }
+
+        /// <summary>
+        /// </summary>
         [JsonProperty(PropertyName = "childrenOperations")]
         public IList<IOperation> ChildrenOperations { get; set; }
 
@@ -5964,7 +6068,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class DynamicPropertyObjectValue
     {
@@ -6053,7 +6166,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class DynamicPropertyName
     {
@@ -6100,8 +6222,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
-    using System.Collections.Generic;
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class DynamicObjectProperty
     {
@@ -6244,8 +6374,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
-    using System.Collections.Generic;
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class PaymentIn
     {
@@ -6265,7 +6403,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
         /// 'Pending', 'Authorized', 'Paid', 'PartiallyRefunded', 'Refunded',
         /// 'Voided', 'Custom', 'Cancelled', 'Declined', 'Error'</param>
         /// <param name="taxType">Tax category or type</param>
-        public PaymentIn(string orderId = default(string), string purpose = default(string), string gatewayCode = default(string), PaymentMethod paymentMethod = default(PaymentMethod), string organizationId = default(string), string organizationName = default(string), string customerId = default(string), string customerName = default(string), System.DateTime? incomingDate = default(System.DateTime?), OrderAddress billingAddress = default(OrderAddress), string paymentStatus = default(string), System.DateTime? authorizedDate = default(System.DateTime?), System.DateTime? capturedDate = default(System.DateTime?), System.DateTime? voidedDate = default(System.DateTime?), ProcessPaymentRequestResult processPaymentResult = default(ProcessPaymentRequestResult), double? price = default(double?), double? priceWithTax = default(double?), double? total = default(double?), double? totalWithTax = default(double?), double? discountAmount = default(double?), double? discountAmountWithTax = default(double?), string objectType = default(string), string taxType = default(string), double? taxTotal = default(double?), double? taxPercentRate = default(double?), IList<TaxDetail> taxDetails = default(IList<TaxDetail>), IList<Discount> discounts = default(IList<Discount>), IList<PaymentGatewayTransaction> transactions = default(IList<PaymentGatewayTransaction>), string operationType = default(string), string parentOperationId = default(string), string number = default(string), bool? isApproved = default(bool?), string status = default(string), string comment = default(string), string currency = default(string), double? sum = default(double?), string outerId = default(string), bool? isCancelled = default(bool?), System.DateTime? cancelledDate = default(System.DateTime?), string cancelReason = default(string), IList<DynamicObjectProperty> dynamicProperties = default(IList<DynamicObjectProperty>), IList<OperationLog> operationsLog = default(IList<OperationLog>), System.DateTime? createdDate = default(System.DateTime?), System.DateTime? modifiedDate = default(System.DateTime?), string createdBy = default(string), string modifiedBy = default(string), string id = default(string))
+        public PaymentIn(string orderId = default(string), string purpose = default(string), string gatewayCode = default(string), PaymentMethod paymentMethod = default(PaymentMethod), string organizationId = default(string), string organizationName = default(string), string customerId = default(string), string customerName = default(string), System.DateTime? incomingDate = default(System.DateTime?), OrderAddress billingAddress = default(OrderAddress), string paymentStatus = default(string), System.DateTime? authorizedDate = default(System.DateTime?), System.DateTime? capturedDate = default(System.DateTime?), System.DateTime? voidedDate = default(System.DateTime?), ProcessPaymentRequestResult processPaymentResult = default(ProcessPaymentRequestResult), double? price = default(double?), double? priceWithTax = default(double?), double? total = default(double?), double? totalWithTax = default(double?), double? discountAmount = default(double?), double? discountAmountWithTax = default(double?), string objectType = default(string), string taxType = default(string), double? taxTotal = default(double?), double? taxPercentRate = default(double?), IList<TaxDetail> taxDetails = default(IList<TaxDetail>), IList<Discount> discounts = default(IList<Discount>), IList<PaymentGatewayTransaction> transactions = default(IList<PaymentGatewayTransaction>), string operationType = default(string), string parentOperationId = default(string), string number = default(string), bool? isApproved = default(bool?), string status = default(string), string comment = default(string), string currency = default(string), double? sum = default(double?), string outerId = default(string), string purchaseOrderNumber = default(string), bool? isCancelled = default(bool?), System.DateTime? cancelledDate = default(System.DateTime?), string cancelReason = default(string), IList<DynamicObjectProperty> dynamicProperties = default(IList<DynamicObjectProperty>), IList<OperationLog> operationsLog = default(IList<OperationLog>), System.DateTime? createdDate = default(System.DateTime?), System.DateTime? modifiedDate = default(System.DateTime?), string createdBy = default(string), string modifiedBy = default(string), string id = default(string))
         {
             OrderId = orderId;
             Purpose = purpose;
@@ -6304,6 +6442,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
             Currency = currency;
             Sum = sum;
             OuterId = outerId;
+            PurchaseOrderNumber = purchaseOrderNumber;
             IsCancelled = isCancelled;
             CancelledDate = cancelledDate;
             CancelReason = cancelReason;
@@ -6514,6 +6653,11 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
         /// <summary>
         /// </summary>
+        [JsonProperty(PropertyName = "purchaseOrderNumber")]
+        public string PurchaseOrderNumber { get; set; }
+
+        /// <summary>
+        /// </summary>
         [JsonProperty(PropertyName = "isCancelled")]
         public bool? IsCancelled { get; set; }
 
@@ -6572,8 +6716,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
-    using System.Collections.Generic;
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class OrderLineItem
     {
@@ -6928,8 +7080,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
-    using System.Collections.Generic;
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class ShippingMethod
     {
@@ -7024,7 +7184,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class OrderShipmentItem
     {
@@ -7119,8 +7288,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
-    using System.Collections.Generic;
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class ShipmentPackage
     {
@@ -7239,8 +7416,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
-    using System.Collections.Generic;
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class CustomerOrder
     {
@@ -7273,7 +7458,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
         /// $100).</param>
         /// <param name="total">Grand order total</param>
         /// <param name="taxType">Tax category or type</param>
-        public CustomerOrder(string customerId = default(string), string customerName = default(string), string channelId = default(string), string storeId = default(string), string storeName = default(string), string organizationId = default(string), string organizationName = default(string), string employeeId = default(string), string employeeName = default(string), string shoppingCartId = default(string), bool? isPrototype = default(bool?), string subscriptionNumber = default(string), string subscriptionId = default(string), string objectType = default(string), IList<OrderAddress> addresses = default(IList<OrderAddress>), IList<PaymentIn> inPayments = default(IList<PaymentIn>), IList<OrderLineItem> items = default(IList<OrderLineItem>), IList<OrderShipment> shipments = default(IList<OrderShipment>), IList<Discount> discounts = default(IList<Discount>), double? discountAmount = default(double?), IList<TaxDetail> taxDetails = default(IList<TaxDetail>), IList<string> scopes = default(IList<string>), double? total = default(double?), double? subTotal = default(double?), double? subTotalWithTax = default(double?), double? subTotalDiscount = default(double?), double? subTotalDiscountWithTax = default(double?), double? subTotalTaxTotal = default(double?), double? shippingTotal = default(double?), double? shippingTotalWithTax = default(double?), double? shippingSubTotal = default(double?), double? shippingSubTotalWithTax = default(double?), double? shippingDiscountTotal = default(double?), double? shippingDiscountTotalWithTax = default(double?), double? shippingTaxTotal = default(double?), double? paymentTotal = default(double?), double? paymentTotalWithTax = default(double?), double? paymentSubTotal = default(double?), double? paymentSubTotalWithTax = default(double?), double? paymentDiscountTotal = default(double?), double? paymentDiscountTotalWithTax = default(double?), double? paymentTaxTotal = default(double?), double? discountTotal = default(double?), double? discountTotalWithTax = default(double?), double? fee = default(double?), double? feeWithTax = default(double?), double? feeTotal = default(double?), double? feeTotalWithTax = default(double?), string taxType = default(string), double? taxTotal = default(double?), double? taxPercentRate = default(double?), string languageCode = default(string), string operationType = default(string), string parentOperationId = default(string), string number = default(string), bool? isApproved = default(bool?), string status = default(string), string comment = default(string), string currency = default(string), double? sum = default(double?), string outerId = default(string), bool? isCancelled = default(bool?), System.DateTime? cancelledDate = default(System.DateTime?), string cancelReason = default(string), IList<DynamicObjectProperty> dynamicProperties = default(IList<DynamicObjectProperty>), IList<OperationLog> operationsLog = default(IList<OperationLog>), System.DateTime? createdDate = default(System.DateTime?), System.DateTime? modifiedDate = default(System.DateTime?), string createdBy = default(string), string modifiedBy = default(string), string id = default(string))
+        public CustomerOrder(string customerId = default(string), string customerName = default(string), string channelId = default(string), string storeId = default(string), string storeName = default(string), string organizationId = default(string), string organizationName = default(string), string employeeId = default(string), string employeeName = default(string), string shoppingCartId = default(string), bool? isPrototype = default(bool?), string subscriptionNumber = default(string), string subscriptionId = default(string), string objectType = default(string), IList<OrderAddress> addresses = default(IList<OrderAddress>), IList<PaymentIn> inPayments = default(IList<PaymentIn>), IList<OrderLineItem> items = default(IList<OrderLineItem>), IList<OrderShipment> shipments = default(IList<OrderShipment>), IList<Discount> discounts = default(IList<Discount>), double? discountAmount = default(double?), IList<TaxDetail> taxDetails = default(IList<TaxDetail>), IList<string> scopes = default(IList<string>), double? total = default(double?), double? subTotal = default(double?), double? subTotalWithTax = default(double?), double? subTotalDiscount = default(double?), double? subTotalDiscountWithTax = default(double?), double? subTotalTaxTotal = default(double?), double? shippingTotal = default(double?), double? shippingTotalWithTax = default(double?), double? shippingSubTotal = default(double?), double? shippingSubTotalWithTax = default(double?), double? shippingDiscountTotal = default(double?), double? shippingDiscountTotalWithTax = default(double?), double? shippingTaxTotal = default(double?), double? paymentTotal = default(double?), double? paymentTotalWithTax = default(double?), double? paymentSubTotal = default(double?), double? paymentSubTotalWithTax = default(double?), double? paymentDiscountTotal = default(double?), double? paymentDiscountTotalWithTax = default(double?), double? paymentTaxTotal = default(double?), double? discountTotal = default(double?), double? discountTotalWithTax = default(double?), double? fee = default(double?), double? feeWithTax = default(double?), double? feeTotal = default(double?), double? feeTotalWithTax = default(double?), string taxType = default(string), double? taxTotal = default(double?), double? taxPercentRate = default(double?), string languageCode = default(string), string operationType = default(string), string parentOperationId = default(string), string number = default(string), bool? isApproved = default(bool?), string status = default(string), string comment = default(string), string currency = default(string), double? sum = default(double?), string outerId = default(string), string purchaseOrderNumber = default(string), bool? isCancelled = default(bool?), System.DateTime? cancelledDate = default(System.DateTime?), string cancelReason = default(string), IList<DynamicObjectProperty> dynamicProperties = default(IList<DynamicObjectProperty>), IList<OperationLog> operationsLog = default(IList<OperationLog>), System.DateTime? createdDate = default(System.DateTime?), System.DateTime? modifiedDate = default(System.DateTime?), string createdBy = default(string), string modifiedBy = default(string), string id = default(string))
         {
             CustomerId = customerId;
             CustomerName = customerName;
@@ -7336,6 +7521,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
             Currency = currency;
             Sum = sum;
             OuterId = outerId;
+            PurchaseOrderNumber = purchaseOrderNumber;
             IsCancelled = isCancelled;
             CancelledDate = cancelledDate;
             CancelReason = cancelReason;
@@ -7675,6 +7861,11 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
         /// <summary>
         /// </summary>
+        [JsonProperty(PropertyName = "purchaseOrderNumber")]
+        public string PurchaseOrderNumber { get; set; }
+
+        /// <summary>
+        /// </summary>
         [JsonProperty(PropertyName = "isCancelled")]
         public bool? IsCancelled { get; set; }
 
@@ -7733,8 +7924,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
-    using System.Collections.Generic;
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class OrderShipment
     {
@@ -7754,7 +7953,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
         /// <param name="shipmentMethodOption">Current shipment option
         /// code</param>
         /// <param name="taxType">Tax category or type</param>
-        public OrderShipment(string organizationId = default(string), string organizationName = default(string), string fulfillmentCenterId = default(string), string fulfillmentCenterName = default(string), string employeeId = default(string), string employeeName = default(string), string shipmentMethodCode = default(string), string shipmentMethodOption = default(string), ShippingMethod shippingMethod = default(ShippingMethod), string customerOrderId = default(string), CustomerOrder customerOrder = default(CustomerOrder), IList<OrderShipmentItem> items = default(IList<OrderShipmentItem>), IList<ShipmentPackage> packages = default(IList<ShipmentPackage>), IList<PaymentIn> inPayments = default(IList<PaymentIn>), string weightUnit = default(string), double? weight = default(double?), string measureUnit = default(string), double? height = default(double?), double? length = default(double?), double? width = default(double?), IList<Discount> discounts = default(IList<Discount>), OrderAddress deliveryAddress = default(OrderAddress), double? price = default(double?), double? priceWithTax = default(double?), double? total = default(double?), double? totalWithTax = default(double?), double? discountAmount = default(double?), double? discountAmountWithTax = default(double?), double? fee = default(double?), double? feeWithTax = default(double?), string objectType = default(string), string taxType = default(string), double? taxTotal = default(double?), double? taxPercentRate = default(double?), IList<TaxDetail> taxDetails = default(IList<TaxDetail>), string operationType = default(string), string parentOperationId = default(string), string number = default(string), bool? isApproved = default(bool?), string status = default(string), string comment = default(string), string currency = default(string), double? sum = default(double?), string outerId = default(string), bool? isCancelled = default(bool?), System.DateTime? cancelledDate = default(System.DateTime?), string cancelReason = default(string), IList<DynamicObjectProperty> dynamicProperties = default(IList<DynamicObjectProperty>), IList<OperationLog> operationsLog = default(IList<OperationLog>), System.DateTime? createdDate = default(System.DateTime?), System.DateTime? modifiedDate = default(System.DateTime?), string createdBy = default(string), string modifiedBy = default(string), string id = default(string))
+        public OrderShipment(string organizationId = default(string), string organizationName = default(string), string fulfillmentCenterId = default(string), string fulfillmentCenterName = default(string), string employeeId = default(string), string employeeName = default(string), string shipmentMethodCode = default(string), string shipmentMethodOption = default(string), ShippingMethod shippingMethod = default(ShippingMethod), string customerOrderId = default(string), CustomerOrder customerOrder = default(CustomerOrder), IList<OrderShipmentItem> items = default(IList<OrderShipmentItem>), IList<ShipmentPackage> packages = default(IList<ShipmentPackage>), IList<PaymentIn> inPayments = default(IList<PaymentIn>), string weightUnit = default(string), double? weight = default(double?), string measureUnit = default(string), double? height = default(double?), double? length = default(double?), double? width = default(double?), IList<Discount> discounts = default(IList<Discount>), OrderAddress deliveryAddress = default(OrderAddress), double? price = default(double?), double? priceWithTax = default(double?), double? total = default(double?), double? totalWithTax = default(double?), double? discountAmount = default(double?), double? discountAmountWithTax = default(double?), double? fee = default(double?), double? feeWithTax = default(double?), string objectType = default(string), string taxType = default(string), double? taxTotal = default(double?), double? taxPercentRate = default(double?), IList<TaxDetail> taxDetails = default(IList<TaxDetail>), string operationType = default(string), string parentOperationId = default(string), string number = default(string), bool? isApproved = default(bool?), string status = default(string), string comment = default(string), string currency = default(string), double? sum = default(double?), string outerId = default(string), string purchaseOrderNumber = default(string), bool? isCancelled = default(bool?), System.DateTime? cancelledDate = default(System.DateTime?), string cancelReason = default(string), IList<DynamicObjectProperty> dynamicProperties = default(IList<DynamicObjectProperty>), IList<OperationLog> operationsLog = default(IList<OperationLog>), System.DateTime? createdDate = default(System.DateTime?), System.DateTime? modifiedDate = default(System.DateTime?), string createdBy = default(string), string modifiedBy = default(string), string id = default(string))
         {
             OrganizationId = organizationId;
             OrganizationName = organizationName;
@@ -7800,6 +7999,7 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
             Currency = currency;
             Sum = sum;
             OuterId = outerId;
+            PurchaseOrderNumber = purchaseOrderNumber;
             IsCancelled = isCancelled;
             CancelledDate = cancelledDate;
             CancelReason = cancelReason;
@@ -8043,6 +8243,11 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
         /// <summary>
         /// </summary>
+        [JsonProperty(PropertyName = "purchaseOrderNumber")]
+        public string PurchaseOrderNumber { get; set; }
+
+        /// <summary>
+        /// </summary>
         [JsonProperty(PropertyName = "isCancelled")]
         public bool? IsCancelled { get; set; }
 
@@ -8101,8 +8306,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
-    using System.Collections.Generic;
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class CustomerOrderSearchResult
     {
@@ -8155,7 +8368,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class BankCardInfo
     {
@@ -8226,7 +8448,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class Money
     {
@@ -8273,7 +8504,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class QuarterPeriodMoney
     {
@@ -8332,8 +8572,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
-    using System.Collections.Generic;
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class DashboardStatisticsResult
     {
@@ -8434,7 +8682,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class KeyValuePair
     {
@@ -8481,8 +8738,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
-    using System.Collections.Generic;
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class PaymentCallbackParameters
     {
@@ -8523,7 +8788,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class PostProcessPaymentRequestResult
     {
@@ -8608,8 +8882,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
-    using System.Collections.Generic;
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class CustomerOrderHistorySearchCriteria
     {
@@ -8718,8 +9000,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
-    using System.Collections.Generic;
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class ChangeLogSearchResult
     {
@@ -8766,8 +9056,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
-    using System.Collections.Generic;
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class PaymentSearchCriteria
     {
@@ -8968,8 +9266,16 @@ namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 
 namespace VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models
 {
-    using System.Collections.Generic;
+    using Microsoft.Rest;
+    using Microsoft.Rest.Serialization;
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public partial class PaymentSearchResult
     {
