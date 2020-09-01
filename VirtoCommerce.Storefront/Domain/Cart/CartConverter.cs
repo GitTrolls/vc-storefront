@@ -428,8 +428,7 @@ namespace VirtoCommerce.Storefront.Domain
                 Status = cartDto.Status,
                 StoreId = cartDto.StoreId,
                 Type = cartDto.Type,
-                Customer = user,
-                PurchaseOrderNumber = cartDto.PurchaseOrderNumber
+                Customer = user
             };
 
             if (cartDto.Coupons != null)
@@ -513,8 +512,7 @@ namespace VirtoCommerce.Storefront.Domain
                 Status = cart.Status,
                 StoreId = cart.StoreId,
                 Type = cart.Type,
-                IsAnonymous = cart.IsAnonymous,
-                PurchaseOrderNumber = cart.PurchaseOrderNumber
+                IsAnonymous = cart.IsAnonymous
             };
 
             if (cart.Language != null)
