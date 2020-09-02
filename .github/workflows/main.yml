@@ -67,20 +67,20 @@ jobs:
     - name: Packaging
       run: vc-build Compress -skip Clean+Restore+Compile+Test
 
-    - name: Build Docker Image
-      if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev' }}
-      id: dockerBuild
-      uses: VirtoCommerce/vc-github-actions/build-docker-image@dev
-      with:
-        tag: ${{ steps.image.outputs.taggedVersion }}
-
     - name: Publish Github Release
       with:
         changelog: ${{ steps.changelog.outputs.changelog }}
       uses: VirtoCommerce/vc-github-actions/publish-github-release@dev
 
+    - name: Build Docker Image
+      if: ${{ github.ref == 'ref/head/master' }}
+      id: dockerBuild
+      uses: VirtoCommerce/vc-github-actions/build-docker-image@dev
+      with:
+        tag: ${{ steps.image.outputs.taggedVersion }}
+
     - name: Docker Login
-      if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev' }}
+      if: ${{ github.ref == 'ref/head/master' }}
       uses: azure/docker-login@v1
       with:
         login-server: docker.pkg.github.com
@@ -88,7 +88,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Publish Docker Image
-      if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev' }}
+      if: ${{ github.ref == 'ref/head/master' }}
       uses: VirtoCommerce/vc-github-actions/publish-docker-image@dev
       with:
           image: ${{ steps.dockerBuild.outputs.imageName }}
