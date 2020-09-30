@@ -30,15 +30,6 @@ namespace VirtoCommerce.Storefront.Model.Security
             };
         }
 
-        public static FormError PhoneNumberNotFound()
-        {
-            return new FormError
-            {
-                Code = nameof(PhoneNumberNotFound).PascalToKebabCase(),
-                Description = "Reset password by code is Failed. Phone Number not found"
-            };
-        }
-
         public static FormError AccountIsBlocked()
         {
             return new FormError

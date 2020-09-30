@@ -1,4 +1,4 @@
-name: Storefront CI
+name: CI
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
@@ -42,18 +42,18 @@ jobs:
       run: dotnet tool install --global dotnet-sonarscanner
 
     - name: Get Image Version
-      uses: VirtoCommerce/vc-github-actions/get-image-version@master
+      uses: VirtoCommerce/vc-github-actions/get-image-version@dev
       id: image
 
     - name: Get changelog
       id: changelog
-      uses: VirtoCommerce/vc-github-actions/changelog-generator@master
+      uses: VirtoCommerce/vc-github-actions/changelog-generator@dev
 
     - name: Add version suffix
-      uses: VirtoCommerce/vc-github-actions/add-version-suffix@master
+      uses: VirtoCommerce/vc-github-actions/add-version-suffix@dev
 
     - name: SonarCloud Begin
-      uses: VirtoCommerce/vc-github-actions/sonar-scanner-begin@master
+      uses: VirtoCommerce/vc-github-actions/sonar-scanner-begin@dev
 
     - name: Build
       run: vc-build Compile
@@ -62,26 +62,23 @@ jobs:
       run: vc-build Test -TestsFilter "Category=Unit|Category=CI" -skip
 
     - name: SonarCloud End
-      uses: VirtoCommerce/vc-github-actions/sonar-scanner-end@master
+      uses: VirtoCommerce/vc-github-actions/sonar-scanner-end@dev
 
     - name: Packaging
       run: vc-build Compress -skip Clean+Restore+Compile+Test
 
-    # Step runs only on commit to master or dev brunch
     - name: Build Docker Image
       if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev' }}
       id: dockerBuild
-      uses: VirtoCommerce/vc-github-actions/build-docker-image@master
+      uses: VirtoCommerce/vc-github-actions/build-docker-image@dev
       with:
         tag: ${{ steps.image.outputs.taggedVersion }}
 
-    # Step runs only on commit to master or dev brunch
     - name: Publish Github Release
       with:
         changelog: ${{ steps.changelog.outputs.changelog }}
-      uses: VirtoCommerce/vc-github-actions/publish-github-release@master
+      uses: VirtoCommerce/vc-github-actions/publish-github-release@dev
 
-    # Step runs only on commit to master or dev brunch
     - name: Docker Login
       if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev' }}
       uses: azure/docker-login@v1
@@ -90,10 +87,9 @@ jobs:
         username: $GITHUB_ACTOR
         password: ${{ secrets.GITHUB_TOKEN }}
 
-    # Step runs only on commit to master or dev brunch
     - name: Publish Docker Image
       if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev' }}
-      uses: VirtoCommerce/vc-github-actions/publish-docker-image@master
+      uses: VirtoCommerce/vc-github-actions/publish-docker-image@dev
       with:
           image: ${{ steps.dockerBuild.outputs.imageName }}
           tag: ${{ steps.image.outputs.taggedVersion }}
