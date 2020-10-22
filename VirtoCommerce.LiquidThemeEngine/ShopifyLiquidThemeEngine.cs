@@ -7,7 +7,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DotLiquid.ViewEngine.Exceptions;
-using GraphQL.Client.Abstractions;
 using LibSassHost;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
@@ -50,18 +49,9 @@ namespace VirtoCommerce.LiquidThemeEngine
         private readonly IContentBlobProvider _themeBlobProvider;
         private readonly ISassFileManager _sassFileManager;
         private readonly IFeaturesAgent _featuresAgent;
-        private readonly IGraphQLClient _graphQLClient;
 
-        public ShopifyLiquidThemeEngine(
-            IStorefrontMemoryCache memoryCache
-            , IWorkContextAccessor workContextAccessor
-            , IHttpContextAccessor httpContextAccessor
-            , IStorefrontUrlBuilder storeFrontUrlBuilder
-            , IContentBlobProvider contentBlobProvider
-            , ISassFileManager sassFileManager
-            , IOptions<LiquidThemeEngineOptions> options
-            , IFeaturesAgent featuresAgent
-            , IGraphQLClient graphQLClient)
+        public ShopifyLiquidThemeEngine(IStorefrontMemoryCache memoryCache, IWorkContextAccessor workContextAccessor, IHttpContextAccessor httpContextAccessor,
+                                        IStorefrontUrlBuilder storeFrontUrlBuilder, IContentBlobProvider contentBlobProvider, ISassFileManager sassFileManager, IOptions<LiquidThemeEngineOptions> options, IFeaturesAgent featuresAgent)
         {
             _workContextAccessor = workContextAccessor;
             _httpContextAccessor = httpContextAccessor;
@@ -71,7 +61,6 @@ namespace VirtoCommerce.LiquidThemeEngine
             _themeBlobProvider = contentBlobProvider;
             _sassFileManager = sassFileManager;
             _featuresAgent = featuresAgent;
-            _graphQLClient = graphQLClient;
             SassCompiler.FileManager = sassFileManager;
         }
 
@@ -84,9 +73,6 @@ namespace VirtoCommerce.LiquidThemeEngine
         /// Current HttpContext
         /// </summary>
         public HttpContext HttpContext => _httpContextAccessor.HttpContext;
-
-        //TODO: move from here
-        public IGraphQLClient GraphQLClient => _graphQLClient;
 
         /// <summary>
         /// Store url builder

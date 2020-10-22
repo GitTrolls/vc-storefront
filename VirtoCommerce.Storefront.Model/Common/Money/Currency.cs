@@ -106,7 +106,7 @@ namespace VirtoCommerce.Storefront.Model.Common
                 {
                     var cultureInfo = CultureInfo.GetCultureInfo(_language.CultureName);
                     NumberFormat = (NumberFormatInfo)cultureInfo.NumberFormat.Clone();
-                    var region = new RegionInfo(_language.CultureName);
+                    var region = new RegionInfo(cultureInfo.LCID);
                     EnglishName = region.CurrencyEnglishName;
 
                     if (_code != null)

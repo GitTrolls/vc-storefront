@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
+using VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi;
+using VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models;
 using VirtoCommerce.Storefront.AutoRestClients.PlatformModuleApi;
 using VirtoCommerce.Storefront.Infrastructure;
 using VirtoCommerce.Storefront.Model.Caching;
@@ -34,16 +36,19 @@ namespace VirtoCommerce.Storefront.Domain.Security
         private readonly IStorefrontMemoryCache _memoryCache;
         private readonly IMemberService _memberService;
         private readonly StorefrontOptions _options;
+        private readonly IOrderModule _orderModule;
 
         public UserStoreStub(ISecurity platformSecurityApi,
             IMemberService memberService,
             IStorefrontMemoryCache memoryCache,
-            IOptions<StorefrontOptions> options)
+            IOptions<StorefrontOptions> options,
+            IOrderModule orderModule)
         {
             _platformSecurityApi = platformSecurityApi;
             _memoryCache = memoryCache;
             _memberService = memberService;
             _options = options.Value;
+            _orderModule = orderModule;
         }
 
         #region IUserStore<User> members
@@ -503,15 +508,24 @@ namespace VirtoCommerce.Storefront.Domain.Security
             // Cleanup
         }
 
-        private Task<User> PrepareUserResultAsync(MemoryCacheEntryOptions options, AutoRestClients.PlatformModuleApi.Models.ApplicationUser userDto)
+        private async Task<User> PrepareUserResultAsync(MemoryCacheEntryOptions options, AutoRestClients.PlatformModuleApi.Models.ApplicationUser userDto)
         {
             if (userDto != null)
             {
                 var user = userDto.ToUser();
+                var orderSearchResult = await _orderModule.SearchCustomerOrderAsync(new CustomerOrderSearchCriteria()
+                {
+                    CustomerId = user.Id,
+                    Take = 0,
+                    Skip = 0,
+                });
+
+                user.IsFirstTimeBuyer = orderSearchResult.TotalCount == 0;
+
                 options.AddExpirationToken(new PollingApiUserChangeToken(_platformSecurityApi, _options.ChangesPollingInterval));
                 options.AddExpirationToken(SecurityCacheRegion.CreateChangeToken(userDto.Id));
 
-                return Task.FromResult(user);
+                return user;
             }
             return null;
         }

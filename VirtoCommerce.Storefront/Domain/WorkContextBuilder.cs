@@ -1,4 +1,3 @@
-using System.Linq;
 using Microsoft.ApplicationInsights.AspNetCore.Extensions;
 using Microsoft.AspNetCore.Http;
 using VirtoCommerce.Storefront.Extensions;
@@ -14,13 +13,13 @@ namespace VirtoCommerce.Storefront.Domain
         {
             HttpContext = httpContext;
 
-            var qs = HttpContext.Request.Query.ToDictionary(x=> x.Key, x=> x.Value.ToString()).WithDefaultValue(null);
+            var qs = HttpContext.Request.Query.ToNameValueCollection();
 
             WorkContext = new WorkContext
             {
                 RequestUrl = HttpContext.Request.GetUri(),
                 QueryString = qs,
-                PageNumber = qs["page"].ToNullableInt() ?? 1,
+                PageNumber = qs["page"].ToNullableInt(),
             };
 
             var pageSize = qs["count"].ToNullableInt() ?? qs["page_size"].ToNullableInt();
@@ -28,9 +27,9 @@ namespace VirtoCommerce.Storefront.Domain
             {
                 pageSize = options.PageSizeMaxValue;
             }
-            WorkContext.PageSize = pageSize ?? 20;
+            WorkContext.PageSize = pageSize;
             //To interpret as true the value of preview_mode from the query string according to its actual presence, since another value of this parameter can be passed.
-            WorkContext.IsPreviewMode = !string.IsNullOrEmpty(WorkContext.QueryString["preview_mode"]);
+            WorkContext.IsPreviewMode = !string.IsNullOrEmpty(WorkContext.QueryString.Get("preview_mode"));
 
         }
 

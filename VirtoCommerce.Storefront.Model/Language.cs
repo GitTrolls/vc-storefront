@@ -20,7 +20,7 @@ namespace VirtoCommerce.Storefront.Model
 
         public Language(string cultureName)
         {
-            var culture = CultureInfo.InvariantCulture;
+            CultureInfo culture = CultureInfo.InvariantCulture;
             if (!string.IsNullOrEmpty(cultureName))
             {
                 culture = CultureInfo.GetCultureInfo(cultureName);
@@ -32,7 +32,7 @@ namespace VirtoCommerce.Storefront.Model
             NativeName = culture.NativeName;
             if (culture != CultureInfo.InvariantCulture)
             {
-                var regionInfo = new RegionInfo(cultureName);
+                var regionInfo = new RegionInfo(culture.LCID);
                 TwoLetterRegionName = regionInfo.TwoLetterISORegionName;
                 ThreeLetterRegionName = regionInfo.ThreeLetterISORegionName;
             }

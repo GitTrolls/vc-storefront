@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using VirtoCommerce.Storefront.Model.Common;
 
@@ -10,11 +9,11 @@ namespace VirtoCommerce.Storefront.Model.Customer
         public static int DefaultPageSize { get; set; } = 20;
 
         public OrganizationContactsSearchCriteria()
-            : base(new Dictionary<string, string>().WithDefaultValue(null), DefaultPageSize)
+            : base(new NameValueCollection(), DefaultPageSize)
         {
         }
 
-        public OrganizationContactsSearchCriteria(IDictionary<string, string> queryString)
+        public OrganizationContactsSearchCriteria(NameValueCollection queryString)
             : base(queryString, DefaultPageSize)
         {
         }
