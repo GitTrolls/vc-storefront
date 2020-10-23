@@ -106,13 +106,9 @@ namespace VirtoCommerce.Storefront.Model.Common
                 {
                     var cultureInfo = CultureInfo.GetCultureInfo(_language.CultureName);
                     NumberFormat = (NumberFormatInfo)cultureInfo.NumberFormat.Clone();
-                    EnglishName = cultureInfo.NumberFormat.CurrencySymbol;
+                    var region = new RegionInfo(cultureInfo.LCID);
+                    EnglishName = region.CurrencyEnglishName;
 
-                    if (!cultureInfo.IsNeutralCulture)
-                    {
-                        var region = new RegionInfo(_language.CultureName);
-                        EnglishName = region.CurrencyEnglishName;
-                    }
                     if (_code != null)
                     {
                         Symbol = _isoCurrencySymbolDict[_code] ?? "N/A";

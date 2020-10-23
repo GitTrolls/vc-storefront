@@ -1,8 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
+using VirtoCommerce.Storefront.Model.Cart;
+using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Customer;
+using VirtoCommerce.Storefront.Model.Inventory;
+using VirtoCommerce.Storefront.Model.Order;
+using VirtoCommerce.Storefront.Model.Pricing;
+using VirtoCommerce.Storefront.Model.Quote;
 using VirtoCommerce.Storefront.Model.Security;
 using VirtoCommerce.Storefront.Model.StaticContent;
 using VirtoCommerce.Storefront.Model.Stores;
@@ -20,8 +29,6 @@ namespace VirtoCommerce.Storefront.Model
             ApplicationSettings = new Dictionary<string, object>();
             Form = new Form();
         }
-
-        public SlugRoutingData SlugRoutingData { get; set; }
 
         public string Template { get; set; }
         /// <summary>
@@ -45,7 +52,7 @@ namespace VirtoCommerce.Storefront.Model
         /// </summary>
         public Uri RequestUrl { get; set; }
 
-        public IDictionary<string, string> QueryString { get; set; }
+        public NameValueCollection QueryString { get; set; }
 
         public IMutablePagedList<Country> Countries { get; set; }
 
@@ -70,16 +77,41 @@ namespace VirtoCommerce.Storefront.Model
         public SeoInfo CurrentPageSeo { get; set; }
 
         /// <summary>
+        /// Represent current account orders search criteria taken from request url
+        /// </summary>
+        public OrderSearchCriteria CurrentOrderSearchCriteria { get; set; }
+
+        /// <summary>
         /// Current store
         /// </summary>
         public Store CurrentStore { get; set; }
         public Store Shop => CurrentStore;
+
+        /// <summary>
+        /// Gets or sets the current shopping cart
+        /// </summary>
+        public Lazy<ShoppingCart> CurrentCart { get; set; }
+        public ShoppingCart Cart => (CurrentCart?.IsValueCreated ?? false) ? CurrentCart.Value : null;
 
 
         /// <summary>
         /// Current single form aggregates ModelState errors
         /// </summary>
         public Form Form { get; set; }
+
+
+        /// <summary>
+        /// Represent current quotes search criteria taken from request url
+        /// </summary>
+        public QuoteSearchCriteria CurrentQuoteSearchCriteria { get; set; }
+
+        public Lazy<QuoteRequest> CurrentQuoteRequest { get; set; }
+        public QuoteRequest QuoteRequest => (CurrentQuoteRequest?.IsValueCreated ?? false) ? CurrentQuoteRequest.Value : null;
+
+        /// <summary>
+        /// Gets or sets the HTML code for payment method prepared form
+        /// </summary>
+        public string PaymentFormHtml { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of site navigation menu link lists
@@ -109,8 +141,57 @@ namespace VirtoCommerce.Storefront.Model
         public IEnumerable<Role> BusinessToBusinessRoles { get; set; }
 
         public string ErrorMessage { get; set; }
+        /// <summary>
+        /// List of active pricelists
+        /// </summary>
+        public IMutablePagedList<Pricelist> CurrentPricelists { get; set; }
 
-        
+        #region Catalog Properties
+
+        /// <summary>
+        /// Represent current product
+        /// </summary>
+        public Product CurrentProduct { get; set; }
+        [JsonIgnore]
+        public Product Product => CurrentProduct;
+        /// <summary>
+        /// Represent current category
+        /// </summary>
+        public Category CurrentCategory { get; set; }
+        public Category Collection => CurrentCategory;
+
+        /// <summary>
+        /// Represent all store catalog categories filtered by current search criteria CurrentCatalogSearchCriteria (loaded on first access by lazy loading)
+        /// </summary>
+        public IMutablePagedList<Category> Categories { get; set; }
+        public IMutablePagedList<Category> Collections => Categories;
+
+        /// <summary>
+        /// Represent products filtered by current search criteria CurrentCatalogSearchCriteria (loaded on first access by lazy loading)
+        /// </summary>
+        public IMutablePagedList<Product> Products { get; set; }
+
+        /// <summary>
+        /// Represent the current product search result
+        /// </summary>
+        public CatalogSearchResult ProductSearchResult { get; set; } = new CatalogSearchResult();
+        /// <summary>
+        /// Current search product search criterias
+        /// </summary>
+        public ProductSearchCriteria CurrentProductSearchCriteria { get; set; }
+
+        /// <summary>
+        /// Current product response group
+        /// </summary>
+        public ItemResponseGroup CurrentProductResponseGroup { get; set; }
+
+        public IMutablePagedList<Vendor> Vendors { get; set; }
+
+        public Vendor CurrentVendor { get; set; }
+        public Vendor Vendor => CurrentVendor;
+
+        #endregion
+
         #region Static Content Properties
         public ContentPage CurrentPage { get; set; }
         public ContentPage Page => CurrentPage;
@@ -147,6 +228,10 @@ namespace VirtoCommerce.Storefront.Model
 
         public IList<Country> AllCountries { get; set; }
 
+        public CustomerOrder CurrentOrder { get; set; }
+        public CustomerOrder Order => CurrentOrder;
+
+
         public StorefrontNotification StorefrontNotification { get; set; }
         public StorefrontNotification Notification => StorefrontNotification;
 
@@ -165,6 +250,16 @@ namespace VirtoCommerce.Storefront.Model
         /// </summary>
         public IList<LoginProvider> ExternalLoginProviders { get; set; }
 
+        /// <summary>
+        /// Current fulfillment center
+        /// </summary>
+        public FulfillmentCenter CurrentFulfillmentCenter { get; set; }
+        public FulfillmentCenter FulfillmentCenter => CurrentFulfillmentCenter;
+
+        /// <summary>
+        ///  All available fulfillment centers 
+        /// </summary>
+        public IMutablePagedList<FulfillmentCenter> FulfillmentCenters { get; set; }
 
         /// <summary>
         /// Gets or sets the dictionary of application settings
@@ -174,19 +269,11 @@ namespace VirtoCommerce.Storefront.Model
         /// <summary>
         /// Current page number
         /// </summary>
-        public int PageNumber { get; set; } = 1;
+        public int? PageNumber { get; set; } = 1;
         /// <summary>
         /// Current page size
         /// </summary>
-        public int PageSize { get; set; } = 20;
-
-        public int SkipCount
-        {
-            get
-            {
-                return (PageNumber - 1) * PageSize;
-            }
-        }
+        public int? PageSize { get; set; }
         /// <summary>
         /// Settings defined in theme
         /// </summary>

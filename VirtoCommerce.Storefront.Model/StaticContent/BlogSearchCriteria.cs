@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using VirtoCommerce.Storefront.Model.Common;
 
@@ -15,11 +14,11 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
         }
 
         public BlogSearchCriteria()
-            : this(new Dictionary<string, string>())
+            : this(new NameValueCollection())
         {
         }
 
-        public BlogSearchCriteria(IDictionary<string, string> queryString)
+        public BlogSearchCriteria(NameValueCollection queryString)
             : base(queryString, DefaultPageSize)
         {
         }
