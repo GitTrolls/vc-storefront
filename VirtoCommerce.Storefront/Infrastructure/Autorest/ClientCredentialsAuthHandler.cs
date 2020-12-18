@@ -5,18 +5,14 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using IdentityModel.Client;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.Storefront.Infrastructure.Autorest
 {
     /// <summary>
-    /// HTTP message delegating handler that encapsulates access token handling and renewment
-    /// Implements id-secret authorization to the Platform API 
+    /// HTTP message delegating handler that encapsulates access token handling and renewal
     /// </summary>
-
-    public class ClientCredentialsAuthHandler : BaseAuthHandler
+    public class ClientCredentialsAuthHandler : DelegatingHandler
     {
         private static readonly SemaphoreSlim _lock = new SemaphoreSlim(1, 1);
         private static string _accessToken;
@@ -57,7 +53,7 @@ namespace VirtoCommerce.Storefront.Infrastructure.Autorest
         /// </summary>
         /// <param name="options"></param>
         /// <param name="clientFactory"></param>
-        public ClientCredentialsAuthHandler(IOptions<PlatformEndpointOptions> options, IHttpClientFactory clientFactory, IWorkContextAccessor workContextAccessor, IHttpContextAccessor httpContextAccessor) : base(workContextAccessor, httpContextAccessor)
+        public ClientCredentialsAuthHandler(IOptions<PlatformEndpointOptions> options, IHttpClientFactory clientFactory)
         {
             _options = options.Value;
             _clientFactory = clientFactory;
@@ -79,6 +75,7 @@ namespace VirtoCommerce.Storefront.Infrastructure.Autorest
                 return new HttpResponseMessage(HttpStatusCode.Unauthorized) { RequestMessage = request };
             }
 
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", AccessToken);
             var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
             if (response.StatusCode != HttpStatusCode.Unauthorized)
@@ -93,12 +90,8 @@ namespace VirtoCommerce.Storefront.Infrastructure.Autorest
 
             response.Dispose(); // This 401 response will not be used for anything so is disposed to unblock the socket.
 
-            return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
-        }
-
-        protected override void AddAuthentication(HttpRequestMessage request)
-        {
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", AccessToken);
+            return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
         }
 
         private async Task<bool> RenewTokensAsync(CancellationToken cancellationToken)
