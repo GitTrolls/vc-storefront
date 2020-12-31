@@ -35,6 +35,7 @@ using VirtoCommerce.Storefront.Extensions;
 using VirtoCommerce.Storefront.Filters;
 using VirtoCommerce.Storefront.Infrastructure;
 using VirtoCommerce.Storefront.Infrastructure.ApplicationInsights;
+using VirtoCommerce.Storefront.Infrastructure.Autorest;
 using VirtoCommerce.Storefront.Infrastructure.Swagger;
 using VirtoCommerce.Storefront.Middleware;
 using VirtoCommerce.Storefront.Model;
@@ -329,7 +330,7 @@ namespace VirtoCommerce.Storefront
 
             services.AddResponseCompression();
 
-            services.AddProxy();
+            services.AddProxy(builder => builder.AddHttpMessageHandler(sp => sp.GetService<AuthenticationHandlerFactory>().CreateAuthHandler()));
 
             services.AddSingleton<IGraphQLClient>(s =>
             {
@@ -341,6 +342,8 @@ namespace VirtoCommerce.Storefront
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseForwardedHeaders();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
