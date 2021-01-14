@@ -1,21 +1,21 @@
 using System;
 using System.Threading;
 using Microsoft.Extensions.Primitives;
-using VirtoCommerce.Storefront.AutoRestClients.PlatformModuleApi;
+using VirtoCommerce.Storefront.AutoRestClients.CacheModuleApi;
 using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Infrastructure
 {
     public class PollingApiChangeToken : IChangeToken
     {
-        private readonly IChangeLog _cacheApi;
+        private readonly ICacheModule _cacheApi;
         private static DateTime _previousChangeTimeUtcStatic;
         private static DateTime _lastCheckedTimeUtcStatic;
         private DateTime _previousChangeTimeUtc;
         private readonly TimeSpan _pollingInterval;
         private static object _lock = new object();
 
-        public PollingApiChangeToken(IChangeLog cacheApi, TimeSpan pollingInterval)
+        public PollingApiChangeToken(ICacheModule cacheApi, TimeSpan pollingInterval)
         {
             _pollingInterval = pollingInterval;
             _cacheApi = cacheApi;
