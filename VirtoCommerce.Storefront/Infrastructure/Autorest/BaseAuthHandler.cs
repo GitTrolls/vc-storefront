@@ -30,7 +30,7 @@ namespace VirtoCommerce.Storefront.Infrastructure.Autorest
         {
             AddCurrentUser(request);
             AddUserIp(request);
-            await AddAuthenticationAsync(request);
+            AddAuthentication(request);
             return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
         }
 
@@ -60,10 +60,6 @@ namespace VirtoCommerce.Storefront.Infrastructure.Autorest
                         request.Headers.Add("VirtoCommerce-User-Name", userName);
                     }
                 }
-                else
-                {
-                    request.Headers.Add("VirtoCommerce-User-Name", "Anonymous");
-                }
             }
         }
 
@@ -86,6 +82,6 @@ namespace VirtoCommerce.Storefront.Infrastructure.Autorest
         /// This method should be implemented depending on authorization way
         /// </summary>
         /// <param name="request"></param>
-        protected abstract Task AddAuthenticationAsync(HttpRequestMessage request);
+        protected abstract void AddAuthentication(HttpRequestMessage request);
     }
 }

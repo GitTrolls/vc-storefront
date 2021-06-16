@@ -134,6 +134,8 @@ namespace VirtoCommerce.Storefront.Model.Stores
         /// </summary>
         public bool IsSpa { get; set; }
 
+        public bool EmailVerificationEnabled { get; set; }
+
         public decimal FixedTaxRate { get; set; }
 
         public string CartValidationRuleSet { get; set; }
@@ -148,6 +150,8 @@ namespace VirtoCommerce.Storefront.Model.Stores
         #endregion
 
         public SeoLinksType SeoLinksType { get; set; }
+
+        public IList<PaymentMethod> PaymentMethods { get; set; }
 
         /// <summary>
         /// Checks if specified URL starts with store URL or store secure URL.

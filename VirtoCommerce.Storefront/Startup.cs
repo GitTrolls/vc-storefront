@@ -4,14 +4,12 @@ using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
 using FluentValidation.AspNetCore;
-using GraphQL.Client.Abstractions;
-using GraphQL.Client.Http;
-using GraphQL.Client.Serializer.Newtonsoft;
 using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -24,30 +22,41 @@ using Microsoft.Extensions.WebEncoders;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using ProxyKit;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using VirtoCommerce.LiquidThemeEngine;
+using VirtoCommerce.Storefront.Binders;
 using VirtoCommerce.Storefront.Caching;
 using VirtoCommerce.Storefront.DependencyInjection;
 using VirtoCommerce.Storefront.Domain;
+using VirtoCommerce.Storefront.Domain.Cart;
 using VirtoCommerce.Storefront.Domain.Security;
 using VirtoCommerce.Storefront.Extensions;
 using VirtoCommerce.Storefront.Filters;
 using VirtoCommerce.Storefront.Infrastructure;
 using VirtoCommerce.Storefront.Infrastructure.ApplicationInsights;
-using VirtoCommerce.Storefront.Infrastructure.Autorest;
 using VirtoCommerce.Storefront.Infrastructure.Swagger;
+using VirtoCommerce.Storefront.JsonConverters;
 using VirtoCommerce.Storefront.Middleware;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Cart.Services;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Common.Bus;
 using VirtoCommerce.Storefront.Model.Common.Events;
 using VirtoCommerce.Storefront.Model.Customer.Services;
 using VirtoCommerce.Storefront.Model.Features;
+using VirtoCommerce.Storefront.Model.Inventory.Services;
 using VirtoCommerce.Storefront.Model.LinkList.Services;
+using VirtoCommerce.Storefront.Model.Marketing.Services;
+using VirtoCommerce.Storefront.Model.Order.Services;
+using VirtoCommerce.Storefront.Model.Pricing.Services;
+using VirtoCommerce.Storefront.Model.Quote.Services;
+using VirtoCommerce.Storefront.Model.Recommendations;
 using VirtoCommerce.Storefront.Model.Security;
+using VirtoCommerce.Storefront.Model.Services;
 using VirtoCommerce.Storefront.Model.StaticContent;
 using VirtoCommerce.Storefront.Model.Stores;
+using VirtoCommerce.Storefront.Model.Subscriptions.Services;
+using VirtoCommerce.Storefront.Model.Tax.Services;
 using VirtoCommerce.Storefront.Routing;
 using VirtoCommerce.Tools;
 using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
@@ -68,6 +77,23 @@ namespace VirtoCommerce.Storefront
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer?view=aspnetcore-3.1#forward-the-scheme-for-linux-and-non-iis-reverse-proxies
+            if (string.Equals(
+                             Environment.GetEnvironmentVariable("ASPNETCORE_FORWARDEDHEADERS_ENABLED"),
+                "true", StringComparison.OrdinalIgnoreCase))
+            {
+                services.Configure<ForwardedHeadersOptions>(options =>
+                {
+                    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor |
+                        ForwardedHeaders.XForwardedProto;
+                    // Only loopback proxies are allowed by default.
+                    // Clear that restriction because forwarders are enabled by explicit
+                    // configuration.
+                    options.KnownNetworks.Clear();
+                    options.KnownProxies.Clear();
+                });
+            }
+
             services.AddMemoryCache();
             services.AddResponseCaching();
 
@@ -84,13 +110,29 @@ namespace VirtoCommerce.Storefront
             services.AddSingleton<ICurrencyService, CurrencyService>();
             services.AddSingleton<ISlugRouteService, SlugRouteService>();
             services.AddSingleton<IMemberService, MemberService>();
-
+            services.AddSingleton<ICustomerOrderService, CustomerOrderService>();
+            services.AddSingleton<IPaymentSearchService, PaymentSearchService>();
+            services.AddSingleton<IQuoteService, QuoteService>();
+            services.AddSingleton<ISubscriptionService, SubscriptionService>();
+            services.AddSingleton<ICatalogService, CatalogService>();
+            services.AddSingleton<IInventoryService, InventoryService>();
+            services.AddSingleton<IPricingService, PricingService>();
+            services.AddSingleton<ITaxEvaluator, TaxEvaluator>();
+            services.AddSingleton<IPromotionEvaluator, PromotionEvaluator>();
+            services.AddSingleton<IDynamicContentEvaluator, DynamicContentEvaluator>();
+            services.AddSingleton<IMarketingService, MarketingService>();
             services.AddSingleton<IStaticContentService, StaticContentService>();
             services.AddSingleton<IMenuLinkListService, MenuLinkListServiceImpl>();
             services.AddSingleton<IStaticContentItemFactory, StaticContentItemFactory>();
             services.AddSingleton<IStaticContentLoaderFactory, StaticContentLoaderFactory>();
             services.AddSingleton<IApiChangesWatcher, ApiChangesWatcher>();
+            services.AddSingleton<AssociationRecommendationsProvider>();
+            services.AddSingleton<CognitiveRecommendationsProvider>();
+            services.AddSingleton<IRecommendationProviderFactory, RecommendationProviderFactory>(provider => new RecommendationProviderFactory(provider.GetService<AssociationRecommendationsProvider>(), provider.GetService<CognitiveRecommendationsProvider>()));
+            services.AddTransient<IQuoteRequestBuilder, QuoteRequestBuilder>();
             services.AddSingleton<IBlobChangesWatcher, BlobChangesWatcher>();
+            services.AddTransient<ICartBuilder, CartBuilder>();
+            services.AddTransient<ICartService, CartService>();
             services.AddTransient<AngularAntiforgeryCookieResultFilter>();
             services.AddTransient<AnonymousUserForStoreAuthorizationFilter>();
 
@@ -163,7 +205,7 @@ namespace VirtoCommerce.Storefront
             //Storefront authorization handler for policy based on permissions 
             services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, CanEditOrganizationResourceAuthorizationHandler>();
-
+            services.AddSingleton<IAuthorizationHandler, CanAccessOrderAuthorizationHandler>();
             services.AddAuthorization(options =>
             {
                 options.AddPolicy(CanImpersonateAuthorizationRequirement.PolicyName,
@@ -176,6 +218,8 @@ namespace VirtoCommerce.Storefront
                                 policy => policy.Requirements.Add(new OnlyRegisteredUserAuthorizationRequirement()));
                 options.AddPolicy(AnonymousUserForStoreAuthorizationRequirement.PolicyName,
                                 policy => policy.Requirements.Add(new AnonymousUserForStoreAuthorizationRequirement()));
+                options.AddPolicy(CanAccessOrderAuthorizationRequirement.PolicyName,
+                              policy => policy.Requirements.Add(new CanAccessOrderAuthorizationRequirement()));
             });
 
             var auth = services.AddAuthentication();
@@ -282,6 +326,11 @@ namespace VirtoCommerce.Storefront
                 options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 options.SerializerSettings.MissingMemberHandling = MissingMemberHandling.Ignore;
+                // Force serialize MutablePagedList type as array, instead of dictionary
+                options.SerializerSettings.Converters.Add(new MutablePagedListAsArrayJsonConverter(options.SerializerSettings));
+                // Converter for providing back compatibility with old themes was used CustomerInfo type which has contained user and contact data in the single type.
+                // May be removed when all themes will fixed to new User type with nested Contact property.
+                options.SerializerSettings.Converters.Add(new UserBackwardCompatibilityJsonConverter(options.SerializerSettings));
             })
              .AddFluentValidation()
             .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
@@ -330,13 +379,6 @@ namespace VirtoCommerce.Storefront
 
             services.AddResponseCompression();
 
-            services.AddProxy(builder => builder.AddHttpMessageHandler(sp => sp.GetService<AuthenticationHandlerFactory>().CreateAuthHandler()));
-
-            services.AddSingleton<IGraphQLClient>(s =>
-            {
-                var platformEndpointOptions = s.GetRequiredService<IOptions<PlatformEndpointOptions>>().Value;
-                return new GraphQLHttpClient($"{platformEndpointOptions.Url}graphql", new NewtonsoftJsonSerializer());
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -365,12 +407,19 @@ namespace VirtoCommerce.Storefront
             app.UseRouting();
 
             app.UseAuthentication();
-
-
             // WorkContextBuildMiddleware must  always be registered first in  the Middleware chain
             app.UseMiddleware<WorkContextBuildMiddleware>();
             app.UseMiddleware<StoreMaintenanceMiddleware>();
             app.UseMiddleware<NoLiquidThemeMiddleware>();
+            app.UseMiddleware<CreateStorefrontRolesMiddleware>();
+            app.UseMiddleware<ApiErrorHandlingMiddleware>();
+
+            var mvcJsonOptions = app.ApplicationServices.GetService<IOptions<MvcNewtonsoftJsonOptions>>().Value;
+            mvcJsonOptions.SerializerSettings.Converters.Add(new CartTypesJsonConverter(app.ApplicationServices.GetService<IWorkContextAccessor>()));
+            mvcJsonOptions.SerializerSettings.Converters.Add(new MoneyJsonConverter(app.ApplicationServices.GetService<IWorkContextAccessor>()));
+            mvcJsonOptions.SerializerSettings.Converters.Add(new CurrencyJsonConverter(app.ApplicationServices.GetService<IWorkContextAccessor>()));
+            mvcJsonOptions.SerializerSettings.Converters.Add(new OrderTypesJsonConverter(app.ApplicationServices.GetService<IWorkContextAccessor>()));
+            mvcJsonOptions.SerializerSettings.Converters.Add(new RecommendationJsonConverter(app.ApplicationServices.GetService<IRecommendationProviderFactory>()));
 
             var mvcViewOptions = app.ApplicationServices.GetService<IOptions<MvcViewOptions>>().Value;
             mvcViewOptions.ViewEngines.Add(app.ApplicationServices.GetService<ILiquidViewEngine>());
@@ -410,23 +459,15 @@ namespace VirtoCommerce.Storefront
                 await next();
             });
 
-            var platformEndpointOptions = app.ApplicationServices.GetRequiredService<IOptions<PlatformEndpointOptions>>().Value;
-            // Forwards the request only when the host is set to the specified value
-            app.UseWhen(
-                context => context.Request.Path.Value.EndsWith("xapi/graphql"),
-                appInner => appInner.RunProxy(context => {
-                context.Request.Path = PathString.Empty;
-                    return context.ForwardTo(new Uri(platformEndpointOptions.Url, "graphql"))
-                        .AddXForwardedHeaders()
-                        .Send();
-                }));
 
             // It will be good to rewrite endpoint routing as described here, but it's not easy to do:
             // https://docs.microsoft.com/en-us/aspnet/core/migration/22-to-30?view=aspnetcore-3.1&tabs=visual-studio#routing-startup-code
+
             app.UseMvc(routes =>
             {
                 routes.MapSlugRoute("{*path}", defaults: new { controller = "Home", action = "Index" });
             });
+
         }
     }
 }

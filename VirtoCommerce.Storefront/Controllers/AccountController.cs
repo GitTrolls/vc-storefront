@@ -72,7 +72,24 @@ namespace VirtoCommerce.Storefront.Controllers
             return View("customers/account", WorkContext);
         }
 
-    
+        [HttpGet("order/{number}")]
+        public async Task<ActionResult> GetOrderDetails(string number)
+        {
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, OnlyRegisteredUserAuthorizationRequirement.PolicyName);
+            if (!authorizationResult.Succeeded)
+            {
+                return Challenge();
+            }
+
+            var order = WorkContext.CurrentUser?.Orders.FirstOrDefault(x => x.Number.EqualsInvariant(number));
+            if (order != null)
+            {
+                WorkContext.CurrentOrder = order;
+            }
+
+            return View("customers/order", WorkContext);
+        }
+
         [HttpGet("addresses")]
         public async Task<ActionResult> GetAddresses()
         {
@@ -132,7 +149,7 @@ namespace VirtoCommerce.Storefront.Controllers
                     };
                     await SendNotificationAsync(registrationEmailNotification);
 
-                    if (_options.SendAccountConfirmation)
+                    if (_options.SendAccountConfirmation || WorkContext.CurrentStore.EmailVerificationEnabled)
                     {
                         var token = await _signInManager.UserManager.GenerateEmailConfirmationTokenAsync(user);
                         var callbackUrl = Url.Action("ConfirmEmail", "Account", new { UserId = user.Id, Token = token }, protocol: Request.Scheme, host: WorkContext.CurrentStore.Host);

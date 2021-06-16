@@ -1,7 +1,6 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Storefront.Model;
@@ -21,7 +20,7 @@ namespace VirtoCommerce.Storefront.Infrastructure.Autorest
             _options = options.Value;
         }
 
-        protected override Task AddAuthenticationAsync(HttpRequestMessage request)
+        protected override void AddAuthentication(HttpRequestMessage request)
         {
             if (_options != null)
             {
@@ -36,7 +35,6 @@ namespace VirtoCommerce.Storefront.Infrastructure.Autorest
                 signature.Hash = HmacUtility.GetHashString(key => new HMACSHA256(key), _options.SecretKey, parameters);
                 request.Headers.Authorization = new AuthenticationHeaderValue("HMACSHA256", signature.ToString());
             }
-            return Task.CompletedTask;
         }
     }
 }
