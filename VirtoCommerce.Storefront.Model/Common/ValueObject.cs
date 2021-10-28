@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Web;
 
 namespace VirtoCommerce.Storefront.Model.Common
 {
@@ -48,11 +49,7 @@ namespace VirtoCommerce.Storefront.Model.Common
 
         public virtual string GetCacheKey()
         {
-            var keyValues = GetEqualityComponents()
-                .Select(x => x is string ? $"'{x}'" : x)
-                .Select(x => x is ICacheKey cacheKey ? cacheKey.GetCacheKey() : x?.ToString());
-
-            return string.Join("|", keyValues);
+            return string.Join("|", GetEqualityComponents().Select(x => x ?? "null").Select(x => x is ICacheKey cacheKey ? cacheKey.GetCacheKey() : x.ToString()));
         }
 
         protected virtual IEnumerable<object> GetEqualityComponents()
@@ -62,19 +59,17 @@ namespace VirtoCommerce.Storefront.Model.Common
                 var value = property.GetValue(this);
                 if (value == null)
                 {
-                    yield return null;
+                    yield return "null";
                 }
                 else
                 {
                     var valueType = value.GetType();
                     if (valueType.IsAssignableFromGenericList())
                     {
-                        yield return '[';
                         foreach (var child in ((IEnumerable)value))
                         {
-                            yield return child;
+                            yield return child ?? "null";
                         }
-                        yield return ']';
                     }
                     else
                     {
