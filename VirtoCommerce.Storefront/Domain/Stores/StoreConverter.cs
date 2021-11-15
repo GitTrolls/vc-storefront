@@ -87,13 +87,14 @@ namespace VirtoCommerce.Storefront.Domain
             result.TaxCalculationEnabled = result.Settings.GetSettingValue("Stores.TaxCalculationEnabled", true);
             result.AnonymousUsersAllowed = result.Settings.GetSettingValue("Stores.AllowAnonymousUsers", true);
             result.IsSpa = result.Settings.GetSettingValue("Stores.IsSpa", false);
+            result.EmailVerificationEnabled = result.Settings.GetSettingValue("Stores.EmailVerificationEnabled", false);
 
             result.CartValidationRuleSet = result.Settings.GetSettingValue<string>("Stores.CartValidationRuleSet", null);
-            if(string.IsNullOrEmpty(result.CartValidationRuleSet))
+            if (string.IsNullOrEmpty(result.CartValidationRuleSet))
             {
                 result.CartValidationRuleSet = result.DynamicProperties?.GetDynamicPropertyValue("CartValidationRuleSet");
             }
-    
+
             return result;
         }
 
